@@ -70,3 +70,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 AU-Project/Assets/Scenes/BillyScene.unity
 AU-Project/Assets/Scenes/BillyScene.unity.meta
+Assets/Scenes/BillyScene.unity
+Assets/Scenes/BillyScene.unity.meta
