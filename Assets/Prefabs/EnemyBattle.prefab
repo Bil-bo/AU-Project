@@ -12,11 +12,10 @@ GameObject:
   - component: {fileID: 8369017813581877365}
   - component: {fileID: 8554170826354122313}
   - component: {fileID: 4424616036757532278}
-  - component: {fileID: 1249564318834575162}
-  - component: {fileID: 5153611542176373022}
+  - component: {fileID: 5754238213734648952}
   m_Layer: 0
-  m_Name: Player
-  m_TagString: Player
+  m_Name: EnemyBattle
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -64,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3b44cff1190f571469f621c8c5656c17, type: 2}
+  - {fileID: 2100000, guid: 84d82540b219d514b97c7d23ff16460c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,7 +108,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1249564318834575162
+--- !u!114 &5754238213734648952
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,17 +120,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e672a38209ba234b8aab0c127448456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  isPlayerTurn: 0
---- !u!114 &5153611542176373022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3517959726302896293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2355160dce1a11b419f13a69cf39b7b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  characterName: Enemy

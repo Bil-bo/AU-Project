@@ -4,5 +4,12 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Billy_Scene.unity
+    guid: 65d658c5f09639a4b84e752fdef5fb5e
+  - enabled: 1
+    path: Assets/Scenes/Billy_Scene2.unity
+    guid: 29b6e875d1788c94e8c6b328ded10173
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
