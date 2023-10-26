@@ -28,13 +28,27 @@ public class PlayerPropsRoaming : MonoBehaviour
 
     void Update()
     {
-        handleMovement();
+        if (charcon)
+        {
+            handleMovement();
+            charIsGrounded = charcon.isGrounded;
+        }
 
     }
 
     void handleMovement()
     {
-        Vector3 currentMovement = new Vector3(moveValue.y, charIsGrounded ? 0.0f:-1.0f, moveValue.x*-1) * _speed * Time.deltaTime;
+
+        var camera = Camera.main;
+
+        var forward = camera.transform.forward;
+        var right = camera.transform.right;
+        forward.y = 0f;
+        right.y = 0f;
+        forward.Normalize();
+        right.Normalize();
+
+        Vector3 currentMovement = (forward * moveValue.y +right * moveValue.x) * _speed * Time.deltaTime;
         charcon.Move(currentMovement);
     }
 
