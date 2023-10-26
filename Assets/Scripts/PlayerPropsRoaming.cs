@@ -49,12 +49,13 @@ public class PlayerPropsRoaming : MonoBehaviour
 
         var forward = camera.transform.forward;
         var right = camera.transform.right;
-        forward.y = 0f;
-        right.y = 0f;
+        forward.y = 0.0f;
+        right.y = 0.0f;
         forward.Normalize();
         right.Normalize();
 
         Vector3 currentMovement = (forward * moveValue.y +right * moveValue.x) * _speed * Time.deltaTime;
+        currentMovement.y = charIsGrounded ? 0.0f : -1.0f;
         Physics.SyncTransforms(); //REQUIRED - allows gamecontroller to move player
         charcon.Move(currentMovement);
     }
