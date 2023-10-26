@@ -40,6 +40,11 @@ public class PlayerPropsRoaming : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.name);
+        switch (other.tag)
+        {
+            case "Pickup":
+                other.gameObject.SetActive(false);
+                break;
+        }
     }
 }
