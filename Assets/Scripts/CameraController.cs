@@ -10,14 +10,15 @@ public class CamaraController : MonoBehaviour
     private int mouseXSpeedMod = 5;
     private int mouseYSpeedMod = 5;
 
-    public float MaxViewDistance = 15f;
+    public float MaxViewDistance = 20f;
     public float MinViewDistance = 10f;
-    public int ZoomRate = 20;
+    public int ZoomRate = 60;
     private int lerpRate = 5;
     private float distance = 3f;
     private float desireDistance;
     private float correctedDistance;
     private float currentDistance;
+    private float fov = 60f;
 
     public float cameraTargetHeight = 1.0f;
 
@@ -32,6 +33,7 @@ public class CamaraController : MonoBehaviour
         Vector3 Angles = transform.eulerAngles;
         x = Angles.x;
         y = Angles.y;
+        Camera.main.fieldOfView = fov;
         currentDistance = distance;
         desireDistance = distance;
         correctedDistance = distance;
