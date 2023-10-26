@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
         if (AllEnemiesDefeated())
         {
             ShowOverlay("You Won!");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
         }
 
         // Check if all players are defeated
@@ -63,7 +65,6 @@ public class GameManager : MonoBehaviour
         {
             overlayText.text = message;
             overlayCanvas.SetActive(true);
-            Time.timeScale = 0f; // Pause the game
         }
     }
 }

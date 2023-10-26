@@ -14,6 +14,7 @@ public class PlayerPropsRoaming : MonoBehaviour
     public Vector2 moveValue;
     private CharacterController charcon;
     private bool charIsGrounded;
+    public MainGameManager gameManager;
 
     private int collectedPickups = 0;
 
@@ -21,6 +22,8 @@ public class PlayerPropsRoaming : MonoBehaviour
     void Start()
     {
         charcon = GetComponent<CharacterController>();
+        collectedPickups = PlayerPrefs.GetInt("PickupsCollected");
+        UpdatePickupText();
     }
 
     void OnMove(InputValue value)
@@ -52,6 +55,7 @@ public class PlayerPropsRoaming : MonoBehaviour
         right.Normalize();
 
         Vector3 currentMovement = (forward * moveValue.y +right * moveValue.x) * _speed * Time.deltaTime;
+        Physics.SyncTransforms(); //REQUIRED - allows gamecontroller to move player
         charcon.Move(currentMovement);
     }
 
@@ -62,7 +66,12 @@ public class PlayerPropsRoaming : MonoBehaviour
             case "Pickup":
                 other.gameObject.SetActive(false);
                 collectedPickups++;
+                PlayerPrefs.SetInt("PickupsCollected", collectedPickups);
                 UpdatePickupText();
+                break;
+            case "Enemy":
+                other.gameObject.SetActive(false);
+                gameManager.EnterBattle();
                 break;
         }
     }
