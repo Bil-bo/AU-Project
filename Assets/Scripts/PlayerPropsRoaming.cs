@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using TMPro;
 
 using UnityEngine;
 using System;
@@ -13,6 +14,8 @@ public class PlayerPropsRoaming : MonoBehaviour
     public Vector2 moveValue;
     private CharacterController charcon;
     private bool charIsGrounded;
+
+    private int collectedPickups = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -58,7 +61,18 @@ public class PlayerPropsRoaming : MonoBehaviour
         {
             case "Pickup":
                 other.gameObject.SetActive(false);
+                collectedPickups++;
+                UpdatePickupText();
                 break;
         }
+    }
+
+    private void UpdatePickupText()
+    {
+        TextMeshProUGUI pickupText = FindFirstObjectByType<TextMeshProUGUI>();
+
+        if(pickupText != null){
+            pickupText.text = "Pickups collected: " + collectedPickups;
+        }  
     }
 }
