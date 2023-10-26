@@ -42,6 +42,7 @@ public class MainGameManager : MonoBehaviour
         else
         {
             init = true;
+            PlayerPrefs.SetInt("PickupsCollected", 0);
         }
     }
 
