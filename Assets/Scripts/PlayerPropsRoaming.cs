@@ -10,12 +10,13 @@ public class PlayerPropsRoaming : MonoBehaviour
 
     public float _speed;
     public Vector2 moveValue;
-    public Rigidbody rb;
+    private CharacterController charcon;
+    private bool charIsGrounded;
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        charcon = GetComponent<CharacterController>();
     }
 
     void OnMove(InputValue value)
@@ -24,10 +25,15 @@ public class PlayerPropsRoaming : MonoBehaviour
 
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        Vector3 movement = new Vector3(moveValue.y, 0.0f, moveValue.x*-1);
-        rb.AddForce(movement * _speed * Time.fixedDeltaTime);
+        handleMovement();
 
+    }
+
+    void handleMovement()
+    {
+        Vector3 currentMovement = new Vector3(moveValue.y, charIsGrounded ? 0.0f:-1.0f, moveValue.x*-1) * _speed * Time.deltaTime;
+        charcon.Move(currentMovement);
     }
 }
