@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
 using UnityEngine;
+using System;
 
 public class PlayerPropsRoaming : MonoBehaviour
 
@@ -35,5 +36,10 @@ public class PlayerPropsRoaming : MonoBehaviour
     {
         Vector3 currentMovement = new Vector3(moveValue.y, charIsGrounded ? 0.0f:-1.0f, moveValue.x*-1) * _speed * Time.deltaTime;
         charcon.Move(currentMovement);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other.name);
     }
 }
