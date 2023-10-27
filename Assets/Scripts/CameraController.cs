@@ -31,7 +31,7 @@ public class CamaraController : MonoBehaviour
     void Start()
     {
         Vector3 Angles = transform.eulerAngles;
-        x = Angles.x;
+        x = 90;
         y = Angles.y;
         Camera.main.fieldOfView = fov;
         currentDistance = distance;
