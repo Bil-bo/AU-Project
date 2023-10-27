@@ -17,6 +17,7 @@ public class PlayerPropsRoaming : MonoBehaviour
     private CharacterController charcon;
     private bool charIsGrounded;
     public MainGameManager gameManager;
+    public GameObject pause;
 
     private int collectedPickups = 0;
     public int maxPickups = 3;
@@ -27,7 +28,15 @@ public class PlayerPropsRoaming : MonoBehaviour
     {
         charcon = GetComponent<CharacterController>();
         collectedPickups = PlayerPrefs.GetInt("PickupsCollected");
+        pause.SetActive(false);
         UpdatePickupText();
+    }
+
+    void onPause()
+    {
+        pause.SetActive(true);
+        Time.timeScale = 0;
+
     }
 
     void OnMove(InputValue value)
