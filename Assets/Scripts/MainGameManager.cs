@@ -61,4 +61,25 @@ public class MainGameManager : MonoBehaviour
         }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
+
+    public void Reset(Vector3 initPos)
+    {
+        PlayerPrefs.SetFloat("PlayerX", initPos.x);
+        PlayerPrefs.SetFloat("PlayerY", initPos.y);
+        PlayerPrefs.SetFloat("PlayerZ", initPos.z);
+        PlayerPrefs.SetInt("PickupsCollected", 0);
+
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            PlayerPrefs.SetInt("Enemy" + i + "Enabled", 1);
+        }
+        for (int i = 0; i < pickups.Length; i++)
+        {
+            PlayerPrefs.SetInt("Pickup" + i + "Enabled", 1);
+        }
+
+
+
+
+    }
 }

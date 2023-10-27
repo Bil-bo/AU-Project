@@ -13,8 +13,7 @@ public class PlayerPropsRoaming : MonoBehaviour
 
     public float _speed;
     public Vector2 moveValue;
-    
-    private Vector3 initialPlayerPosition;
+
     private CharacterController charcon;
     private bool charIsGrounded;
     public MainGameManager gameManager;
@@ -23,20 +22,11 @@ public class PlayerPropsRoaming : MonoBehaviour
     public int maxPickups = 3;
     private bool hasWon = false;
 
-    private List<Vector3> initialEnemyPositions = new List<Vector3>();
-
     // Start is called before the first frame update
     void Start()
     {
         charcon = GetComponent<CharacterController>();
         collectedPickups = PlayerPrefs.GetInt("PickupsCollected");
-        initialPlayerPosition = transform.position;
-
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach (GameObject enemy in enemies)
-        {
-            initialEnemyPositions.Add(enemy.transform.position);
-        }
         UpdatePickupText();
     }
 
@@ -115,30 +105,12 @@ public class PlayerPropsRoaming : MonoBehaviour
             if(winText != null)
             {
                 winText.text = "You won!";
-
-                transform.position = initialPlayerPosition;
+                gameManager.Reset(new Vector3(4,4,4));
                 collectedPickups = 0;
-                PlayerPrefs.SetInt("PickupsCollected", 0);
-                RespawnEnemies();
-
                 SceneManager.LoadScene("Menu");
 
 
                 
-            }
-        }
-    }
-
-    private void RespawnEnemies()
-    {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-
-    // Iterate through the enemy game objects and set their positions to their initial spawn positions.
-        for (int i = 0; i < enemies.Length; i++)
-        {
-            if (i < initialEnemyPositions.Count)
-            {
-                enemies[i].transform.position = initialEnemyPositions[i];
             }
         }
     }
