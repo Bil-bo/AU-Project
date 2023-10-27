@@ -61,7 +61,7 @@ public class TurnBasedCharacter : MonoBehaviour
     {
         if (isPlayerTurn)
         {
-            int damage = 100; 
+            int damage = 20; 
             targetCharacter.TakeDamage(damage);
             Debug.Log(gameObject.name + " does " + damage + " damage to " + targetCharacter.gameObject.name);
 
