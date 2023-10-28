@@ -32,7 +32,7 @@ public class PlayerPropsRoaming : MonoBehaviour
         UpdatePickupText();
     }
 
-    void onPause()
+    void OnPause()
     {
         pause.SetActive(true);
         Time.timeScale = 0;
