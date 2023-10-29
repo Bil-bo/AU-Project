@@ -9,12 +9,15 @@ public class TurnBasedCharacter : MonoBehaviour
     public bool isPlayerTurn = false;
     private Renderer characterRenderer;
     private Material originalMaterial;
+    public GameManager manager;
 
     void Start()
     {
+        Debug.Log(GameObject.FindGameObjectsWithTag("Enemy").Length);
         currentHealth = maxHealth;
         hudManager = FindFirstObjectByType<HUDManager>();
         characterRenderer = GetComponent<Renderer>();
+        manager = FindAnyObjectByType<GameManager>();
         originalMaterial = new Material(characterRenderer.material);    
     }
 
@@ -53,6 +56,7 @@ public class TurnBasedCharacter : MonoBehaviour
             Debug.Log(gameObject.name + " has been defeated.");
             
             Destroy(gameObject);
+            CheckWinLossConditions();
         }
         UpdateHealthBar();
     }
@@ -101,5 +105,41 @@ public class TurnBasedCharacter : MonoBehaviour
     void ResetColor()
     {
         characterRenderer.material = originalMaterial;
+    }
+
+    bool AllEnemiesDefeated()
+    {
+        // Find all game objects with the "Enemy" tag
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        Debug.Log(enemies.Length);
+        // Return true if there are no enemies left in the scene
+        return enemies.Length - 1 == 0;
+    }
+
+    bool AllPlayersDefeated()
+    {
+        // Find all game objects with the "Player" tag
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        // Return true if there are no players left in the scene
+        return players.Length - 1 == 0;
+    }
+
+    void CheckWinLossConditions()
+    {
+        Debug.Log("here");
+        // Check if all enemies are defeated
+        if (AllEnemiesDefeated())
+        {
+            Debug.Log("Now Here");
+            manager.ShowOverlay("You Won!");
+            manager.ExitBattle();
+        }
+
+        // Check if all players are defeated
+        else if (AllPlayersDefeated())
+        {
+            manager.ShowOverlay("You Lost!");
+        }
     }
 }

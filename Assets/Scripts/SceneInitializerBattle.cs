@@ -36,10 +36,10 @@ public class SceneInitializer : MonoBehaviour
         for (int i = 0; i < numberOfPlayers; i++)
         {
             // Instantiate the enemy prefab
-            GameObject enemy = Instantiate(playerPrefab, new Vector3(((-2f) * (playerCount + 1)), 0f, 3f), Quaternion.identity);
+            GameObject player = Instantiate(playerPrefab, new Vector3(((-2f) * (playerCount + 1)), 0f, 3f), Quaternion.identity);
 
             // Assign a unique name to the enemy
-            enemy.name = "Player " + (playerCount + 1);
+            player.name = "Player " + (playerCount + 1);
             playerCount++;
 
             // SET OTHER PROPERTIES OR COMPONENTS FOR PLAYER HERE

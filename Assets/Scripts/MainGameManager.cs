@@ -1,3 +1,4 @@
+using OpenCover.Framework.Model;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,9 +49,12 @@ public class MainGameManager : MonoBehaviour
 
     public void EnterBattle()
     {
+        
         PlayerPrefs.SetFloat("PlayerX", player.transform.position.x);
         PlayerPrefs.SetFloat("PlayerY", player.transform.position.y);
         PlayerPrefs.SetFloat("PlayerZ", player.transform.position.z);
+
+
         for (int i = 0; i < enemies.Length; i++)
         {
             PlayerPrefs.SetInt("Enemy" + i + "Enabled", enemies[i].activeSelf ? 1 : 0);
@@ -61,6 +65,8 @@ public class MainGameManager : MonoBehaviour
         }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
+
+
 
     public void Reset(Vector3 initPos)
     {
@@ -77,9 +83,7 @@ public class MainGameManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("Pickup" + i + "Enabled", 1);
         }
-
-
-
-
     }
+
+
 }

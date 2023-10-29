@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject overlayCanvas;
     public TMP_Text overlayText;
+    private string message = "";
 
     void Awake()
     {
@@ -19,47 +21,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
-        CheckWinLossConditions();
+        ShowOverlay(message);
     }
 
-    void CheckWinLossConditions()
+    public void ExitBattle()
     {
-        // Check if all enemies are defeated
-        if (AllEnemiesDefeated())
-        {
-            ShowOverlay("You Won!");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-        }
 
-        // Check if all players are defeated
-        else if (AllPlayersDefeated())
-        {
-            ShowOverlay("You Lost!");
-        }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
-    bool AllEnemiesDefeated()
+
+    public void ShowOverlay(string message)
     {
-        // Find all game objects with the "Enemy" tag
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-
-        // Return true if there are no enemies left in the scene
-        return enemies.Length == 0;
-    }
-
-    bool AllPlayersDefeated()
-    {
-        // Find all game objects with the "Player" tag
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-
-        // Return true if there are no players left in the scene
-        return players.Length == 0;
-    }
-
-    void ShowOverlay(string message)
-    {
+        this.message = message;
         // Show the overlay canvas with the provided message
         if (overlayCanvas != null)
         {
