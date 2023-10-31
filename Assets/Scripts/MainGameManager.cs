@@ -19,6 +19,8 @@ public class MainGameManager : MonoBehaviour
         Debug.Log(init);
         enemies = GameObject.FindGameObjectsWithTag("Enemy").OrderBy(enemy => enemy.name).ToArray();
         pickups = GameObject.FindGameObjectsWithTag("Pickup").OrderBy(enemy => enemy.name).ToArray();
+
+
         if (init)
         {
             // Load the enabled state for each enemy and set it
@@ -39,6 +41,7 @@ public class MainGameManager : MonoBehaviour
             float playerZ = PlayerPrefs.GetFloat("PlayerZ");
             player.transform.position = new Vector3(playerX, playerY, playerZ);
             Debug.Log("Player position set to: " + playerX + " " + playerY + " " + playerZ);
+            
         }
         else
         {
@@ -67,7 +70,6 @@ public class MainGameManager : MonoBehaviour
     }
 
 
-
     public void Reset(Vector3 initPos)
     {
         PlayerPrefs.SetFloat("PlayerX", initPos.x);
@@ -84,6 +86,8 @@ public class MainGameManager : MonoBehaviour
             PlayerPrefs.SetInt("Pickup" + i + "Enabled", 1);
         }
     }
+
+
 
 
 }

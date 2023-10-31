@@ -9,6 +9,7 @@ TagManager:
   - WinText
   - PickupText
   - Door
+  - Button
   layers:
   - Default
   - TransparentFX

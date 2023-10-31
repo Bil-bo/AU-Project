@@ -73,16 +73,23 @@ public class PlayerPropsRoaming : MonoBehaviour
         charcon.Move(currentMovement);
     }
 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Collider other = hit.collider;
+        if (other.CompareTag("Button"))
+        {
+            other.GetComponent<Button>().collided();
+
+        }
+    }
+
+
     private void OnTriggerEnter(Collider other)
     {
         switch (other.tag)
         {
             case "Pickup":
                 
-                if (other.gameObject.GetComponent<PickUpsData>().getDoor() != null)
-                {
-                    other.gameObject.GetComponent<PickUpsData>().getDoor().SetActive(false);       
-                }
                 other.gameObject.SetActive(false);
                 collectedPickups++;
                 PlayerPrefs.SetInt("PickupsCollected", collectedPickups);
