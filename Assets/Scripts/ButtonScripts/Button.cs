@@ -19,26 +19,8 @@ public class Button : MonoBehaviour
         Active,
         Primed
     }
-
-
-    public State getState() { return state; }
-
-    public void SetState(State state) {  this.state = state; }
-
-    public Button getNext() { return next; }
-
-    public void SetNext(Button next) { this.next= next; }
-
-    public Button getPrev() { return prev; }
-
-    public void SetPrev(Button prev) { this.prev = prev; }
-
-
-    public void SetTrigger(GameObject toTrigger) { this.toTrigger = toTrigger; }
-
     public void collided()
     {
-        Debug.Log("primed");
         switch (state)
         {
             case State.Primed:
@@ -87,4 +69,18 @@ public class Button : MonoBehaviour
             GetComponent<Renderer>().material = inActiveColour;
         }
     }
+    public State getState() { return state; }
+
+    public void SetState(State state) { this.state = state; }
+
+    public Button getNext() { return next; }
+
+    public void SetNext(Button next) { this.next = next; }
+
+    public Button getPrev() { return prev; }
+
+    public void SetPrev(Button prev) { this.prev = prev; }
+
+
+    public void SetTrigger(GameObject toTrigger) { this.toTrigger = toTrigger; }
 }

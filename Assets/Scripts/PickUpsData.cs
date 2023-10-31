@@ -7,13 +7,18 @@ public class PickUpsData : MonoBehaviour
 { 
     public GameObject door;
 
-
-    public GameObject getDoor() {  return door; }
-
-
-    private void Start()
+    public void PickedUp()
     {
-
+        if (door != null)
+        {
+            GameData.Instance.setDoor(door.GetComponent<Door>(), true);
+            door.SetActive(false);
+        }
+        this.gameObject.SetActive(false);
+        
     }
+
+
+
 
 }

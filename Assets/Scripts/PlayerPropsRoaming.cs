@@ -89,8 +89,7 @@ public class PlayerPropsRoaming : MonoBehaviour
         switch (other.tag)
         {
             case "Pickup":
-                
-                other.gameObject.SetActive(false);
+                other.GetComponent<PickUpsData>().PickedUp();
                 collectedPickups++;
                 PlayerPrefs.SetInt("PickupsCollected", collectedPickups);
                 UpdatePickupText();
