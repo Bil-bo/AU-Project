@@ -7,6 +7,7 @@ public class GameData : MonoBehaviour
     public static GameData Instance;
 
     private Dictionary<string, bool> doors = new Dictionary<string, bool>();
+    public bool isPuzzleComplete { get; set; }
 
     private void Awake()
     {
@@ -34,7 +35,7 @@ public class GameData : MonoBehaviour
         }
     }
 
-    public void setDoor(Door door, bool newState)
+    public void SetDoor(Door door, bool newState)
     {
         if (doors.ContainsKey(door.ID)) 
         {
@@ -42,8 +43,8 @@ public class GameData : MonoBehaviour
         }
     }
 
-    public bool HasDoors()
+    public bool FindDoor(Door door)
     {
-        return doors.Count > 0;
+        return doors.ContainsKey(door.ID);
     }
 }

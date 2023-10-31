@@ -15,8 +15,6 @@ public class MainGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Awake Called");
-        Debug.Log(init);
         enemies = GameObject.FindGameObjectsWithTag("Enemy").OrderBy(enemy => enemy.name).ToArray();
         pickups = GameObject.FindGameObjectsWithTag("Pickup").OrderBy(enemy => enemy.name).ToArray();
 
@@ -40,7 +38,6 @@ public class MainGameManager : MonoBehaviour
             float playerY = PlayerPrefs.GetFloat("PlayerY");
             float playerZ = PlayerPrefs.GetFloat("PlayerZ");
             player.transform.position = new Vector3(playerX, playerY, playerZ);
-            Debug.Log("Player position set to: " + playerX + " " + playerY + " " + playerZ);
             
         }
         else

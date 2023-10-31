@@ -17,9 +17,10 @@ public class DoorInit : MonoBehaviour
             doors[i].GetComponent<Door>().Initialise("Door" + i, false);
             if (GameData.Instance != null)
             {
-                if (!GameData.Instance.HasDoors())
-
+                if (!GameData.Instance.FindDoor(doors[i].GetComponent<Door>()))
+                {
                     GameData.Instance.AddDoor(doors[i].GetComponent<Door>());
+                }
                 else
                 {
                     GameData.Instance.LoadDoor(doors[i].GetComponent<Door>());
@@ -28,6 +29,7 @@ public class DoorInit : MonoBehaviour
 
             if (doors[i].GetComponent <Door>().isOpen)
             {
+                Debug.Log("This is open");
                 doors[i].SetActive(false);
             }
 

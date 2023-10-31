@@ -13,7 +13,6 @@ public class TurnBasedCharacter : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(GameObject.FindGameObjectsWithTag("Enemy").Length);
         currentHealth = maxHealth;
         hudManager = FindFirstObjectByType<HUDManager>();
         characterRenderer = GetComponent<Renderer>();
@@ -111,7 +110,6 @@ public class TurnBasedCharacter : MonoBehaviour
     {
         // Find all game objects with the "Enemy" tag
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        Debug.Log(enemies.Length);
         // Return true if there are no enemies left in the scene
         return enemies.Length - 1 == 0;
     }
@@ -127,11 +125,9 @@ public class TurnBasedCharacter : MonoBehaviour
 
     void CheckWinLossConditions()
     {
-        Debug.Log("here");
         // Check if all enemies are defeated
         if (AllEnemiesDefeated())
         {
-            Debug.Log("Now Here");
             manager.ShowOverlay("You Won!");
             manager.ExitBattle();
         }

@@ -7,9 +7,9 @@ using UnityEngine;
 public class Button : MonoBehaviour
 {
 
-    private State state;
-    private Button next;
-    private Button prev;
+    public State state { get; set; }
+    public Button next { get; set; }
+    public Button prev { get; set; }
     private GameObject toTrigger;
     public Material ActiveColour;
     public Material inActiveColour;
@@ -27,14 +27,21 @@ public class Button : MonoBehaviour
                 state = State.Active;
                 if (next != null)
                 {
-                    next.SetState(State.Primed);
+                    next.state = State.Primed;
                 }
                 else
+                {
                     if (toTrigger != null)
                     {
+                        if (toTrigger.GetComponent<Door>() != null)
+                        {
+                            Debug.Log("Setting to true");
+                            GameData.Instance.SetDoor(toTrigger.GetComponent<Door>(), true);
+                        }
                         toTrigger.SetActive(false);
+
                     }
-                {
+                    Complete();
                 }
                 break;
             case State.inActive:
@@ -53,8 +60,28 @@ public class Button : MonoBehaviour
         else
         {
             state = State.inActive;
+            prev.Reset();
         }
-        prev.Reset();
+
+    }
+
+    public void Complete()
+    {
+        Button head = this;
+        Button nextDestroy = null;
+        while (head.prev != null)
+        {
+            head = head.prev;  
+        }
+        while (head != this)
+        {
+            nextDestroy = head.next;
+            head.gameObject.SetActive(false);
+            head = nextDestroy;
+        }
+        GameData.Instance.isPuzzleComplete = true;
+        this.gameObject.SetActive(false);
+
     }
 
     private void Update()
@@ -69,18 +96,6 @@ public class Button : MonoBehaviour
             GetComponent<Renderer>().material = inActiveColour;
         }
     }
-    public State getState() { return state; }
-
-    public void SetState(State state) { this.state = state; }
-
-    public Button getNext() { return next; }
-
-    public void SetNext(Button next) { this.next = next; }
-
-    public Button getPrev() { return prev; }
-
-    public void SetPrev(Button prev) { this.prev = prev; }
-
 
     public void SetTrigger(GameObject toTrigger) { this.toTrigger = toTrigger; }
 }

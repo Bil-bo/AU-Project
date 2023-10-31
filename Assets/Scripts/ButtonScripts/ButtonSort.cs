@@ -12,6 +12,7 @@ public class ButtonSort : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         buttonObjects = GameObject.FindGameObjectsWithTag("Button").ToList();
         foreach (GameObject button in buttonObjects)
         {
@@ -21,17 +22,22 @@ public class ButtonSort : MonoBehaviour
         { 
             if (i == 0)
             {
-                buttons[i].SetState(Button.State.Primed);
+                buttons[i].state = Button.State.Primed;
             }
             else 
-            {   if (i == buttons.Count - 1) { 
+            {   
+                if (i == buttons.Count - 1) {
                     buttons[i].SetTrigger(GameObject.Find("ButtonDoor"));
                 }
-                buttons[i].SetState(Button.State.inActive);
-                buttons[i].SetPrev(buttons[i-1]);
-                buttons[i - 1].SetNext(buttons[i]);
+                buttons[i].state = Button.State.inActive;
+                buttons[i].prev = buttons[i-1];
+                buttons[i - 1].next = buttons[i];
 
             }
+        }
+        if (GameData.Instance.isPuzzleComplete)
+        {
+            buttons[buttons.Count - 1].Complete();
         }
     }
 }
