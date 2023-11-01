@@ -123,6 +123,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   isPlayerTurn: 0
+  manager: {fileID: 0}
+  attackPressed: 0
+  damageNumberPrefab: {fileID: 4992939234414459512, guid: 3f6074de0f1907043a8f81e74093e7c9, type: 3}
 --- !u!114 &5153611542176373022
 MonoBehaviour:
   m_ObjectHideFlags: 0

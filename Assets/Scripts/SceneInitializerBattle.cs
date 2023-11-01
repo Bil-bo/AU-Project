@@ -25,6 +25,7 @@ public class SceneInitializer : MonoBehaviour
 
             // Assign a unique name to the enemy
             enemy.name = "Enemy " + (enemyCount + 1);
+            enemy.GetComponent<TurnBasedCharacter>().Position = enemyCount + 1;
             enemyCount++;
 
             // SET OTHER PROPERTIES OR COMPONENTS FOR ENEMY HERE
@@ -40,6 +41,7 @@ public class SceneInitializer : MonoBehaviour
 
             // Assign a unique name to the enemy
             player.name = "Player " + (playerCount + 1);
+            player.GetComponent<TurnBasedCharacter>().Position = playerCount + 1;
             playerCount++;
 
             // SET OTHER PROPERTIES OR COMPONENTS FOR PLAYER HERE

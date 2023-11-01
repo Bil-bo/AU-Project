@@ -120,4 +120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e672a38209ba234b8aab0c127448456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterName: Enemy
+  maxHealth: 100
+  isPlayerTurn: 0
+  manager: {fileID: 0}
+  attackPressed: 0
+  damageNumberPrefab: {fileID: 4992939234414459512, guid: 3f6074de0f1907043a8f81e74093e7c9, type: 3}

@@ -21,14 +21,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        ShowOverlay(message);
-    }
-
     public void ExitBattle()
     {
-
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 

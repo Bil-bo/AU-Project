@@ -15,7 +15,7 @@ public class TurnManager : MonoBehaviour
 
     IEnumerator DelayedStart()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
 
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");

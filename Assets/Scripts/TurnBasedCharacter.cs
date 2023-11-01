@@ -1,5 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using System.Collections.Generic;
+using TMPro;
 
 public class TurnBasedCharacter : MonoBehaviour
 {
@@ -10,6 +13,25 @@ public class TurnBasedCharacter : MonoBehaviour
     private Renderer characterRenderer;
     private Material originalMaterial;
     public GameManager manager;
+    public bool attackPressed = false;
+    public GameObject damageNumberPrefab;
+
+    // Card Buttons
+    private GameObject Card1;
+    private GameObject Card2;
+
+    //Status effect List
+    public List<StatusEffect> ActiveStatusEffects  = new List<StatusEffect>();
+
+    // Card Lists
+    private List<AbilityCard> originalDeck = new List<AbilityCard>();
+    public List<AbilityCard> Deck = new List<AbilityCard>();
+    public List<AbilityCard> CurrentHand = new List<AbilityCard>(2); // only two abilities per turn
+
+    public System.Action<TurnBasedCharacter> currentSelectedAbilityAction;
+    public AbilityCard currentCard;
+
+    public int Position = 0;
 
     void Start()
     {
@@ -17,11 +39,160 @@ public class TurnBasedCharacter : MonoBehaviour
         hudManager = FindFirstObjectByType<HUDManager>();
         characterRenderer = GetComponent<Renderer>();
         manager = FindAnyObjectByType<GameManager>();
-        originalMaterial = new Material(characterRenderer.material);    
+
+        // Find Card Buttons
+        Card1 = GameObject.Find("Card1");
+        Card2 = GameObject.Find("Card2");
+        originalMaterial = new Material(characterRenderer.material);
+
+        // Create deck
+        InitializeDeck();
+    }
+
+    public void ProcessStatusEffects()
+    {
+        for (int i = ActiveStatusEffects.Count - 1; i >= 0; i--)
+        {
+            StatusEffect effect = ActiveStatusEffects[i];
+            effect.Duration--;
+            if (effect.Duration <= 0)
+            {
+                // If the effect duration is over, remove it from the list
+                ActiveStatusEffects.RemoveAt(i);
+            }
+        }
+    }
+
+    public void ApplyStatusEffect(StatusEffect effect)
+    {
+        ActiveStatusEffects.Add(effect);
+    }
+
+    public void InitializeDeck()
+    {
+        Deck.Add(new AbilityCard
+        {
+            Name = "Melee Attack",
+            Description = "Deal damage to the opponent.",
+            Range = 1,
+            ExecuteAbility = (attacker) =>
+            {
+                attacker.currentSelectedAbilityAction = (selectedTarget) =>
+                {
+                    int damage = 40; // Example damage value
+                    selectedTarget.TakeDamage(damage);
+                    Debug.Log(attacker.gameObject.name + " does " + damage + " damage to " + selectedTarget.gameObject.name);
+
+                    attacker.isPlayerTurn = false; // End turn after attack
+                };
+            }
+        });
+
+        Deck.Add(new AbilityCard
+        {
+            Name = "Ranged Attack",
+            Description = "Deal damage to the opponent.",
+            Range = 4,
+            ExecuteAbility = (attacker) =>
+            {
+                attacker.currentSelectedAbilityAction = (selectedTarget) =>
+                {
+                    int damage = 20; // Example damage value
+                    selectedTarget.TakeDamage(damage);
+                    Debug.Log(attacker.gameObject.name + " does " + damage + " damage to " + selectedTarget.gameObject.name);
+
+                    attacker.isPlayerTurn = false; // End turn after attack
+                };
+            }
+        });
+
+        Deck.Add(new AbilityCard
+        {
+            Name = "Defend",
+            Description = "Halve incoming damage next turn.",
+            ExecuteAbility = (attacker) =>
+            {
+                attacker.currentSelectedAbilityAction = null;
+                DisableAllButtons();
+                attacker.ApplyStatusEffect(new StatusEffect
+                {
+                    Name = "Defensive Stance",
+                    Duration = 1,
+                    EffectType = EffectType.IncreaseDefense,
+                    EffectValue = 2f //Defense multiplier
+                });
+                Debug.Log("Defend Pressed");
+                DisplayText("Defense Up");
+                attacker.isPlayerTurn = false;
+            }
+        });
+
+        // ADD NEW CARDS HERE
+
+        originalDeck = new List<AbilityCard>(Deck); // Store a copy of the original deck.
+    }
+
+    public void UpdateButtonAbilities()
+    {
+        EnableAllButtons();
+
+        // Gets two random abilities
+        DealAbilities();
+
+        // Sets the text object of the card buttons to the name of the abilities 
+        Card1.transform.Find("Text").GetComponent<TMP_Text>().text = CurrentHand[0].Name;
+        Card2.transform.Find("Text").GetComponent<TMP_Text>().text = CurrentHand[1].Name;
+
+        // Assign the abilities to the button's onClick events
+        Card1.GetComponent<UnityEngine.UI.Button>().onClick.RemoveAllListeners();
+        Card1.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => UseAbility(CurrentHand[0]));
+
+        Card2.GetComponent<UnityEngine.UI.Button>().onClick.RemoveAllListeners();
+        Card2.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => UseAbility(CurrentHand[1]));
+    }
+
+    private void DisableAllButtons()
+    {
+        Card1.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        Card2.GetComponent<UnityEngine.UI.Button>().interactable = false;
+    }
+
+    private void EnableAllButtons()
+    {
+        Card1.GetComponent<UnityEngine.UI.Button>().interactable = true;
+        Card2.GetComponent<UnityEngine.UI.Button>().interactable = true;
+    }
+
+    public void UseAbility(AbilityCard card)
+    {
+        card.ExecuteAbility(this);
+        currentCard = card;
+    }
+
+    public void DealAbilities()
+    {
+        Deck = new List<AbilityCard>(originalDeck); // Reset the deck to its original state.
+        CurrentHand.Clear();
+
+        if (Deck.Count < 2)
+        {
+            Debug.LogError("Not enough abilities in the deck to deal!");
+            return;
+        }
+
+        // Randomly select two cards
+        for (int i = 0; i < 2; i++)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, Deck.Count);
+            CurrentHand.Add(Deck[randomIndex]);
+            Deck.RemoveAt(randomIndex);
+        }
     }
 
     public IEnumerator TakeTurn()
     {
+        ProcessStatusEffects();
+        UpdateButtonAbilities();
         isPlayerTurn = gameObject.CompareTag("Player");
         hudManager.UpdateTurnText(gameObject.name);
         UpdateHealthBar();
@@ -30,6 +201,8 @@ public class TurnBasedCharacter : MonoBehaviour
         {
             AttackRandomPlayer();
         }
+        Card1.SetActive(isPlayerTurn);
+        Card2.SetActive(isPlayerTurn);
 
         // Player's turn: Wait for input
         while (isPlayerTurn)
@@ -47,8 +220,13 @@ public class TurnBasedCharacter : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        damage = CalculateIncomingDamage(damage);
         currentHealth -= damage;
         FlashObject(new Color(1f, 0f, 0f, 0.5f));
+
+        DisplayText(damage.ToString());
+
+
         if (currentHealth <= 0)
         {
             currentHealth = 0;
@@ -60,16 +238,35 @@ public class TurnBasedCharacter : MonoBehaviour
         UpdateHealthBar();
     }
 
+    public void DisplayText(string text)
+    {
+        GameObject textPopup = Instantiate(damageNumberPrefab, transform.position, Quaternion.identity);
+        textPopup.GetComponent<TMP_Text>().text = text;
+        textPopup.transform.position = new Vector3(textPopup.transform.position.x, textPopup.transform.position.y + 1f, textPopup.transform.position.z - 1f);
+    }
+
+    public int CalculateIncomingDamage(float originalDamage)
+    {
+        float finalDamage = originalDamage;
+
+        foreach (var effect in ActiveStatusEffects)
+        {
+            if (effect.EffectType == EffectType.IncreaseDefense)
+            {
+                finalDamage /= effect.EffectValue; // Divide damage by defense multiplier
+            }
+            // Add other damage modifiers here
+        }
+
+        return Mathf.FloorToInt(finalDamage);
+    }
+
     public void OnTargetSelected(TurnBasedCharacter targetCharacter)
     {
-        if (isPlayerTurn)
+        if (isPlayerTurn && currentSelectedAbilityAction != null)
         {
-            int damage = 20; 
-            targetCharacter.TakeDamage(damage);
-            Debug.Log(gameObject.name + " does " + damage + " damage to " + targetCharacter.gameObject.name);
-
-            // End the player's turn after the attack
-            isPlayerTurn = false;
+            currentSelectedAbilityAction.Invoke(targetCharacter);
+            currentSelectedAbilityAction = null; // Clear the action after it's used
         }
     }
 
