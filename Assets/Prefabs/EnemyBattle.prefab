@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8369017813581877365}
   - component: {fileID: 8554170826354122313}
   - component: {fileID: 4424616036757532278}
-  - component: {fileID: 5754238213734648952}
+  - component: {fileID: 1779578383305385361}
   m_Layer: 0
   m_Name: EnemyBattle
   m_TagString: Enemy
@@ -108,7 +108,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5754238213734648952
+--- !u!114 &1779578383305385361
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,11 +117,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3517959726302896293}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e672a38209ba234b8aab0c127448456, type: 3}
+  m_Script: {fileID: 11500000, guid: 3203e7fbd98b33c429aac976c1b626cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  isPlayerTurn: 0
-  manager: {fileID: 0}
-  attackPressed: 0
+  dead: 0
   damageNumberPrefab: {fileID: 4992939234414459512, guid: 3f6074de0f1907043a8f81e74093e7c9, type: 3}
+  isMyTurn: 0
+  hudManager: {fileID: 0}
+  Position: 0

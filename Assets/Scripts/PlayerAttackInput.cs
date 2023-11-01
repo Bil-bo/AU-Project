@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class PlayerAttackInput : MonoBehaviour
 {
-    private TurnBasedCharacter playerCharacter;
+    private BattlePlayer playerCharacter;
 
     void Start()
     {
-        playerCharacter = GetComponent<TurnBasedCharacter>();
+        playerCharacter = GetComponent<BattlePlayer>();
     }
 
     void Update()
@@ -26,21 +26,21 @@ public class PlayerAttackInput : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                TurnBasedCharacter targetCharacter = hit.collider.GetComponent<TurnBasedCharacter>();
+                BattleEnemy targetCharacter = hit.collider.GetComponent<BattleEnemy>();
 
                 if (targetCharacter != null)
                 {
                     // Assuming playerCharacter.CurrentAbility is the ability they want to use
                     AbilityCard currentAbility = playerCharacter.currentCard;
 
-                    if (targetCharacter.gameObject.tag == "Player")
-                    {
-                        targetCharacter.DisplayText("Cannot attack ally");
-                        Debug.Log("Cannot attack ally");
-                    }
+                    //if (targetCharacter.gameObject.tag == "Player")
+                    //{
+                        //targetCharacter.DisplayText("Cannot attack ally");
+                        //Debug.Log("Cannot attack ally");
+                    //}
 
                     // Check if the targeted character's position is within the range of the current ability
-                    else if (targetCharacter.Position <= currentAbility.Range)
+                    if (targetCharacter.Position <= currentAbility.Range)
                     {
                         // Player has clicked on a character, initiate attack
                         playerCharacter.OnTargetSelected(targetCharacter);

@@ -1,3 +1,7 @@
+#if(VS)
+
+
+
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
@@ -191,8 +195,8 @@ public class TurnBasedCharacter : MonoBehaviour
 
     public IEnumerator TakeTurn()
     {
-        ProcessStatusEffects();
-        UpdateButtonAbilities();
+        ProcessStatusEffects(); //Both
+        UpdateButtonAbilities(); //Player
         isPlayerTurn = gameObject.CompareTag("Player");
         hudManager.UpdateTurnText(gameObject.name);
         UpdateHealthBar();
@@ -336,3 +340,5 @@ public class TurnBasedCharacter : MonoBehaviour
         }
     }
 }
+
+#endif
