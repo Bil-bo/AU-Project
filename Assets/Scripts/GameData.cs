@@ -47,4 +47,10 @@ public class GameData : MonoBehaviour
     {
         return doors.ContainsKey(door.ID);
     }
+
+    public void Restart()
+    {
+        isPuzzleComplete = false;
+        doors.Clear();
+    }
 }

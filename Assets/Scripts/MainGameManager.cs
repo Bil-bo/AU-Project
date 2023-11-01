@@ -69,6 +69,8 @@ public class MainGameManager : MonoBehaviour
 
     public void Reset(Vector3 initPos)
     {
+        GameData.Instance.Restart();
+
         PlayerPrefs.SetFloat("PlayerX", initPos.x);
         PlayerPrefs.SetFloat("PlayerY", initPos.y);
         PlayerPrefs.SetFloat("PlayerZ", initPos.z);
