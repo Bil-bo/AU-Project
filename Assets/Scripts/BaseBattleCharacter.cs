@@ -10,9 +10,9 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     private int maxHealth = 100;
     private int currentHealth;
 
-    public List<StatusEffect> ActiveStatusEffects  = new List<StatusEffect>();
+    public List<StatusEffect> ActiveStatusEffects = new List<StatusEffect>();
 
-    public bool dead = false; 
+    public bool dead { get; set;} =  false; 
     private Renderer characterRenderer;
     public GameObject damageNumberPrefab;
 

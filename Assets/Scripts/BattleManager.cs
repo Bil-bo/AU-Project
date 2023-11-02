@@ -89,8 +89,8 @@ public class BattleManager : MonoBehaviour
             
     
 
-            playerWin = (enemies.Length - 1 == 0);
-            playerLose = (players.Length - 1 == 0);
+            playerWin = (enemies.Length == 0);
+            playerLose = (players.Length == 0);
 
             currentIndex = (currentIndex + 1) % characters.Count;  
 
