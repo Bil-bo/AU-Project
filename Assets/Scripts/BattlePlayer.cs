@@ -54,6 +54,7 @@ public class BattlePlayer : BaseBattleCharacter
     {
 
         ProcessStatusEffects(); //Both
+        isMyTurn = true;    
         
         Debug.Log("Made it here acc" + isMyTurn);
         if (deckHandler == null) {
