@@ -13,6 +13,7 @@ public class BattlePlayer : BaseBattleCharacter
     public Card currentCard { get; set; }
     public GameObject deckViewer;
     private DeckHandler deckHandler;
+    public bool isMyTurn = false;
 
 
 
