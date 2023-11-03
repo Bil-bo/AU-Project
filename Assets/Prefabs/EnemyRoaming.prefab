@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6139805389014933892}
   - component: {fileID: 3865268901610602528}
   - component: {fileID: 3735884716019572517}
-  - component: {fileID: -618234504235974710}
+  - component: {fileID: 8067447519904012738}
   m_Layer: 0
   m_Name: EnemyRoaming
   m_TagString: Enemy
@@ -106,7 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 13, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-618234504235974710
+--- !u!114 &8067447519904012738
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,4 +118,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9495fb67ab3dc23459730dd7153f117e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  door: {fileID: 0}
+  enemyInfos: []

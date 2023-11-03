@@ -7,8 +7,8 @@ using TMPro;
 public abstract class BaseBattleCharacter : MonoBehaviour
 {
 
-    private int maxHealth = 100;
-    private int currentHealth;
+    public int maxHealth = 100;
+    public int currentHealth;
 
     public List<StatusEffect> ActiveStatusEffects = new List<StatusEffect>();
 
@@ -16,7 +16,7 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     private Renderer characterRenderer;
     public GameObject damageNumberPrefab;
 
-    public bool isMyTurn = false;
+    //public bool isMyTurn = false;
 
     public HUDManager hudManager;
     private Material originalMaterial;
@@ -24,7 +24,7 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     // Start is called before the first frame update
     public virtual void Start()
     {
-        currentHealth = maxHealth;
+        currentHealth = maxHealth; //Initialise health and everything else
         hudManager = FindFirstObjectByType<HUDManager>();
         characterRenderer = GetComponent<Renderer>();
         originalMaterial = new Material(characterRenderer.material);
@@ -38,7 +38,7 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     }
 
     public abstract void Attack();
-
+//Abstract methods used for each type of character
     public abstract void Defend();
 
     public abstract IEnumerator DoTurn();
@@ -47,7 +47,7 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     {
         for (int i = ActiveStatusEffects.Count - 1; i >= 0; i--)
         {
-            StatusEffect effect = ActiveStatusEffects[i];
+            StatusEffect effect = ActiveStatusEffects[i]; 
             effect.Duration--;
             if (effect.Duration <= 0)
             {
@@ -59,12 +59,12 @@ public abstract class BaseBattleCharacter : MonoBehaviour
 
     public void ApplyStatusEffect(StatusEffect effect)
     {
-        ActiveStatusEffects.Add(effect);
+        ActiveStatusEffects.Add(effect); //The status effects for the characters are applied here
     }
 
     public void UpdateHealthBar()
     {
-        hudManager.UpdateHealthBar(gameObject.name, currentHealth, maxHealth);
+        hudManager.UpdateHealthBar(gameObject.name, currentHealth, maxHealth); //Visual update for HP
     }
 
     void FlashObject(Color flashColor)
@@ -93,9 +93,9 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     {
         float finalDamage = originalDamage;
 
-        foreach (var effect in ActiveStatusEffects)
+        foreach (var effect in ActiveStatusEffects) //We check all status effects
         {
-            if (effect.EffectType == EffectType.IncreaseDefense)
+            if (effect.EffectType == EffectType.IncreaseDefense) //We check if a defense option has been used
             {
                 finalDamage /= effect.EffectValue; // Divide damage by defense multiplier
             }
@@ -105,21 +105,21 @@ public abstract class BaseBattleCharacter : MonoBehaviour
         return Mathf.FloorToInt(finalDamage);
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage) //Method for the chars to take damage
     {
         damage = CalculateIncomingDamage(damage);
-        currentHealth -= damage;
-        FlashObject(new Color(1f, 0f, 0f, 0.5f));
+        currentHealth -= damage; //We take away a bit of health based on how much damage the char has inflicted
+        FlashObject(new Color(1f, 0f, 0f, 0.5f)); //They turn red temporarily when getting attacked
 
         DisplayText(damage.ToString());
 
 
         if (currentHealth <= 0)
         {
-            currentHealth = 0;
+            currentHealth = 0; //Killing off characters
             Debug.Log(gameObject.name + " has been defeated.");
             
-            dead = true;
+            dead = true; 
         }
         UpdateHealthBar();
     }

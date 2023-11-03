@@ -7,6 +7,8 @@ public class GameData : MonoBehaviour
     public static GameData Instance;
 
     private Dictionary<string, bool> doors = new Dictionary<string, bool>();
+
+    public BattleEnemyInfo [] battleEnemies;
     public bool isPuzzleComplete { get; set; }
 
     private void Awake()

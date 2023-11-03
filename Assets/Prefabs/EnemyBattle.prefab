@@ -120,8 +120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3203e7fbd98b33c429aac976c1b626cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dead: 0
   damageNumberPrefab: {fileID: 4992939234414459512, guid: 3f6074de0f1907043a8f81e74093e7c9, type: 3}
-  isMyTurn: 0
   hudManager: {fileID: 0}
   Position: 0

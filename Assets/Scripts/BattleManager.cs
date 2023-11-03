@@ -9,11 +9,15 @@ public class BattleManager : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
 
-    public List<GameObject> characters = new List<GameObject>();
+    //public List<GameObject> characters = new List<GameObject>();
+
+    public List<GameObject> players = new List<GameObject>();
+    public List<GameObject> enemies = new List<GameObject>();
     public int numberOfEnemies = 3; // Number of enemies to generate
     private int enemyCount = 0;
     public int numberOfPlayers = 2; // Number of players to generate
     private int playerCount = 0;
+    public GameData gameData;
 
     
     public GameManager manager;
@@ -21,29 +25,41 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         manager = FindAnyObjectByType<GameManager>();
+        gameData = FindAnyObjectByType<GameData>();
         GeneratePlayers();
-
         GenerateEnemies();
+    
 
         StartCoroutine(StartBattlePhase());
     }
 
+
     void GenerateEnemies()
     {
-        for (int i = 0; i < numberOfEnemies; i++)
+        var enemyInput = GameData.Instance.battleEnemies;
+
+
+        for (int i = 0; i < enemyInput.Length; i++)
         {
             // Instantiate the enemy prefab
             GameObject enemy = Instantiate(enemyPrefab, new Vector3((2f*enemyCount+1), 0f, 3f), Quaternion.identity);
+            //Need to add the type of enemy from enemyInput list to the enemy GameObject
+            
 
             // Assign a unique name to the enemy
-            enemy.name = "Enemy " + (enemyCount + 1);
-            enemy.GetComponent<BattleEnemy>().Position = enemyCount + 1;
+            enemy.name = "Enemy " + enemyInput[i].enemyName + (enemyCount + 1);
+            var currentEnemy = enemy.GetComponent<BattleEnemy>();
+            currentEnemy.Position = enemyCount +1;
+            currentEnemy.atk = enemyInput[i].atk;
+            currentEnemy.maxHealth = enemyInput[i].maxHP;
+            currentEnemy.currentHealth = enemyInput[i].maxHP;
             enemyCount++;
 
             // SET OTHER PROPERTIES OR COMPONENTS FOR ENEMY HERE
-            characters.Add(enemy);
+            enemies.Add(enemy);
         }
     }
+
 
     void GeneratePlayers()
     {
@@ -58,7 +74,7 @@ public class BattleManager : MonoBehaviour
             playerCount++;
 
             // SET OTHER PROPERTIES OR COMPONENTS FOR PLAYER HERE
-            characters.Add(player);
+            players.Add(player);
         }
     }
 
@@ -66,33 +82,39 @@ public class BattleManager : MonoBehaviour
     {
         bool playerWin = false;
         bool playerLose = false;
-        int currentIndex = 0;
-        while(!playerWin && !playerLose){
-            Debug.Log("Waiting for input");
-            var currentCharacter = characters[currentIndex].GetComponent<BaseBattleCharacter>();
+        while(!playerWin & !playerLose){
 
-            currentCharacter.isMyTurn = true;
-            
-
-
-            yield return StartCoroutine(currentCharacter.DoTurn());
-            if(currentCharacter.isMyTurn == true)
+            for(int i=0; i<players.Count;i++)
             {
-                continue;
-            }
-            yield return new WaitForSeconds(1f);
-            CheckDeaths();
+                var currentPlayer = players[i].GetComponent<BattlePlayer>();
+                Debug.Log(currentPlayer);
+                yield return StartCoroutine(currentPlayer.DoTurn());
+                yield return new WaitForSeconds(1f);
+                CheckEnemyDeaths();
+                CheckPlayerDeaths();
             
 
-            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            
     
+            
+            }
+            
+            
+            for(int i=0; i<enemies.Count;i++)
+            {
+                var currentEnemy = enemies[i].GetComponent<BattleEnemy>();
+                yield return StartCoroutine(currentEnemy.DoTurn());
+                yield return new WaitForSeconds(1f);
+                CheckPlayerDeaths();
+                CheckEnemyDeaths();
+                
 
-            playerWin = (enemies.Length == 0);
-            playerLose = (players.Length == 0);
-
-            currentIndex = (currentIndex + 1) % characters.Count;  
+    
+            
+            }
+             
+            playerWin = (enemies.Count == 0);
+            playerLose = (players.Count == 0);
+              
 
 
         }
@@ -100,6 +122,7 @@ public class BattleManager : MonoBehaviour
         if (playerWin)
         {
             manager.ShowOverlay("You Won!");
+            yield return new WaitForSeconds(2f);
             manager.ExitBattle();
         }
 
@@ -113,16 +136,32 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    void CheckDeaths(){
-        for(int i= 0; i < characters.Count; i++){
+    void CheckPlayerDeaths(){
+        for(int i= 0; i < players.Count; i++){
 
-                if(characters[i].GetComponent<BaseBattleCharacter>().dead){
-                    var character = characters[i];
-                    characters.RemoveAt(i);
-                    Destroy(character);
+                if(players[i].GetComponent<BattlePlayer>().dead){
+                    var player = players[i];
+                    players.RemoveAt(i);
+                    Destroy(player);
                 }
             }
 
 
+    }
+
+    void CheckEnemyDeaths()
+    {
+        for(int i=0; i<enemies.Count;i++)
+            {
+                if(enemies[i].GetComponent<BattleEnemy>().dead){
+                    var enemy= enemies[i];
+                    enemies.RemoveAt(i);
+                    Destroy(enemy);
+                }
+                
+
+    
+            
+            }
     }
 }

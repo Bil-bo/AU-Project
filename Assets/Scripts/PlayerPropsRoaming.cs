@@ -17,6 +17,8 @@ public class PlayerPropsRoaming : MonoBehaviour
     private CharacterController charcon;
     private bool charIsGrounded;
     public MainGameManager gameManager;
+
+    public GameData gameData;
     public GameObject pause;
 
     private int collectedPickups = 0;
@@ -101,6 +103,8 @@ public class PlayerPropsRoaming : MonoBehaviour
                 break;
             case "Enemy":
                 other.gameObject.SetActive(false);
+                var enemyInfoList = other.GetComponent<EnemyPropsRoaming>().battleEnemyInfos;
+                GameData.Instance.battleEnemies = enemyInfoList;
                 gameManager.EnterBattle();
                 break;
         }
@@ -114,6 +118,8 @@ public class PlayerPropsRoaming : MonoBehaviour
             pickupText.text = "Pickups collected: " + collectedPickups;
         }  
     }
+
+    
 
     private void DisplayWinMessage()
     {

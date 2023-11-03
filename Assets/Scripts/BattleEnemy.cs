@@ -5,11 +5,12 @@ using UnityEngine;
 public class BattleEnemy : BaseBattleCharacter
 {
 
-    private int atk; 
+    public int atk; 
+    public int def;
     // Start is called before the first frame update
     public override void Start()
     {
-        base.Start();        
+        base.Start();        //Start from the base class
     }
 
     // Update is called once per frame
@@ -20,9 +21,9 @@ public class BattleEnemy : BaseBattleCharacter
 
     public override void Attack(){
 
-        BattlePlayer[] players = FindObjectsByType<BattlePlayer>(FindObjectsSortMode.None);
+        BattlePlayer[] players = FindObjectsByType<BattlePlayer>(FindObjectsSortMode.None); //Attack method for enemy
 
-        if (players.Length > 0)
+        if (players.Length > 0) //If we find a player 
         {
             // Randomly select a player character
             BattlePlayer randomPlayer = players[Random.Range(0, players.Length)];
@@ -36,6 +37,9 @@ public class BattleEnemy : BaseBattleCharacter
     }
 
     public override void Defend(){
+       //Empty for now as we have not implemented a defense mechanism for enemies yet 
+
+
 
 
 
@@ -44,10 +48,12 @@ public class BattleEnemy : BaseBattleCharacter
     public override IEnumerator DoTurn(){
         ProcessStatusEffects(); //Both
 
+        hudManager.UpdateTurnText(gameObject.name);
+
         UpdateHealthBar();
 
-        Attack();
-        isMyTurn = false;
+        Attack(); //Enemies can only attack on their turn
+        
 
         
 
