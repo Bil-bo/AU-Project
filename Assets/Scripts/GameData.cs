@@ -11,8 +11,14 @@ public class GameData : MonoBehaviour
     public BattleEnemyInfo [] battleEnemies;
     public bool isPuzzleComplete { get; set; }
 
+    public List<GameObject> deckToPass { get; set; }
+
+
+
+
     private void Awake()
     {
+
         if (Instance == null)
         {
             Instance = this;

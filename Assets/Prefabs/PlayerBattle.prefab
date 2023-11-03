@@ -133,14 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b21f82dbfd5ec834e985c39d4bcb8656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dead: 0
   damageNumberPrefab: {fileID: 4992939234414459512, guid: 3f6074de0f1907043a8f81e74093e7c9, type: 3}
   isMyTurn: 0
   hudManager: {fileID: 0}
   Position: 0
-  Deck: []
-  CurrentHand: []
-  currentCard:
-    Name: 
-    Description: 
-    Range: 0
+  deckViewer: {fileID: 7692090804435570409, guid: 726a701e45c3ccd428baed4122495851, type: 3}

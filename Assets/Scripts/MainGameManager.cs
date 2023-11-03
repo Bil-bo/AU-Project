@@ -47,8 +47,9 @@ public class MainGameManager : MonoBehaviour
         }
     }
 
-    public void EnterBattle()
+    public void EnterBattle(List<GameObject> cards)
     {
+        GameData.Instance.deckToPass = cards;
         
         PlayerPrefs.SetFloat("PlayerX", player.transform.position.x);
         PlayerPrefs.SetFloat("PlayerY", player.transform.position.y);

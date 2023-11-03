@@ -24,6 +24,7 @@ public class PlayerPropsRoaming : MonoBehaviour
     private int collectedPickups = 0;
     public int maxPickups = 3;
     private bool hasWon = false;
+    public List<GameObject> deck;
 
     // Start is called before the first frame update
     void Start()
@@ -105,7 +106,7 @@ public class PlayerPropsRoaming : MonoBehaviour
                 other.gameObject.SetActive(false);
                 var enemyInfoList = other.GetComponent<EnemyPropsRoaming>().battleEnemyInfos;
                 GameData.Instance.battleEnemies = enemyInfoList;
-                gameManager.EnterBattle();
+                gameManager.EnterBattle(deck);
                 break;
         }
     }
