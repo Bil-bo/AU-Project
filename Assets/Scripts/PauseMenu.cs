@@ -9,6 +9,9 @@ public class PauseMenu : MonoBehaviour
     public void ResumeGame()
     {
         Time.timeScale = 1;
+        //Re-lock mouse cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false; 
         this.gameObject.SetActive(false);   
     }
 

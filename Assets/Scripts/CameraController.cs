@@ -13,7 +13,6 @@ public class CameraController : MonoBehaviour
     public float MaxViewDistance = 20f;
     public float MinViewDistance = 10f;
     public int ZoomRate = 60;
-    private int lerpRate = 5;
     private float distance = 3f;
     private float desireDistance;
     private float correctedDistance;
@@ -30,6 +29,8 @@ public class CameraController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked; // Lock the mouse cursor to center of screen
+        Cursor.visible = false; // Hide the mouse cursor
         Vector3 Angles = transform.eulerAngles;
         x = 90;
         y = Angles.y;
@@ -42,16 +43,10 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (Input.GetMouseButton(1))
-        {/*0 mouse btn izq, 1 mouse btn der*/
-            x += Input.GetAxis("Mouse X") * mouseXSpeedMod;
-            y += Input.GetAxis("Mouse Y") * mouseYSpeedMod;
-        }
-        else if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+        if (Time.timeScale != 0) //Move camera while game not paused.
         {
-            float targetRotantionAngle = CameraTarget.eulerAngles.y;
-            float cameraRotationAngle = transform.eulerAngles.y;
-            x = Mathf.LerpAngle(cameraRotationAngle, targetRotantionAngle, lerpRate * Time.deltaTime);
+            x += Input.GetAxis("Mouse X") * mouseXSpeedMod;
+            y -= Input.GetAxis("Mouse Y") * mouseYSpeedMod;
         }
 
         y = ClampAngle(y, -15, 25);
@@ -88,12 +83,7 @@ public class CameraController : MonoBehaviour
         //CameraTarget.rotation = rotation;
 
         float cameraX = transform.rotation.x;
-        //checks if right mouse button is pushed
-        if (Input.GetMouseButton(1))
-        {
-            //sets CHARACTERS x rotation to match cameras x rotation
-            CameraTarget.eulerAngles = new Vector3(cameraX, transform.eulerAngles.y, transform.eulerAngles.z);
-        }
+        CameraTarget.eulerAngles = new Vector3(cameraX, transform.eulerAngles.y, transform.eulerAngles.z); //Rotates camera target to match the camera rotation
         //checks if middle mouse button is pushed down
         if (Input.GetMouseButtonDown(2))
         {
