@@ -40,6 +40,9 @@ public class PlayerPropsRoaming : MonoBehaviour
         pause.SetActive(true);
         Time.timeScale = 0;
 
+        //Unlock mouse cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     void OnMove(InputValue value)

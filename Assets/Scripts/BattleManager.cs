@@ -28,7 +28,10 @@ public class BattleManager : MonoBehaviour
         gameData = FindAnyObjectByType<GameData>();
         GeneratePlayers();
         GenerateEnemies();
-    
+
+        //Unlock mouse cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 
         StartCoroutine(StartBattlePhase());
     }
