@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Runtime.CompilerServices;
 
 public abstract class BaseBattleCharacter : MonoBehaviour
 {
 
     public int maxHealth = 100;
     public int currentHealth;
+    public int attack;
+    public int defense;
 
-    public List<StatusEffect> ActiveStatusEffects = new List<StatusEffect>();
+    public Dictionary<string, StatusEffect> ActiveStatusEffects = new Dictionary<string, StatusEffect>();
 
     public bool dead { get; set;} =  false; 
     private Renderer characterRenderer;
@@ -37,29 +40,37 @@ public abstract class BaseBattleCharacter : MonoBehaviour
         
     }
 
-    public abstract void Attack();
-//Abstract methods used for each type of character
-    public abstract void Defend();
-
     public abstract IEnumerator DoTurn();
 
     public void ProcessStatusEffects()
     {
-        for (int i = ActiveStatusEffects.Count - 1; i >= 0; i--)
+        List<string> keysToRemove = new List<string>();
+        foreach (StatusEffect effect in ActiveStatusEffects.Values)
         {
-            StatusEffect effect = ActiveStatusEffects[i]; 
-            effect.Duration--;
-            if (effect.Duration <= 0)
+            if (effect.countDown(this) <= 0)
             {
-                // If the effect duration is over, remove it from the list
-                ActiveStatusEffects.RemoveAt(i);
+                keysToRemove.Add(effect.name);
             }
         }
+
+        foreach (string key in keysToRemove) 
+        {
+            ActiveStatusEffects.Remove(key);
+        
+        }
+
     }
 
     public void ApplyStatusEffect(StatusEffect effect)
     {
-        ActiveStatusEffects.Add(effect); //The status effects for the characters are applied here
+        if (ActiveStatusEffects.ContainsKey(effect.name))
+        {
+            ActiveStatusEffects[effect.name].Combine(effect);
+        }
+        else
+        {
+            ActiveStatusEffects.Add(effect.name, effect); //The status effects for the characters are applied here
+        }
     }
 
     public void UpdateHealthBar()
@@ -93,16 +104,7 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     {
         float finalDamage = originalDamage;
 
-        foreach (var effect in ActiveStatusEffects) //We check all status effects
-        {
-            if (effect.EffectType == EffectType.IncreaseDefense) //We check if a defense option has been used
-            {
-                finalDamage /= effect.EffectValue; // Divide damage by defense multiplier
-            }
-            // Add other damage modifiers here
-        }
-
-        return Mathf.FloorToInt(finalDamage);
+        return Mathf.FloorToInt(finalDamage / (ActiveStatusEffects.ContainsKey("Block") ? 4: 1));
     }
 
     public void TakeDamage(int damage) //Method for the chars to take damage

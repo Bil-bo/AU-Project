@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CardName: Sword
-  Description: Basic Melee Attack
   Range: 1
   Targets: 1
   Effects:
@@ -63,4 +62,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682c96afb02bf774da6218bfa9523708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Description: Deal {0} Damage
   Dmg: 40

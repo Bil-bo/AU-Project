@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.XR;
 
 public class DeckHandler : MonoBehaviour
@@ -10,44 +11,38 @@ public class DeckHandler : MonoBehaviour
     public GameObject ifEmptyDeck;
     public GameObject canvas;
     public GameObject cardPrefab;
+    public BattlePlayer Player;
+
     public List<GameObject> originalDeck = new List<GameObject>();
     public List<GameObject> hand = new List<GameObject>();
     public List<GameObject> CreatedCards = new List<GameObject>();
+    public Dictionary<GameObject, GameObject[]> CombinedCards = new Dictionary<GameObject, GameObject[]>();
 
     private void Start()
     {
         canvas = gameObject;
     }
 
-    public void ShowDeck(BattlePlayer player)
+    public void initialise(BattlePlayer player)
     {
-        Debug.Log("Now ONto here");
-        if (originalDeck.Count <= 0) { InitializeDeck(player);  }
+        this.Player = player;
+    }
+
+    public void ShowDeck()
+    {
+
+        if (originalDeck.Count <= 0) { InitializeDeck();  }
         shuffleDeck(CreatedCards);
-        IEnumerable<GameObject> cut = CreatedCards.Take(3);
+        IEnumerable<GameObject> cut = CreatedCards.Take(Player.maxHand);
         hand = cut.ToList();
-        int position = (hand.Count - 1) * 50;
-        Debug.Log(position);
+        UpdateDeck();
 
-        foreach (GameObject card in hand) 
-        {
-            Debug.Log(position);
-            RectTransform rectTransform = card.GetComponent<RectTransform>();
-            rectTransform.anchorMax.Set(0.5f, 0);
-            rectTransform.anchorMax.Set(0.5f, 0);
-            rectTransform.anchoredPosition = new Vector2(position, 0);
-            card.transform.localScale = Vector3.one;
-            
-            position -= 100;
-            card.SetActive(true);
-
-        }
 
     }
 
-    public void InitializeDeck(BattlePlayer player)
+    public void InitializeDeck()
     {
-        Debug.Log("Made it here");
+ 
         try
         {
             originalDeck = GameData.Instance.deckToPass;
@@ -61,9 +56,7 @@ public class DeckHandler : MonoBehaviour
         foreach (GameObject card in originalDeck)
         {
             GameObject addCard = Instantiate(cardPrefab, cardPrefab.transform.position, Quaternion.identity, this.transform);
-
-            addCard.GetComponent<Card>().Player = player;
-            addCard.GetComponent<Card>().CardDataHolder = card.GetComponent<CardData>();
+            addData(addCard, card);
             CreatedCards.Add(addCard);
             addCard.SetActive(false);
         }
@@ -103,4 +96,60 @@ public class DeckHandler : MonoBehaviour
         }
     }
 
+    public void AddCard(GameObject cardToAdd, GameObject[] combined = null)
+    {
+        Debug.Log("adding new card");
+        int position = hand.Count - 1;
+        Debug.Log(combined.Length);
+        if (combined != null)
+        {
+            Debug.Log("made it to this stage");
+            CombinedCards.Add(cardToAdd, combined);
+            position = hand.IndexOf(combined[0]);
+
+            for (int i = 0; i < combined.Length; i++)
+            {
+                hand.RemoveAt(hand.IndexOf(combined[i]));
+                combined[i].SetActive(false);
+            }
+        }
+
+        GameObject newCard = Instantiate(cardPrefab, cardPrefab.transform.position, Quaternion.identity, this.transform);
+        addData(newCard, cardToAdd);
+        CreatedCards.Add(newCard);
+        hand.Add(newCard);
+        cardToAdd.SetActive(true);
+        UpdateDeck();
+
+
+
+    }
+
+    private void addData(GameObject card, GameObject cardData)
+    {
+        card.GetComponent<Card>().Player = Player;
+        card.GetComponent<Card>().CardDataHolder = cardData.GetComponent<CardData>();
+        card.GetComponent<Card>().CardDataHolder.initialise();
+
+    }
+
+    private void UpdateDeck()
+    {
+        int position = (hand.Count - 1) * 50;
+
+
+        foreach (GameObject card in hand)
+        {
+
+            RectTransform rectTransform = card.GetComponent<RectTransform>();
+            rectTransform.anchorMax.Set(0.5f, 0);
+            rectTransform.anchorMax.Set(0.5f, 0);
+            rectTransform.anchoredPosition = new Vector2(position, 0);
+            card.transform.localScale = Vector3.one;
+
+            position -= 100;
+            card.SetActive(true);
+
+        }
+    }
 }

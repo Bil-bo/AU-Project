@@ -17,7 +17,6 @@ public class BattleManager : MonoBehaviour
     private int enemyCount = 0;
     public int numberOfPlayers = 2; // Number of players to generate
     private int playerCount = 0;
-    public GameData gameData;
 
     
     public GameManager manager;
@@ -25,7 +24,6 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         manager = FindAnyObjectByType<GameManager>();
-        gameData = FindAnyObjectByType<GameData>();
         GeneratePlayers();
         GenerateEnemies();
     
@@ -50,7 +48,7 @@ public class BattleManager : MonoBehaviour
             enemy.name = "Enemy " + enemyInput[i].enemyName + (enemyCount + 1);
             var currentEnemy = enemy.GetComponent<BattleEnemy>();
             currentEnemy.Position = enemyCount +1;
-            currentEnemy.atk = enemyInput[i].atk;
+            currentEnemy.attack = enemyInput[i].atk;
             currentEnemy.maxHealth = enemyInput[i].maxHP;
             currentEnemy.currentHealth = enemyInput[i].maxHP;
             enemyCount++;
@@ -87,7 +85,6 @@ public class BattleManager : MonoBehaviour
             for(int i=0; i<players.Count;i++)
             {
                 var currentPlayer = players[i].GetComponent<BattlePlayer>();
-                Debug.Log(currentPlayer);
                 yield return StartCoroutine(currentPlayer.DoTurn());
                 yield return new WaitForSeconds(1f);
                 CheckEnemyDeaths();

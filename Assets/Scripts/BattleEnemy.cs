@@ -5,8 +5,6 @@ using UnityEngine;
 public class BattleEnemy : BaseBattleCharacter
 {
 
-    public int atk; 
-    public int def;
     // Start is called before the first frame update
     public override void Start()
     {
@@ -19,7 +17,7 @@ public class BattleEnemy : BaseBattleCharacter
         
     }
 
-    public override void Attack(){
+    public void Attack(){
 
         BattlePlayer[] players = FindObjectsByType<BattlePlayer>(FindObjectsSortMode.None); //Attack method for enemy
 
@@ -36,7 +34,7 @@ public class BattleEnemy : BaseBattleCharacter
 
     }
 
-    public override void Defend(){
+    public void Defend(){
        //Empty for now as we have not implemented a defense mechanism for enemies yet 
 
 
