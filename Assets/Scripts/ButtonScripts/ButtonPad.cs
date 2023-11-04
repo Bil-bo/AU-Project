@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Button : MonoBehaviour
+public class ButtonPad : MonoBehaviour
 {
 
     public State state { get; set; }
-    public Button next { get; set; }
-    public Button prev { get; set; }
+    public ButtonPad next { get; set; }
+    public ButtonPad prev { get; set; }
     private GameObject toTrigger;
     public Material ActiveColour;
     public Material inActiveColour;
@@ -67,8 +67,8 @@ public class Button : MonoBehaviour
 
     public void Complete()
     {
-        Button head = this;
-        Button nextDestroy = null;
+        ButtonPad head = this;
+        ButtonPad nextDestroy = null;
         while (head.prev != null)
         {
             head = head.prev;  

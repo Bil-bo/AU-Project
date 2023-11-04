@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngine.XR;
+using UnityEngine.UI;
 
 public class DeckHandler : MonoBehaviour
 {
@@ -26,6 +25,8 @@ public class DeckHandler : MonoBehaviour
     public void initialise(BattlePlayer player)
     {
         this.Player = player;
+        Button button = GetComponentInChildren<Button>();
+        button.onClick.AddListener(Player.FinishTurn);
     }
 
     public void ShowDeck()
@@ -35,6 +36,7 @@ public class DeckHandler : MonoBehaviour
         shuffleDeck(CreatedCards);
         IEnumerable<GameObject> cut = CreatedCards.Take(Player.maxHand);
         hand = cut.ToList();
+        gameObject.transform.GetChild(0).gameObject.SetActive(true);
         UpdateDeck();
 
 
@@ -94,6 +96,7 @@ public class DeckHandler : MonoBehaviour
         {
             card.SetActive(false);
         }
+        gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
     public void AddCard(GameObject cardToAdd, GameObject[] combined = null)

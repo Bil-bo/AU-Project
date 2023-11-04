@@ -84,7 +84,7 @@ public class PlayerPropsRoaming : MonoBehaviour
         Collider other = hit.collider;
         if (other.CompareTag("Button"))
         {
-            other.GetComponent<Button>().collided();
+            other.GetComponent<ButtonPad>().collided();
 
         }
     }
