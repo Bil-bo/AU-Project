@@ -120,6 +120,14 @@ public class PlayerPropsRoaming : MonoBehaviour
         }  
     }
 
+    private IEnumerator DelayAndLoadMainMenu()
+{
+    yield return new WaitForSeconds(3f); // Wait for 3 seconds
+
+    // Load the main menu scene
+    SceneManager.LoadScene("Menu");
+}
+
     
 
     private void DisplayWinMessage()
@@ -134,7 +142,9 @@ public class PlayerPropsRoaming : MonoBehaviour
                 winText.text = "You won!";
                 gameManager.Reset(new Vector3(4,4,4));
                 collectedPickups = 0;
-                SceneManager.LoadScene("Menu");
+                
+                
+                StartCoroutine(DelayAndLoadMainMenu());
 
 
                 
