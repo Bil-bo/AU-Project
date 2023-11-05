@@ -43,21 +43,21 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < enemyInput.Length; i++)
         {
             // Instantiate the enemy prefab
-            GameObject enemy = Instantiate(enemyPrefab, new Vector3((2f*enemyCount+1), 0f, 3f), Quaternion.identity);
+            GameObject enemyBody = Instantiate(enemyInput[i], new Vector3((2f*enemyCount+1), 0f, 3f), Quaternion.identity);
             //Need to add the type of enemy from enemyInput list to the enemy GameObject
-            
+            BattleEnemy enemy = enemyBody.GetComponent<BattleEnemy>();
 
             // Assign a unique name to the enemy
-            enemy.name = "Enemy " + enemyInput[i].enemyName + (enemyCount + 1);
+            enemy.name = "Enemy " + enemy.enemyName + (enemyCount + 1);
             var currentEnemy = enemy.GetComponent<BattleEnemy>();
             currentEnemy.Position = enemyCount +1;
-            currentEnemy.attack = enemyInput[i].atk;
-            currentEnemy.maxHealth = enemyInput[i].maxHP;
-            currentEnemy.currentHealth = enemyInput[i].maxHP;
+            currentEnemy.attack = enemy.attack;
+            currentEnemy.maxHealth = enemy.maxHealth;
+            currentEnemy.currentHealth = enemy.maxHealth;
             enemyCount++;
 
             // SET OTHER PROPERTIES OR COMPONENTS FOR ENEMY HERE
-            enemies.Add(enemy);
+            enemies.Add(enemyBody);
         }
     }
 

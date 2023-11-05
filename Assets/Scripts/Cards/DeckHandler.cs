@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem.Android;
 using UnityEngine.UI;
 
 public class DeckHandler : MonoBehaviour
@@ -34,8 +35,14 @@ public class DeckHandler : MonoBehaviour
 
         if (originalDeck.Count <= 0) { InitializeDeck();  }
         shuffleDeck(CreatedCards);
-        IEnumerable<GameObject> cut = CreatedCards.Take(Player.maxHand);
-        hand = cut.ToList();
+
+        for (int i = 0; i < Player.maxHand; i++) 
+        {
+            GameObject proxy = CreatedCards[0];
+            hand.Add(proxy);
+            CreatedCards.Remove(proxy);
+        }
+
         gameObject.transform.GetChild(0).gameObject.SetActive(true);
         UpdateDeck();
 
@@ -92,34 +99,37 @@ public class DeckHandler : MonoBehaviour
 
     public void HideHand()
     {
-        foreach (GameObject card in hand)
+        int counter = hand.Count;
+        for (int i = 0; i < counter; i++)
         {
-            card.SetActive(false);
+            GameObject proxy = hand[0];
+            CreatedCards.Add(proxy);
+            hand.Remove(proxy);
+            proxy.SetActive(false);
         }
-        gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
     public void AddCard(GameObject cardToAdd, GameObject[] combined = null)
     {
         Debug.Log("adding new card");
         int position = hand.Count - 1;
-        Debug.Log(combined.Length);
+
         if (combined != null)
         {
             Debug.Log("made it to this stage");
             CombinedCards.Add(cardToAdd, combined);
-            position = hand.IndexOf(combined[0]);
+            Debug.Log(combined.Length);
 
             for (int i = 0; i < combined.Length; i++)
             {
-                hand.RemoveAt(hand.IndexOf(combined[i]));
+                Debug.Log("Removing From Hand");
+                hand.Remove(combined[i]);
                 combined[i].SetActive(false);
             }
         }
 
         GameObject newCard = Instantiate(cardPrefab, cardPrefab.transform.position, Quaternion.identity, this.transform);
         addData(newCard, cardToAdd);
-        CreatedCards.Add(newCard);
         hand.Add(newCard);
         cardToAdd.SetActive(true);
         UpdateDeck();

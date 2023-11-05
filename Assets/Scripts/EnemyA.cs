@@ -21,8 +21,6 @@ public class EnemyA : BattleEnemy
         hudManager.UpdateTurnText(gameObject.name);
 
         UpdateHealthBar();
-
-        Attack();
         
         switch(counterField){
             case (0):
@@ -43,7 +41,7 @@ public class EnemyA : BattleEnemy
         
 
         }
-        counterField = (counterField >= 3)?0:counterField+1;
+        counterField = (counterField >= 3) ? 0:counterField+1;
         
         
 

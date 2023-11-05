@@ -2,22 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattleEnemy : BaseBattleCharacter
+public abstract class BattleEnemy : BaseBattleCharacter
 {
+    [SerializeField]
+    public string enemyName { get; set; }
 
-    // Start is called before the first frame update
-    public override void Start()
-    {
-        base.Start();        //Start from the base class
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void Attack(){
+    public virtual void Attack(){
 
         BattlePlayer[] players = FindObjectsByType<BattlePlayer>(FindObjectsSortMode.None); //Attack method for enemy
 
@@ -34,13 +25,9 @@ public class BattleEnemy : BaseBattleCharacter
 
     }
 
-    public void Defend(){
+    public virtual void Defend(){
+        ApplyStatusEffect(StatusFactory.Instance.createStatus<Block>(1));
        //Empty for now as we have not implemented a defense mechanism for enemies yet 
-
-
-
-
-
     }
 
     public override IEnumerator DoTurn(){

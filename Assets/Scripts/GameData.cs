@@ -8,7 +8,7 @@ public class GameData : MonoBehaviour
 
     private Dictionary<string, bool> doors = new Dictionary<string, bool>();
 
-    public BattleEnemyInfo [] battleEnemies;
+    public GameObject [] battleEnemies;
     public bool isPuzzleComplete { get; set; }
 
     public List<GameObject> deckToPass { get; set; }
