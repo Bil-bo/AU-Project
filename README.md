@@ -23,3 +23,8 @@ After defeating the first enemy, you will notice a puzzle to unlock the next are
 
 Upon defeating all enemies, you will see a text displayed telling you that you've won, after this is briefly displayed, you will then be sent into the main menu screen.
 Here you will have an option of whether you want to start a new game or just quit altogether, it is your choice.
+
+LINKS TO EXTERNAL CODE (also found in comments in code):
+https://gist.github.com/jasonmarziani/7b4769673d0b593457609b392536e9f9 - Fisher-Yates shuffle
+https://forum.unity.com/threads/third-person-camera-rotate.197592/ - Camera Controller
+https://discussions.unity.com/t/what-is-the-most-effective-way-to-structure-card-effects-in-a-single-player-game/216011/2 - Inspiration for the Card Creation
