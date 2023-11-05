@@ -16,7 +16,8 @@ public class DeckHandler : MonoBehaviour
     public List<GameObject> originalDeck = new List<GameObject>();
     public List<GameObject> hand = new List<GameObject>();
     public List<GameObject> CreatedCards = new List<GameObject>();
-    public Dictionary<GameObject, GameObject[]> CombinedCards = new Dictionary<GameObject, GameObject[]>();
+    public Dictionary<Guid, GameObject[]> CombinedCards = new Dictionary<Guid, GameObject[]>();
+
 
     private void Start()
     {
@@ -114,10 +115,14 @@ public class DeckHandler : MonoBehaviour
         Debug.Log("adding new card");
         int position = hand.Count - 1;
 
+        GameObject newCard = Instantiate(cardPrefab, cardPrefab.transform.position, Quaternion.identity, this.transform);
+        addData(newCard, cardToAdd);
+        hand.Add(newCard);
+
         if (combined != null)
         {
             Debug.Log("made it to this stage");
-            CombinedCards.Add(cardToAdd, combined);
+            CombinedCards.Add(newCard.GetComponent<Card>().CardID, combined);
             Debug.Log(combined.Length);
 
             for (int i = 0; i < combined.Length; i++)
@@ -128,9 +133,7 @@ public class DeckHandler : MonoBehaviour
             }
         }
 
-        GameObject newCard = Instantiate(cardPrefab, cardPrefab.transform.position, Quaternion.identity, this.transform);
-        addData(newCard, cardToAdd);
-        hand.Add(newCard);
+
         cardToAdd.SetActive(true);
         UpdateDeck();
 

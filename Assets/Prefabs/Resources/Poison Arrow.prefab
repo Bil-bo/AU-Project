@@ -53,6 +53,7 @@ MonoBehaviour:
   CardOutput: []
   Effects:
   - {fileID: 297285902390529405}
+  - {fileID: 2725060812980070110}
 --- !u!114 &297285902390529405
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -14,6 +15,8 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private bool isPressing = false;
 
     public CardData CardDataHolder;
+
+    public Guid CardID { get; } = Guid.NewGuid();
 
     private void Start()
     {
@@ -59,7 +62,10 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
                 }
       
-            } catch { }
+            } catch (Exception e)
+            {
+                Debug.LogError(e);            
+            }
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
