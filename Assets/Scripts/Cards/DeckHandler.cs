@@ -108,6 +108,7 @@ public class DeckHandler : MonoBehaviour
             hand.Remove(proxy);
             proxy.SetActive(false);
         }
+        gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
     public void AddCard(GameObject cardToAdd, GameObject[] combined = null)
