@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyA : BattleEnemy
-{ //This class isn't officialy being used yet
+{ 
     private int counterField = 0;
 
 
@@ -22,6 +22,8 @@ public class EnemyA : BattleEnemy
 
         UpdateHealthBar();
         
+
+        // Basic pattern
         switch(counterField){
             case (0):
             Attack();

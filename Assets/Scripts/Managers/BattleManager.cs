@@ -4,16 +4,16 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 
+
+// Sets up and starts the main battle scene
 public class BattleManager : MonoBehaviour
 {
     public GameObject playerPrefab;
-    public GameObject enemyPrefab;
 
     //public List<GameObject> characters = new List<GameObject>();
 
     public List<GameObject> players = new List<GameObject>();
     public List<GameObject> enemies = new List<GameObject>();
-    public int numberOfEnemies = 3; // Number of enemies to generate
     private int enemyCount = 0;
     public int numberOfPlayers = 2; // Number of players to generate
     private int playerCount = 0;

@@ -6,24 +6,34 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+
+// ):
+// Script Attached Directly to All Card Instances
 public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
 
-
+    // Player the card belongs to
     public BattlePlayer Player;
 
+    // If this card was held down on first, this is true
     private bool isPressing = false;
 
+    // The information of the card. Includes its effects
     public CardData CardDataHolder;
 
+    // UNique ID for all card instances. For combining cards
     public Guid CardID { get; } = Guid.NewGuid();
 
+
+    // Sets the card name when it is created
     private void Start()
     {
 
         this.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = CardDataHolder.CardName;
     }
     
+
+    // When the card is pressed down on
     public void OnPointerDown(PointerEventData eventData) 
     {
 
@@ -36,6 +46,9 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
 
+    // This one
+    // When The mouse is released
+    // Called from the same card that the original OnPointerDown was called on, not the card the mouse was released over
     public void OnPointerUp(PointerEventData eventData)
     {
 
@@ -43,12 +56,12 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         if (Player.isMyTurn && isPressing)
         {
-
+            // Try Catch Block For Checking for combinable cards
             try {
-
                 GraphicRaycaster raycaster = gameObject.transform.parent.GetComponent<GraphicRaycaster>();
                 List<RaycastResult> results = new List<RaycastResult>();
                 raycaster.Raycast(eventData, results);
+                // Checks if the Raycast hit another card
                 foreach (RaycastResult result in results)
                 {
                     if (result.gameObject.GetComponent<Card>() != null)
@@ -66,6 +79,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             {
                 Debug.LogError(e);            
             }
+            // Check If The Card has hit the appropriate target, and execute effects
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
@@ -89,6 +103,7 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
 
 
+    // Check if the card has hit the correct target
     private bool CheckIfTarget(RaycastHit hit)
     {
         if (hit.collider.GetComponent<Card>() != null)
@@ -107,11 +122,13 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         Player.currentCard = null;
     }
+    
     public bool CheckRange(BaseBattleCharacter target)
     {
         return (target.Position <= CardDataHolder.Range);
     }
 
+    // Activates all card effects
     public void Ability(BaseBattleCharacter target)
     {
         foreach(CardActions effect in CardDataHolder.Effects)
@@ -120,30 +137,34 @@ public class Card : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }       
     }
 
+    // Main Game Core Concept: Combining Cards - Two Compatible cards come together to create one stronger card
     public void combine(GameObject cardToCombine)
     {
-        Debug.Log("Will They Combine?");
+        // Have to check via the cardDataHolders gameObject since that is the one with a different name
+        // Alternative Setup? : Use String name or String type as identifier
+
+
         GameObject combinationHolder;
-        Debug.Log(CardDataHolder.Combinations.ContainsKey(cardToCombine)); 
         Debug.Log(cardToCombine.GetComponent<Card>().CardDataHolder.Combinations.ContainsKey(CardDataHolder.gameObject));
         if (CardDataHolder.Combinations.ContainsKey(cardToCombine.GetComponent<Card>().CardDataHolder.gameObject))
         {
-            Debug.Log("They Combine Here");
+
             combinationHolder = CardDataHolder.Combinations[cardToCombine.GetComponent<Card>().CardDataHolder.gameObject];                     
         
         }
 
         else if (cardToCombine.GetComponent<Card>().CardDataHolder.Combinations.ContainsKey(CardDataHolder.gameObject))
         {
-            Debug.Log("They Combine Here Actually");
+
             combinationHolder = cardToCombine.GetComponent<Card>().CardDataHolder.Combinations[CardDataHolder.gameObject];
         }
         else
         {
-            Debug.Log("They Don't combine :(");
             combinationHolder = null;
         }
 
+
+        // If the cards can combine add them to the deckHandler
         if (combinationHolder != null)
         {
             GameObject[] cardsToPass = new GameObject[] { gameObject, cardToCombine};

@@ -18,8 +18,6 @@ public class BattlePlayer : BaseBattleCharacter
 
 
 
-    // Start is called before the first frame update
-
     private void CreateCanvas()
     {
         
@@ -28,6 +26,8 @@ public class BattlePlayer : BaseBattleCharacter
 
     }
 
+
+    // Awake called to avoid race conditions with the coroutine
     private void Awake()
     {
         CreateCanvas();
@@ -36,12 +36,15 @@ public class BattlePlayer : BaseBattleCharacter
         defense = 0;
     }
 
+
+    // TODO: Find a way to remove this
     public override void Start()
     {
 
         base.Start();
 
     }
+
 
     public override IEnumerator DoTurn()
     {
@@ -50,7 +53,6 @@ public class BattlePlayer : BaseBattleCharacter
         isMyTurn = true;    
         
         deckHandler.ShowDeck();
-        //isPlayerTurn = gameObject.CompareTag("Player");
         hudManager.UpdateTurnText(gameObject.name);
         UpdateHealthBar();
 
@@ -60,9 +62,6 @@ public class BattlePlayer : BaseBattleCharacter
         {
             yield return null;
         }
-
-
-
 
         UpdateHealthBar();
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// Simple script for buttons in main menu
 public class MainMenu : MonoBehaviour
 {
     public void PlayGame()

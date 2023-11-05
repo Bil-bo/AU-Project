@@ -6,24 +6,33 @@ using UnityEngine;
 using UnityEngine.InputSystem.Android;
 using UnityEngine.UI;
 
+// DeckHandler Attached to each Player to show and manage their cards
 public class DeckHandler : MonoBehaviour
 {
+    // Prefab for playtesting when loading directly into the battle scene
     public GameObject ifEmptyDeck;
-    public GameObject canvas;
+    public GameObject canvas; // Unnecessary but I'm scared to remove
     public GameObject cardPrefab;
-    public BattlePlayer Player;
+    public BattlePlayer Player; 
 
+    // Original Deck - The player's current deck - not to be altered here only to create cards from
+    // hand - cards to be shown in the battle scene
+    // Created Cards - Instantiated cards that can be drawn from
+    // Combined cards - Holds cards that have been combined from: unimplemented - restoring combined cards if a respective combined card is used
     public List<GameObject> originalDeck = new List<GameObject>();
     public List<GameObject> hand = new List<GameObject>();
     public List<GameObject> CreatedCards = new List<GameObject>();
     public Dictionary<Guid, GameObject[]> CombinedCards = new Dictionary<Guid, GameObject[]>();
 
 
+    // Scared to remove
     private void Start()
     {
         canvas = gameObject;
     }
 
+
+    // Called when the deck handler is created by a player, otherwise some things aren't set up correctly by start or awake
     public void initialise(BattlePlayer player)
     {
         this.Player = player;
@@ -31,6 +40,7 @@ public class DeckHandler : MonoBehaviour
         button.onClick.AddListener(Player.FinishTurn);
     }
 
+    // Creates and shows a Hand for the current player, also the end turn button
     public void ShowDeck()
     {
 
@@ -50,9 +60,26 @@ public class DeckHandler : MonoBehaviour
 
     }
 
+    // TODO: Rename this or above
+    // Puts all cards in hand back into createdCards, and hides the end turn button
+    public void HideHand()
+    {
+        int counter = hand.Count;
+        for (int i = 0; i < counter; i++)
+        {
+            GameObject proxy = hand[0];
+            CreatedCards.Add(proxy);
+            hand.Remove(proxy);
+            proxy.SetActive(false);
+        }
+        gameObject.transform.GetChild(0).gameObject.SetActive(false);
+    }
+
+
+    // TODO: Change Z to S
+    // Creates the deck when the handler is first created
     public void InitializeDeck()
     {
- 
         try
         {
             originalDeck = GameData.Instance.deckToPass;
@@ -72,6 +99,7 @@ public class DeckHandler : MonoBehaviour
         }
     }
 
+    // For When Loading directly into the battle scene
     private List<GameObject> CreateDefaultList(List<GameObject> deck)
     {
         for (int i = 0; i < 10; i++)
@@ -81,6 +109,8 @@ public class DeckHandler : MonoBehaviour
         return deck;
     }
 
+    // Fisher-Yates shuffle
+    // First found here https://gist.github.com/jasonmarziani/7b4769673d0b593457609b392536e9f9, maybe
     public static List<GameObject> shuffleDeck(List<GameObject> cards)
     {
         System.Random rand = new System.Random();
@@ -98,37 +128,26 @@ public class DeckHandler : MonoBehaviour
         return cards;
     }
 
-    public void HideHand()
-    {
-        int counter = hand.Count;
-        for (int i = 0; i < counter; i++)
-        {
-            GameObject proxy = hand[0];
-            CreatedCards.Add(proxy);
-            hand.Remove(proxy);
-            proxy.SetActive(false);
-        }
-        gameObject.transform.GetChild(0).gameObject.SetActive(false);
-    }
 
+    // For Adding a new Card to the deck
+    // Currently mainly used for combining cards but should have functionality to just add cards in battle
     public void AddCard(GameObject cardToAdd, GameObject[] combined = null)
     {
-        Debug.Log("adding new card");
+
         int position = hand.Count - 1;
 
         GameObject newCard = Instantiate(cardPrefab, cardPrefab.transform.position, Quaternion.identity, this.transform);
         addData(newCard, cardToAdd);
         hand.Add(newCard);
 
+        // For removing cards that were combined from being pulled
         if (combined != null)
         {
-            Debug.Log("made it to this stage");
             CombinedCards.Add(newCard.GetComponent<Card>().CardID, combined);
             Debug.Log(combined.Length);
 
             for (int i = 0; i < combined.Length; i++)
             {
-                Debug.Log("Removing From Hand");
                 hand.Remove(combined[i]);
                 combined[i].SetActive(false);
             }
@@ -142,6 +161,7 @@ public class DeckHandler : MonoBehaviour
 
     }
 
+    // Adds the necessary data to the current card
     private void addData(GameObject card, GameObject cardData)
     {
         card.GetComponent<Card>().Player = Player;
@@ -150,6 +170,7 @@ public class DeckHandler : MonoBehaviour
 
     }
 
+    // Fans the cards out from the middle of the screen outwards
     private void UpdateDeck()
     {
         int position = (hand.Count - 1) * 50;

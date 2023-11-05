@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
+// Somewhat Deprecated at this point, should be moved to battleManager most likely
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;

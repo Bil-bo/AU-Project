@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using System;
 
+
+// Player in main scene
 public class PlayerPropsRoaming : MonoBehaviour
 
 {
@@ -35,6 +37,7 @@ public class PlayerPropsRoaming : MonoBehaviour
         UpdatePickupText();
     }
 
+    // Temporarily stopping the game: Mainly used for making it back to the main menu
     void OnPause()
     {
         pause.SetActive(true);
@@ -45,12 +48,14 @@ public class PlayerPropsRoaming : MonoBehaviour
         Cursor.visible = true;
     }
 
+    // Movement
     void OnMove(InputValue value)
     {
         moveValue = value.Get<Vector2>();
 
     }
-
+    
+  
     void Update()
     {
         if (charcon)
@@ -60,6 +65,7 @@ public class PlayerPropsRoaming : MonoBehaviour
         }
 
     }
+
 
     void handleMovement()
     {
@@ -79,6 +85,8 @@ public class PlayerPropsRoaming : MonoBehaviour
         charcon.Move(currentMovement);
     }
 
+
+    // For colliding with rigidBodies (Buttons for now)
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         Collider other = hit.collider;
@@ -90,6 +98,7 @@ public class PlayerPropsRoaming : MonoBehaviour
     }
 
 
+    // Picking up pickups, Starting battles
     private void OnTriggerEnter(Collider other)
     {
         switch (other.tag)
@@ -114,6 +123,7 @@ public class PlayerPropsRoaming : MonoBehaviour
         }
     }
 
+    // Should be done somewhere else prolly
     private void UpdatePickupText()
     {
         TextMeshProUGUI pickupText = GameObject.FindGameObjectWithTag("PickupText")?.GetComponent<TextMeshProUGUI>();
@@ -132,7 +142,7 @@ public class PlayerPropsRoaming : MonoBehaviour
 }
 
     
-
+    // For winning the game
     private void DisplayWinMessage()
     {
         

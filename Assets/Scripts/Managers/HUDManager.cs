@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Basic management for the battle scene HUD
 public class HUDManager : MonoBehaviour
 {
     public TMP_Text turnText;

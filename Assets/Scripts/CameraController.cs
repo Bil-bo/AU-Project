@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+//https://forum.unity.com/threads/third-person-camera-rotate.197592/
 public class CameraController : MonoBehaviour
 {
     public Transform CameraTarget;

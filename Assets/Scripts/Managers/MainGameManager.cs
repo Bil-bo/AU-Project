@@ -4,6 +4,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+// For managing the main scene
+// Slightly Deprecated by GameData
 public class MainGameManager : MonoBehaviour
 {
     private GameObject[] enemies;
@@ -45,7 +48,8 @@ public class MainGameManager : MonoBehaviour
             PlayerPrefs.SetInt("PickupsCollected", 0);
         }
     }
-
+     
+    // For Saving data between scenes before starting the battle
     public void EnterBattle(List<GameObject> cards)
     {
         GameData.Instance.deckToPass = cards;
@@ -66,7 +70,7 @@ public class MainGameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-
+    // Restarts the Game
     public void Reset(Vector3 initPos)
     {
         GameData.Instance.Restart();

@@ -1,15 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DealDamage : CardActions
 {
-    public int Dmg;
+    [SerializeField]
+    private int Dmg;
 
-
+    // Simple Effect: Card does damge to target
     public override void Effect(BaseBattleCharacter target, BattlePlayer user)
     {
-        // BattlePlayer player = gameObject.transform.parent.GetComponent<Card>().Player;
         target.TakeDamage(Dmg + user.attack);// + player.attack);
         
     }

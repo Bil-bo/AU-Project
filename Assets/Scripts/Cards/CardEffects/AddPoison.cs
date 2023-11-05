@@ -1,11 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
+
+
+// Simple Card Behaviour for applying poison to an enemy 
+// 
+
 using UnityEngine;
 
 public class AddPoison : CardActions
 {
-
-    public int turns;
+    // Learnt about this too late oops
+    [SerializeField]
+    private int turns;
     public override void Effect(BaseBattleCharacter target, BattlePlayer user) 
     {
         target.ApplyStatusEffect(StatusFactory.Instance.createStatus<Poison>(turns));

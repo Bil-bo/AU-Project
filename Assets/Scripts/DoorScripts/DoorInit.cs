@@ -5,6 +5,8 @@ using UnityEngine;
 
 
 
+
+// Sets up all the doors in the scene, and stops doors that were already open from closing again
 public class DoorInit : MonoBehaviour
 {
     public List<GameObject> doors = new List<GameObject>();
