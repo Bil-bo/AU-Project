@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1182,6 +1182,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss
       objectReference: {fileID: 0}
+    - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+      propertyPath: battleEnemyInfos.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+      propertyPath: 'battleEnemyInfos.Array.data[0]'
+      value: 
+      objectReference: {fileID: 3517959726302896293, guid: 73bff409274e9f040afdade454dbb6ff, type: 3}
+    - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+      propertyPath: 'battleEnemyInfos.Array.data[1]'
+      value: 
+      objectReference: {fileID: 3517959726302896293, guid: 73bff409274e9f040afdade454dbb6ff, type: 3}
+    - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+      propertyPath: 'battleEnemyInfos.Array.data[2]'
+      value: 
+      objectReference: {fileID: 3517959726302896293, guid: 73bff409274e9f040afdade454dbb6ff, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1993,15 +2009,15 @@ PrefabInstance:
     - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: 'battleEnemyInfos.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: 2b271dee3f203de4c9ed2fad1d441302, type: 2}
+      objectReference: {fileID: 3517959726302896293, guid: 645d0861ee501814f93bb6dfb9a327f3, type: 3}
     - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: 'battleEnemyInfos.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 2b271dee3f203de4c9ed2fad1d441302, type: 2}
+      objectReference: {fileID: 3517959726302896293, guid: 645d0861ee501814f93bb6dfb9a327f3, type: 3}
     - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: 'battleEnemyInfos.Array.data[2]'
       value: 
-      objectReference: {fileID: 11400000, guid: 2b271dee3f203de4c9ed2fad1d441302, type: 2}
+      objectReference: {fileID: 3517959726302896293, guid: 645d0861ee501814f93bb6dfb9a327f3, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5503,6 +5519,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyRoaming
       objectReference: {fileID: 0}
+    - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+      propertyPath: battleEnemyInfos.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+      propertyPath: 'battleEnemyInfos.Array.data[0]'
+      value: 
+      objectReference: {fileID: 3517959726302896293, guid: 73bff409274e9f040afdade454dbb6ff, type: 3}
+    - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+      propertyPath: 'battleEnemyInfos.Array.data[1]'
+      value: 
+      objectReference: {fileID: 3517959726302896293, guid: 645d0861ee501814f93bb6dfb9a327f3, type: 3}
+    - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+      propertyPath: 'battleEnemyInfos.Array.data[2]'
+      value: 
+      objectReference: {fileID: 3517959726302896293, guid: 645d0861ee501814f93bb6dfb9a327f3, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
