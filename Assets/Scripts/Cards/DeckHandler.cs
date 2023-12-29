@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // DeckHandler Attached to each Player to show and manage their cards
@@ -12,45 +14,56 @@ public class DeckHandler : MonoBehaviour
     public GameObject ifEmptyDeck;
     public GameObject canvas; // Unnecessary but I'm scared to remove
     public GameObject cardPrefab;
-    public BattlePlayer Player; 
+    public BattlePlayer Player;
+    private Button button;
+
+    private EventSystem eventSystem;
+
+    private GameObject _currentPlayer;
+    public GameObject currentPlayer { 
+        get { return _currentPlayer; }
+        set 
+        {
+            _currentPlayer = value;
+            Player = _currentPlayer.GetComponent<BattlePlayer>();
+            button.onClick.AddListener(Player.FinishTurn);
+        } 
+    }
 
     // Original Deck - The player's current deck - not to be altered here only to create cards from
     // hand - cards to be shown in the battle scene
     // Created Cards - Instantiated cards that can be drawn from
     // Combined cards - Holds cards that have been combined from: unimplemented - restoring combined cards if a respective combined card is used
-    public List<GameObject> originalDeck = new List<GameObject>();
     public List<GameObject> hand = new List<GameObject>();
-    public List<GameObject> CreatedCards = new List<GameObject>();
-    public Dictionary<Guid, GameObject[]> CombinedCards = new Dictionary<Guid, GameObject[]>();
+    GraphicRaycaster raycaster;
+
+
+    public Dictionary<GameObject, List<GameObject>> partyDecks = new Dictionary<GameObject, List<GameObject>>();
+    public Dictionary<GameObject, List<GameObject>> InDeck = new Dictionary<GameObject, List<GameObject>>();
+    public Dictionary<GameObject, Dictionary<Guid, GameObject[]>> CombinedCards = new Dictionary<GameObject, Dictionary<Guid, GameObject[]>>();
 
 
     // Scared to remove
     private void Start()
     {
         canvas = gameObject;
+        raycaster = gameObject.GetComponent<GraphicRaycaster>();
+        eventSystem = GetComponent<EventSystem>();
+        button = GetComponentInChildren<Button>();
+
     }
 
-
-    // Called when the deck handler is created by a player, otherwise some things aren't set up correctly by start or awake
-    public void initialise(BattlePlayer player)
-    {
-        this.Player = player;
-        Button button = GetComponentInChildren<Button>();
-        button.onClick.AddListener(Player.FinishTurn);
-    }
-
-    // Creates and shows a Hand for the current player, also the end turn button
     public void ShowDeck()
     {
+        if (!InDeck.ContainsKey(currentPlayer)) { InitialiseDeck(); }
 
-        if (originalDeck.Count <= 0) { InitializeDeck();  }
-        shuffleDeck(CreatedCards);
+        ShuffleDeck(InDeck[currentPlayer]);
 
-        for (int i = 0; i < Player.maxHand; i++) 
+        for (int i = 0; i < Player.maxHand; i++)
         {
-            GameObject proxy = CreatedCards[0];
+            GameObject proxy = InDeck[currentPlayer][i];
             hand.Add(proxy);
-            CreatedCards.Remove(proxy);
+            InDeck[currentPlayer].Remove(proxy);
         }
 
         gameObject.transform.GetChild(0).gameObject.SetActive(true);
@@ -61,42 +74,28 @@ public class DeckHandler : MonoBehaviour
 
     // TODO: Rename this or above
     // Puts all cards in hand back into createdCards, and hides the end turn button
-    public void HideHand()
+    public void HideDeck()
     {
         int counter = hand.Count;
         for (int i = 0; i < counter; i++)
         {
             GameObject proxy = hand[0];
-            CreatedCards.Add(proxy);
+            InDeck[currentPlayer].Add(proxy);
             hand.Remove(proxy);
             proxy.SetActive(false);
         }
         gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
-
-    // TODO: Change Z to S
-    // Creates the deck when the handler is first created
-    public void InitializeDeck()
+    public void InitialiseDeck()
     {
-        try
+        if (partyDecks[currentPlayer].Count == 0) { partyDecks[currentPlayer] = CreateDefaultList(partyDecks[currentPlayer]); }
+        else
         {
-            originalDeck = GameData.Instance.deckToPass;
-            if (originalDeck.Count == 0) { originalDeck = CreateDefaultList(originalDeck); }
-        }
-        catch
-        {
-            originalDeck = CreateDefaultList(originalDeck);
-        }
-
-        foreach (GameObject card in originalDeck)
-        {
-            GameObject addCard = Instantiate(cardPrefab, cardPrefab.transform.position, Quaternion.identity, this.transform);
-            addData(addCard, card);
-            CreatedCards.Add(addCard);
-            addCard.SetActive(false);
+            InDeck[currentPlayer] = partyDecks[currentPlayer];
         }
     }
+
 
     // For When Loading directly into the battle scene
     private List<GameObject> CreateDefaultList(List<GameObject> deck)
@@ -110,7 +109,7 @@ public class DeckHandler : MonoBehaviour
 
     // Fisher-Yates shuffle
     // First found here https://gist.github.com/jasonmarziani/7b4769673d0b593457609b392536e9f9, maybe
-    public static List<GameObject> shuffleDeck(List<GameObject> cards)
+    public static List<GameObject> ShuffleDeck(List<GameObject> cards)
     {
         System.Random rand = new System.Random();
         int n = cards.Count;
@@ -128,44 +127,32 @@ public class DeckHandler : MonoBehaviour
     }
 
 
-    // For Adding a new Card to the deck
-    // Currently mainly used for combining cards but should have functionality to just add cards in battle
-    public void AddCard(GameObject cardToAdd, GameObject[] combined = null)
+    public void TryMergeCards(Card cardOne, Card cardTwo)
     {
-
-        int position = hand.Count - 1;
-
-        GameObject newCard = Instantiate(cardPrefab, cardPrefab.transform.position, Quaternion.identity, this.transform);
-        addData(newCard, cardToAdd);
-        hand.Add(newCard);
-
-        // For removing cards that were combined from being pulled
-        if (combined != null)
+        GameObject canMerge = cardOne.CanMerge(cardTwo);
+        if (canMerge != null)
         {
-            CombinedCards.Add(newCard.GetComponent<Card>().CardID, combined);
-            Debug.Log(combined.Length);
+            if (!CombinedCards.ContainsKey(currentPlayer)) { CombinedCards.Add(currentPlayer, new Dictionary<Guid, GameObject[]>()); }
+            GameObject newCard = CreateCard(canMerge, true);
+            hand.Add(newCard);
 
-            for (int i = 0; i < combined.Length; i++)
-            {
-                hand.Remove(combined[i]);
-                combined[i].SetActive(false);
-            }
+            CombinedCards[currentPlayer].Add(newCard.GetComponent<Card>().CardID, new GameObject[] { cardOne.gameObject, cardTwo.gameObject });
+            hand.Remove(cardOne.gameObject);
+            hand.Remove(cardTwo.gameObject);
+
+            cardOne.gameObject.SetActive(false);
+            cardTwo.gameObject.SetActive(false);
+            UpdateDeck();
         }
-
-
-        cardToAdd.SetActive(true);
-        UpdateDeck();
-
-
-
     }
 
-    // Adds the necessary data to the current card
-    private void addData(GameObject card, GameObject cardData)
+    public GameObject CreateCard(GameObject cardData, bool isActive)
     {
-        card.GetComponent<Card>().Player = Player;
-        card.GetComponent<Card>().CardDataHolder = cardData.GetComponent<CardData>();
-        card.GetComponent<Card>().CardDataHolder.initialise();
+        GameObject CardBase = Instantiate(cardPrefab, cardPrefab.transform.position, Quaternion.identity, this.transform);
+        Instantiate(cardData, CardBase.transform);
+        CardBase.SetActive(isActive);
+
+        return CardBase;
 
     }
 
@@ -188,5 +175,46 @@ public class DeckHandler : MonoBehaviour
             card.SetActive(true);
 
         }
+    }
+
+    public void AddDeck(GameObject player)
+    {
+        partyDecks[player] = GameData.Instance.BattlePlayers[player];
+        foreach (GameObject card in partyDecks[player])
+        {
+            card.transform.SetParent(transform, false);
+        }
+    }
+
+    public GameObject SelectCard(Vector2 mousePos)
+    {
+        PointerEventData pointerData = new PointerEventData(eventSystem);
+        pointerData.position = mousePos;
+        List<RaycastResult> results = new List<RaycastResult>();
+        raycaster.Raycast(pointerData, results);
+        // Checks if the Raycast hit another card
+        foreach (RaycastResult result in results)
+        {
+            Debug.Log(result.ToString());
+            if (result.gameObject.GetComponentInChildren<Card>() != null)
+            {
+                return result.gameObject;
+            }
+        }
+        return null;
+    }
+
+    public void ResetCards()
+    {
+        foreach (List<GameObject> decks in partyDecks.Values.ToList())
+        {
+            foreach(GameObject card in decks)
+            {
+                card.SetActive(false);
+                card.transform.SetParent(GameData.Instance.transform, false);
+            }
+        }
+
+
     }
 }

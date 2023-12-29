@@ -21,10 +21,10 @@ public class CardData : MonoBehaviour
 
     public Dictionary<GameObject, GameObject> Combinations = new Dictionary<GameObject, GameObject>();
 
-    public List<CardActions> Effects = new List<CardActions>();
+    public List<ICardActions> Effects = new List<ICardActions>();
 
     // Oh also this has to be called since awake and start aren't called because of the setup of using empty prefabs attached to real GameObjects
-    public void initialise()
+    public void Initialise()
     {
         GameObject hold;
         if (CardInput.Count > 0 && CardInput != null)
@@ -40,9 +40,6 @@ public class CardData : MonoBehaviour
         }
     }
 
-    public enum Target
-    {
-        Player,
-        Enemy
-    }
+
 }
+

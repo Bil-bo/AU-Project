@@ -8,6 +8,8 @@ public class HUDManager : MonoBehaviour
     public TMP_Text turnText;
     public TMP_Text healthText;
 
+    
+
     public void UpdateTurnText(string characterName)
     {
         turnText.text = characterName + "'s Turn";
@@ -17,4 +19,6 @@ public class HUDManager : MonoBehaviour
     {
         healthText.text = "Health: " + currentHealth + "/" + maxHealth;
     }
+
+
 }

@@ -149,6 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 624d926e26950a1438afa4af9cc93b0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerPrefab: {fileID: 3517959726302896293, guid: a4ca3067d45cd1643b33d7478c98a82f, type: 3}
+  CardPrefab: {fileID: 4837163492941158079, guid: 426e4d8c911d95e40a2f81b5f9a3e1c0, type: 3}
   battleEnemies: []
 --- !u!4 &7606664
 Transform:
@@ -1960,7 +1962,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2292618281491278568, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 65
+      value: 52
       objectReference: {fileID: 0}
     - target: {fileID: 2292618281491278568, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1968,7 +1970,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2292618281491278568, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 89.8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2292618281491278568, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: m_LocalRotation.w

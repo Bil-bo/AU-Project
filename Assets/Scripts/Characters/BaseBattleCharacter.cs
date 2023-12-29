@@ -5,72 +5,68 @@ using UnityEngine.UI;
 using TMPro;
 using System.Runtime.CompilerServices;
 
-public abstract class BaseBattleCharacter : MonoBehaviour
+public abstract class BaseBattleCharacter : MonoBehaviour, IBroadCastEvent
 {
-
-    public int maxHealth = 100;
-    public int currentHealth;
+    public string Name;
+    public int maxHealth;
+    private int currentHealth;
     public int attack;
     public int defense;
-
-    public Dictionary<string, StatusEffect> ActiveStatusEffects = new Dictionary<string, StatusEffect>();
-
     public bool dead { get; set;} =  false; 
     private Renderer characterRenderer;
     public GameObject damageNumberPrefab;
-
-    //public bool isMyTurn = false;
 
     public HUDManager hudManager;
     private Material originalMaterial;
     public int Position = 0;
     // Start is called before the first frame update
+
+    private GameObject _PositionMarker;
+    public GameObject Targeter { get; set; }
+
+    public GameObject PositionMarker 
+    { 
+        get { return _PositionMarker; }
+        set
+        {
+            if (_PositionMarker != null) 
+            {
+                Targeter.transform.SetParent(PositionMarker.transform, true);
+                Targeter.transform.localPosition = Vector3.zero;
+                Targeter.SetActive(false);
+            }
+            _PositionMarker = value;
+            transform.SetParent(PositionMarker.transform, true);
+            transform.localPosition = Vector3.zero;
+            Targeter = value.transform.GetChild(0).gameObject;  
+            Targeter.transform.SetParent(transform, true);
+            Targeter.transform.localPosition = transform.localPosition + new Vector3(0, 2.0f, 0);
+            Position = value.GetComponent<PositionPointer>().Position;
+        }
+    }
+
+    public bool CanSelect { get; set; } = false;
+
+
     public virtual void Start()
     {
         currentHealth = maxHealth; //Initialise health and everything else
         hudManager = FindFirstObjectByType<HUDManager>();
         characterRenderer = GetComponent<Renderer>();
         originalMaterial = new Material(characterRenderer.material);
+
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public abstract IEnumerator DoTurn();
 
     public void ProcessStatusEffects()
     {
-        List<string> keysToRemove = new List<string>();
-        foreach (StatusEffect effect in ActiveStatusEffects.Values)
-        {
-            if (effect.countDown(this) <= 0)
-            {
-                keysToRemove.Add(effect.name);
-            }
-        }
-
-        foreach (string key in keysToRemove) 
-        {
-            ActiveStatusEffects.Remove(key);
-        
-        }
-
     }
 
-    public void ApplyStatusEffect(StatusEffect effect)
+    public void ApplyStatusEffect()
     {
-        if (ActiveStatusEffects.ContainsKey(effect.name))
-        {
-            ActiveStatusEffects[effect.name].Combine(effect);
-        }
-        else
-        {
-            ActiveStatusEffects.Add(effect.name, effect); //The status effects for the characters are applied here
-        }
     }
 
     public void UpdateHealthBar()
@@ -104,7 +100,7 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     {
         float finalDamage = originalDamage;
 
-        return Mathf.FloorToInt(finalDamage / (ActiveStatusEffects.ContainsKey("Block") ? 4: 1));
+        return Mathf.FloorToInt(finalDamage);
     }
 
     public void TakeDamage(int damage) //Method for the chars to take damage
@@ -120,13 +116,14 @@ public abstract class BaseBattleCharacter : MonoBehaviour
         {
             currentHealth = 0; //Killing off characters
             Debug.Log(gameObject.name + " has been defeated.");
-            
             dead = true; 
+
         }
         UpdateHealthBar();
     }
 
-    
+    public void TakeFlatDamage(int damage)
+    {
 
-    
+    }
 }

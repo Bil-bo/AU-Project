@@ -13,6 +13,8 @@ public class PlayerPropsRoaming : MonoBehaviour
 
 {
 
+    public BattleInfo BattleInfo;
+
     public float _speed;
     public Vector2 moveValue;
 
@@ -26,7 +28,6 @@ public class PlayerPropsRoaming : MonoBehaviour
     private int collectedPickups = 0;
     public int maxPickups = 3;
     private bool hasWon = false;
-    public List<GameObject> deck;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +41,7 @@ public class PlayerPropsRoaming : MonoBehaviour
     // Temporarily stopping the game: Mainly used for making it back to the main menu
     void OnPause()
     {
+        Debug.Log("Paused");
         pause.SetActive(true);
         Time.timeScale = 0;
 
@@ -65,7 +67,6 @@ public class PlayerPropsRoaming : MonoBehaviour
         }
 
     }
-
 
     void handleMovement()
     {
@@ -118,7 +119,7 @@ public class PlayerPropsRoaming : MonoBehaviour
                 other.gameObject.SetActive(false);
                 var enemyInfoList = other.GetComponent<EnemyPropsRoaming>().battleEnemyInfos;
                 GameData.Instance.battleEnemies = enemyInfoList;
-                gameManager.EnterBattle(deck);
+                gameManager.EnterBattle();
                 break;
         }
     }

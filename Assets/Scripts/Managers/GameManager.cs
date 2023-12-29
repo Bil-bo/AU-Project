@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        if (instance == null) { instance = this; }
         // Hide the overlay canvas initially
         if (overlayCanvas != null)
         {

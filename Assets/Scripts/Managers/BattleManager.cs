@@ -1,37 +1,190 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using System.Collections.ObjectModel;
+using System.Linq;
+using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
+using System;
+using UnityEditor;
+using UnityEngine.TextCore.Text;
+
 
 
 // Sets up and starts the main battle scene
 public class BattleManager : MonoBehaviour
 {
-    public GameObject playerPrefab;
+
+
 
     //public List<GameObject> characters = new List<GameObject>();
 
-    public List<GameObject> players = new List<GameObject>();
-    public List<GameObject> enemies = new List<GameObject>();
-    private int enemyCount = 0;
-    public int numberOfPlayers = 2; // Number of players to generate
-    private int playerCount = 0;
+    public List<BattlePlayer> players = new List<BattlePlayer>();
+    public List<BattleEnemy> enemies = new List<BattleEnemy>();
 
-    
+    private BattlePlayer CurrentPlayer;
+
+    private int enemyCount = 0;
+    private bool playerWin = false;
+    private bool playerLose = false;
+    private bool isPressing = false;
+
+
     public GameManager manager;
+
+    private PlayerInput inputs;
+
+
+    [SerializeField]
+    private GameObject decks;
+
+    [SerializeField]
+    private ArrowPointer Line;
+
+
+    [SerializeField]
+    private List<GameObject> PlayerPositions = new List<GameObject>();
+
+    [SerializeField]
+    private List<GameObject> EnemyPositions = new List<GameObject>();
+
+    [SerializeField]
+    private List<Material> TargetMats = new List<Material>();
+
+    private DeckHandler deckHandler;
+
+    private GameObject _Card;
+    private Card CardData;
+
+    private Vector2 mousePrevPos;
+    private bool InPlay;
+    private bool TargetSelection = false;
+    private BaseBattleCharacter SingleTarget;
+
+
+    public GameObject Card { 
+        get { return _Card; }
+        set { _Card = value;
+            if (value != null) { CardData = value.GetComponentInChildren<Card>(); }
+            else { CardData = null; }
+        }
+    }
+
+    private void Awake()
+    {
+        inputs = GetComponent<PlayerInput>();
+    }
 
     void Start()
     {
+
+        var clickInput = inputs.actions["UI/Click"];
+        clickInput.started += Click;
+        clickInput.canceled += ClickRelease;
+
+
+        deckHandler = decks.GetComponent<DeckHandler>();
         manager = FindAnyObjectByType<GameManager>();
+
+        List<GameObject> allPostions = PlayerPositions.Concat(EnemyPositions).ToList();
+        foreach (GameObject position in allPostions)
+        {
+            position.transform.GetChild(0).gameObject.SetActive(false);
+        }
+
         GeneratePlayers();
         GenerateEnemies();
+        
 
         //Unlock mouse cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
         StartCoroutine(StartBattlePhase());
+    }
+
+
+    void Click(InputAction.CallbackContext context)
+    {
+        // Tell the deck handler to check if a card is being selected
+        // if a card has been selected have it ready here.
+        // Start drawing a line
+        // start highlighting potential targets
+        Vector2 mousePos = inputs.actions["UI/Point"].ReadValue<Vector2>();
+        Debug.Log(mousePos);
+        Card = deckHandler.SelectCard(mousePos);
+        if (Card != null )
+        {
+            isPressing = true;
+            Debug.Log(CardData.Name);
+            mousePrevPos = mousePos;    
+            Line.SetStartPos(Card.GetComponent<RectTransform>());
+
+        }
+    }
+
+    void ClickHold()
+    {
+        if (mousePrevPos != inputs.actions["UI/Point"].ReadValue<Vector2>())
+        {
+            mousePrevPos = inputs.actions["UI/Point"].ReadValue<Vector2>();
+            Line.DrawArrow(mousePrevPos);
+            Ray ray = Camera.main.ScreenPointToRay(mousePrevPos);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 45f, LayerMask.GetMask("PlayArea")))
+            {
+                InPlay = true;
+                HighlightTargets(CardData.Target, CardData.Range, CurrentPlayer);
+                Debug.Log(TargetSelection);
+                if (TargetSelection && Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Default")))
+                {
+                    Debug.Log(hit.collider.gameObject.name);
+                    if (hit.collider.gameObject.TryGetComponent<BaseBattleCharacter>(out BaseBattleCharacter hitCharacter))
+                    {
+                        if (hitCharacter.CanSelect)
+                        {
+                            SingleTarget = hitCharacter;
+                            SingleTarget.Targeter.GetComponent<Renderer>().material = TargetMats[2];
+                        }
+                    }
+                }
+                else { SingleTarget = null; }
+            }
+
+            else 
+            {
+                InPlay = false;
+                DeselectAll();
+            }
+
+
+        }
+
+
+    }
+
+    void ClickRelease(InputAction.CallbackContext context)
+    {
+        if (isPressing && InPlay) 
+        {
+            List<BaseBattleCharacter> targets = GetTargets(CardData.Target, CardData.Range);
+            if (targets.Count > 0) 
+            {
+                CurrentPlayer.CurrentEnergy -= CardData.Cost;
+                CardData.Use(CurrentPlayer, targets);
+            }
+
+        }
+
+        isPressing = false;
+        TargetSelection = false;
+        SingleTarget = null;
+        Card = null;
+        DeselectAll();
+        Debug.Log("Button Released");
     }
 
 
@@ -43,87 +196,91 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < enemyInput.Length; i++)
         {
             // Instantiate the enemy prefab
-            GameObject enemyBody = Instantiate(enemyInput[i], new Vector3((2f*enemyCount+1), 0f, 3f), Quaternion.identity);
+
+            GameObject enemyBody = Instantiate(enemyInput[i]);
+            
             //Need to add the type of enemy from enemyInput list to the enemy GameObject
             BattleEnemy enemy = enemyBody.GetComponent<BattleEnemy>();
 
+
             // Assign a unique name to the enemy
             enemy.name = "Enemy " + enemy.enemyName + (enemyCount + 1);
-            var currentEnemy = enemy.GetComponent<BattleEnemy>();
-            currentEnemy.Position = enemyCount +1;
-            currentEnemy.attack = enemy.attack;
-            currentEnemy.maxHealth = enemy.maxHealth;
-            currentEnemy.currentHealth = enemy.maxHealth;
+            enemy.PositionMarker = EnemyPositions[i];
             enemyCount++;
 
             // SET OTHER PROPERTIES OR COMPONENTS FOR ENEMY HERE
-            enemies.Add(enemyBody);
+            enemies.Add(enemy);
         }
     }
 
 
     void GeneratePlayers()
     {
-        for (int i = 0; i < numberOfPlayers; i++)
-        {
-            // Instantiate the enemy prefab
-            GameObject player = Instantiate(playerPrefab, new Vector3(((-2f) * (playerCount + 1)), 0f, 3f), Quaternion.identity);
+        List<GameObject> party = GameData.Instance.BattlePlayers.Keys.ToList();
+        for (int i = 0; i < party.Count; i++)
+        { 
+            BattlePlayer playerData = party[i].GetComponent<BattlePlayer>();
+           
+            deckHandler.AddDeck(party[i]);
+            party[i].SetActive(true);
+            playerData.PositionMarker = PlayerPositions[i];
 
-            // Assign a unique name to the enemy
-            player.name = "Player " + (playerCount + 1);
-            player.GetComponent<BattlePlayer>().Position = playerCount + 1;
-            playerCount++;
+            players.Add(playerData);
 
-            // SET OTHER PROPERTIES OR COMPONENTS FOR PLAYER HERE
-            players.Add(player);
         }
+
     }
 
-   IEnumerator StartBattlePhase()
+
+    private void Update()
     {
-        bool playerWin = false;
-        bool playerLose = false;
-        while(!playerWin & !playerLose){
+        if (isPressing) { ClickHold(); }
+        
+    }
 
-            for(int i=0; i<players.Count;i++)
+    IEnumerator StartBattlePhase()
+    {
+        while(!playerWin || !playerLose) {
+
+            foreach (BattlePlayer player in players)
             {
-                var currentPlayer = players[i].GetComponent<BattlePlayer>();
-                yield return StartCoroutine(currentPlayer.DoTurn());
-                yield return new WaitForSeconds(1f);
-                CheckEnemyDeaths();
-                CheckPlayerDeaths();
-            
-
-    
-            
+                if (playerWin || playerLose) { continue; }
+                else
+                { 
+                    CurrentPlayer = player;
+                    CurrentPlayer.Targeter.SetActive(true);
+                    CurrentPlayer.Targeter.GetComponent<Renderer>().material = TargetMats[0];
+                    deckHandler.currentPlayer = CurrentPlayer.gameObject;
+                    deckHandler.ShowDeck();
+                    yield return new WaitForSeconds(0.5f);
+                    yield return StartCoroutine(player.DoTurn());
+                    CheckEnemyDeaths();
+                    CheckPlayerDeaths();
+                    CurrentPlayer.Targeter.SetActive(false);
+                    deckHandler.HideDeck();
+                }
             }
-            
-            
-            for(int i=0; i<enemies.Count;i++)
+
+
+            foreach (BattleEnemy enemy in enemies)
             {
-                var currentEnemy = enemies[i].GetComponent<BattleEnemy>();
-                yield return StartCoroutine(currentEnemy.DoTurn());
-                yield return new WaitForSeconds(1f);
-                CheckPlayerDeaths();
-                CheckEnemyDeaths();
-                
+                if (playerWin || playerLose) { continue; }
+                else
+                {
+                    yield return StartCoroutine(enemy.DoTurn());
+                    CheckPlayerDeaths();
+                    CheckEnemyDeaths();
+                    yield return new WaitForSeconds(1f);
 
-    
-            
+                }
             }
-             
-            playerWin = (enemies.Count == 0);
-            playerLose = (players.Count == 0);
-              
-
-
         }
 
         if (playerWin)
         {
             manager.ShowOverlay("You Won!");
             yield return new WaitForSeconds(2f);
-            manager.ExitBattle();
+            ExitBattle();
         }
 
         // Check if all players are defeated
@@ -131,37 +288,229 @@ public class BattleManager : MonoBehaviour
         {
             manager.ShowOverlay("You Lost!");
         }
-
-
-
     }
 
     void CheckPlayerDeaths(){
-        for(int i= 0; i < players.Count; i++){
-
-                if(players[i].GetComponent<BattlePlayer>().dead){
-                    var player = players[i];
-                    players.RemoveAt(i);
-                    Destroy(player);
-                }
+        for(int i= 0; i < players.Count; i++) 
+        {
+            if(players[i].GetComponent<BattlePlayer>().dead)
+            {
+                var player = players[i];
+                players.RemoveAt(i);
+                Destroy(player);
             }
-
+        }
+        playerLose = (players.Count == 0);
 
     }
 
     void CheckEnemyDeaths()
     {
         for(int i=0; i<enemies.Count;i++)
+        {
+            if(enemies[i].GetComponent<BattleEnemy>().dead)
             {
-                if(enemies[i].GetComponent<BattleEnemy>().dead){
-                    var enemy= enemies[i];
-                    enemies.RemoveAt(i);
-                    Destroy(enemy);
-                }
-                
-
-    
-            
+                var enemy = enemies[i];
+                enemies.RemoveAt(i);
+                Destroy(enemy);
             }
+        }
+        playerWin = (enemies.Count == 0);
     }
+
+    public void ExitBattle()
+    {
+        foreach (BattlePlayer player in players)
+        {
+            player.transform.parent = GameData.Instance.transform;
+        }
+
+        deckHandler.ResetCards();
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+    }
+
+
+    private List<BaseBattleCharacter> GetTargets(Target targets, int range)
+    {
+        List<BaseBattleCharacter> toReturn = new();
+
+        switch (targets)
+        {
+            case Target.PLAYER:
+            case Target.ENEMY:
+            case Target.PLAYERS_OR_ENEMIES:
+                if (SingleTarget != null) { toReturn.Add(SingleTarget); }
+                return toReturn;
+
+            case Target.ALL_PLAYERS:
+                return new List<BaseBattleCharacter>(players);        
+
+            case Target.SELF_AND_ENEMIES:
+                toReturn.Add(CurrentPlayer);
+                toReturn.AddRange(enemies);
+                return toReturn;
+
+            case Target.ALL_ENEMIES:
+                toReturn.AddRange(enemies);
+                return new List<BaseBattleCharacter>(enemies);    
+                
+            case Target.ALL:
+                toReturn.AddRange(players);
+                toReturn.AddRange(enemies);
+                return toReturn;
+
+            case Target.PLAYERS_IN_RANGE:
+                foreach (BattlePlayer player in players)
+                {
+                    if (player.Position >= Mathf.Clamp(CurrentPlayer.Position - range, 0, 10) &&
+                        player.Position <= Mathf.Clamp(CurrentPlayer.Position + range, 0, players.Count))
+                    {
+                        toReturn.Add(player);
+                    }
+                }
+                return toReturn;
+
+
+            case Target.ENEMIES_IN_RANGE:
+                foreach (BattlePlayer player in players)
+                {
+                    if (player.Position >= Mathf.Clamp(CurrentPlayer.Position - range, 0, 10) &&
+                        player.Position <= Mathf.Clamp(CurrentPlayer.Position + range, 0, players.Count))
+                    {
+                        toReturn.Add(player);
+                    }
+                }
+                return toReturn;
+
+
+            case Target.ALL_IN_RANGE:
+                foreach (BattleEnemy enemy in enemies)
+                {
+                    if (range - (CurrentPlayer.Position + 1) >= enemy.Position)
+                    {
+                        toReturn.Add(enemy);
+                    }
+                }
+                return toReturn;
+
+            
+            default:
+                return toReturn;
+
+        }
+    }
+
+
+
+    private void HighlightTargets (Target targets, int range, BattlePlayer comparePlayer)
+    {
+        switch (targets)
+        {
+            case Target.PLAYER:
+                TargetSelection = true;
+                SetHighlights(new List<BaseBattleCharacter>(players), comparePlayer, 1, true, range, true);
+                break;
+
+            case Target.ENEMY:
+                TargetSelection = true;
+                SetHighlights(new List<BaseBattleCharacter>(enemies), comparePlayer, 1, true, range, false, true);
+                break;
+
+            case Target.SELF:
+                comparePlayer.CanSelect = true;
+                comparePlayer.Targeter.GetComponent<Renderer>().material = TargetMats[2];
+                break;
+
+            case Target.ALL:
+                List<BaseBattleCharacter> all = new List<BaseBattleCharacter>();
+                all.AddRange(players);
+                all.AddRange(enemies);
+                SetHighlights(all, comparePlayer, 2);
+                break;
+
+            case Target.ALL_ENEMIES:
+                SetHighlights(new List<BaseBattleCharacter>(enemies), comparePlayer, 2);
+                break;
+
+            case Target.ALL_PLAYERS:
+                SetHighlights(new List<BaseBattleCharacter>(players), comparePlayer, 2);
+                break;
+
+            case Target.ALL_IN_RANGE:
+                SetHighlights(new List<BaseBattleCharacter>(players), comparePlayer, 2, true, range, true, false);
+                SetHighlights(new List<BaseBattleCharacter>(enemies), comparePlayer, 2, true, range, false, true);
+                break;
+
+            case Target.SELF_AND_ENEMIES:
+                comparePlayer.CanSelect = true;
+                comparePlayer.Targeter.GetComponent<Renderer>().material = TargetMats[2];
+                SetHighlights(new List<BaseBattleCharacter>(enemies), comparePlayer, 2);
+                break;
+
+            case Target.PLAYERS_IN_RANGE:
+                SetHighlights(new List<BaseBattleCharacter>(players), comparePlayer, 2, true, range, true);
+                break;
+
+            case Target.ENEMIES_IN_RANGE:
+                SetHighlights(new List<BaseBattleCharacter>(enemies), comparePlayer, 1, true, range, false, true);
+                break;
+
+            case Target.PLAYERS_OR_ENEMIES:
+                TargetSelection = true;
+                SetHighlights(new List<BaseBattleCharacter>(players), comparePlayer, 1, true, range, true, false);
+                SetHighlights(new List<BaseBattleCharacter>(enemies), comparePlayer, 1, true, range, false, true);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void SetHighlights(List<BaseBattleCharacter> charToHighlight, BattlePlayer comparePlayer, int MatIndex, bool setActive = true, int range = 0, bool playerRange = false, bool enemyRange = false)
+    {
+        foreach (BaseBattleCharacter character in charToHighlight)
+        {
+            character.Targeter.SetActive(setActive);
+            if (playerRange) 
+            {
+                if (character.Position >= Mathf.Clamp(comparePlayer.Position - range, 0, 10) && 
+                    character.Position <= Mathf.Clamp(comparePlayer.Position + range, 0, players.Count))
+                {
+                    character.CanSelect = setActive;
+                    character.Targeter.GetComponent<Renderer>().material = TargetMats[MatIndex];
+                }
+            }
+            else if (enemyRange)
+            {
+                if (range - (comparePlayer.Position + 1) >= character.Position)
+                {
+                    character.CanSelect = setActive;
+                    character.Targeter.GetComponent<Renderer>().material = TargetMats[MatIndex];
+                }
+            }
+            else 
+            {
+                character.CanSelect = setActive;
+                character.Targeter.GetComponent<Renderer>().material = TargetMats[MatIndex];
+
+            }
+
+        }
+    }
+
+
+    private void DeselectAll() 
+    {
+        List<BaseBattleCharacter> all = new List<BaseBattleCharacter>();
+        all.AddRange(players);
+        all.AddRange(enemies);
+        all.Remove(CurrentPlayer);
+        SetHighlights(all, CurrentPlayer, 3, false);
+        CurrentPlayer.Targeter.GetComponent<Renderer>().material = TargetMats[0];
+        CurrentPlayer.CanSelect = false;
+
+    }
+
+
 }

@@ -1,73 +1,77 @@
 using System;
-using System.Threading;
-using Unity.VisualScripting;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
 
 // For Holding StatusEffects that can effect the game characters
 // Also no monobehaviour: no need for inspector and doesn't have to be attached to a GameObject
-public abstract class StatusEffect
+public abstract class StatusEffect: IOnStatusEffectAdded
 {
-    // Timer for how long an affect lasts for
-    // Name for ease of storage
-    public int timer { get; set; }
-    public string name;
 
-    public StatusEffect(int timer)
-    {
-        this.timer = timer;
+    private int _Counter;
+
+    public int Counter 
+    {  
+        get { return _Counter; } 
+        set 
+        {
+            _Counter = value;
+            CounterChange.Invoke(value);
+        }
     }
 
-    // Counts down - Timer value returned for ease of storage arguments
-    public virtual int countDown (BaseBattleCharacter affected)
+
+
+    public string Name;
+    public BaseBattleCharacter Target;
+    public Action<int> CounterChange;
+
+
+    public StatusEffect(int counter, BaseBattleCharacter target)
     {
-        timer -= 1;
-        return timer;
+        this.Counter = counter;
+        this.Target = target;
+    }
+
+    public virtual void Initialise()
+    {
+        EventManager.AddListener<StatusEffectAddedEvent>(OnStatusEffectAdded, Target);
     }
 
     // Combine adds two of the same statusEffect together, so that they can stack
-    public virtual void Combine(StatusEffect extra)
+    public virtual void Combine(int extraTime)
     {
-        timer += extra.timer;
-
+      
     }
 
+    public virtual void OnStatusEffectAdded(StatusEffectAddedEvent eventData) 
+    {
+        if (eventData.Name == Name)
+        {
+            eventData.IsMerged.IsTrue = true;
+            Combine(eventData.Counter);
+        }
+    }
 }
 
-// Simple Status Effect that deals damage every turn 
-public class Poison : StatusEffect
+
+public class PoisonEffect: StatusEffect, IOnStartOfTurn
 {
-    public Poison(int timer) : base(timer) 
+    public PoisonEffect(int counter, BaseBattleCharacter target) : base(counter, target)
     {
-        name = "Poison";
+        this.Name = "Poison";
     }
 
-    // Deals damage relative to the timer each turn. Designed to get stronger the more poison you can stack
-    // Based off of Slay the Spire / WildFrost Poison
-    public override int countDown(BaseBattleCharacter affected)
+    public override void Initialise()
     {
-        affected.TakeDamage(timer);
-        timer -= 1;
-        return timer;
-
+        base.Initialise();
+        EventManager.AddListener<StartOfTurnEvent>(OnStartOfTurn, Target);
     }
-}
-
-// Simple - Take reduced damage for a turn then go back to normal
-public class Block : StatusEffect
-{
-    public Block(int timer) : base(timer)
+    public void OnStartOfTurn(StartOfTurnEvent eventData)
     {
-        name = "Block";
+        ActionManager.Instance.AddToBottom(new DealDamage(null, new List<BaseBattleCharacter> { Target }, Counter, DamageType.FLAT));
+        Counter--;
     }
-}
 
-
-// Factory (maybe but probably not) for more Dynamic creation of status effects
-public class StatusFactory
-{
-    public static StatusFactory Instance = new StatusFactory();
-
-    public T createStatus<T>(int timer) where T : StatusEffect
-    {
-        return Activator.CreateInstance(typeof(T), timer) as T;
-    }
-}
+} 

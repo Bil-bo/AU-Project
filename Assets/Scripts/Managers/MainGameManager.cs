@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,14 +47,13 @@ public class MainGameManager : MonoBehaviour
         {
             init = true;
             PlayerPrefs.SetInt("PickupsCollected", 0);
+            GameData.Instance.AddPlayer(player.GetComponent<PlayerPropsRoaming>().BattleInfo);
         }
     }
      
     // For Saving data between scenes before starting the battle
-    public void EnterBattle(List<GameObject> cards)
+    public void EnterBattle()
     {
-        GameData.Instance.deckToPass = cards;
-        
         PlayerPrefs.SetFloat("PlayerX", player.transform.position.x);
         PlayerPrefs.SetFloat("PlayerY", player.transform.position.y);
         PlayerPrefs.SetFloat("PlayerZ", player.transform.position.z);

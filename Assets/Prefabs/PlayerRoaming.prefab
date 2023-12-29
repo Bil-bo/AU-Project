@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 001ac778f66dcab49a2b4998b900b614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BattleInfo: {fileID: 11400000, guid: 6655b9a03beed26458efd7fcfa7c8bf7, type: 2}
   _speed: 500
   moveValue: {x: 0, y: 0}
   gameManager: {fileID: 0}

@@ -8,7 +8,7 @@ public abstract class BattleEnemy : BaseBattleCharacter
     public string enemyName { get; set; }
 
 
-    public virtual void Attack(){
+    public virtual void Attack() {
 
         BattlePlayer[] players = FindObjectsByType<BattlePlayer>(FindObjectsSortMode.None); //Attack method for enemy
 
@@ -19,14 +19,14 @@ public abstract class BattleEnemy : BaseBattleCharacter
 
             // Attack the randomly selected player
             int damage = 5;
-            randomPlayer.TakeDamage(damage);
+
+            ActionManager.Instance.AddToBottom(new DealDamage(this, new List<BaseBattleCharacter> { randomPlayer }, damage, DamageType.NORMAL));
             Debug.Log(gameObject.name + " does " + damage + " damage to " + randomPlayer.gameObject.name);
         }
 
     }
 
     public virtual void Defend(){
-        ApplyStatusEffect(StatusFactory.Instance.createStatus<Block>(1));
        //Empty for now as we have not implemented a defense mechanism for enemies yet 
     }
 

@@ -10,27 +10,47 @@ using System.Runtime.CompilerServices;
 public class BattlePlayer : BaseBattleCharacter
 {
 
-    public Card currentCard { get; set; }
-    public GameObject deckViewer;
-    private DeckHandler deckHandler;
     public bool isMyTurn = false;
     public int maxHand { get; set; } = 3;
 
-
-
-    private void CreateCanvas()
+    private BattleInfo _info;
+    public BattleInfo info
     {
-        
-        deckHandler = Instantiate(deckViewer, deckViewer.transform.position, Quaternion.identity).GetComponent<DeckHandler>();
-        deckHandler.initialise(this);
-
+        get {  return _info; }
+        set 
+        {
+            _info = value;
+            maxHealth = _info.maxHealth;
+            Name = _info.Name;
+            MaxEnergy = _info.MaxEnergy;
+        }
     }
+
+    public int MaxEnergy { get; set; }
+
+    private int _CurrentEnergy;
+
+    public int CurrentEnergy 
+    {
+        get { return _CurrentEnergy; }
+        set 
+        {
+            _CurrentEnergy = Mathf.Clamp(value, 0, 999);
+            if (_CurrentEnergy <= 0 )
+            {
+                FinishTurn();
+            }
+        }
+    }
+
+
+   
+
 
 
     // Awake called to avoid race conditions with the coroutine
     private void Awake()
     {
-        CreateCanvas();
         hudManager = GameObject.Find("Canvas").GetComponent<HUDManager>();
         attack = 0;
         defense = 0;
@@ -50,13 +70,11 @@ public class BattlePlayer : BaseBattleCharacter
     {
 
         ProcessStatusEffects(); //Both
-        isMyTurn = true;    
+        isMyTurn = true;
+        CurrentEnergy = MaxEnergy;
         
-        deckHandler.ShowDeck();
-        hudManager.UpdateTurnText(gameObject.name);
+        hudManager.UpdateTurnText(Name);
         UpdateHealthBar();
-
-        
 
         while (isMyTurn)
         {
@@ -68,7 +86,6 @@ public class BattlePlayer : BaseBattleCharacter
     
     public void FinishTurn()
     {
-        deckHandler.HideHand();
         isMyTurn = false;
     }
 
