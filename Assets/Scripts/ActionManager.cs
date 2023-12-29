@@ -31,7 +31,6 @@ public class ActionManager : MonoBehaviour
     public void AddToTop(ICardActions action)
     {
         ActionQueue.AddFirst(action);
-
     }
 
     public void AddToBottom(ICardActions action) 

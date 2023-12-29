@@ -9,6 +9,7 @@ public class StatusVisualiser : MonoBehaviour
     private TextMeshPro StatusCounter;
 
     private Renderer StatusRenderer;
+
     private StatusEffect _Effect;
 
     public StatusEffect Effect 

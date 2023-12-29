@@ -10,16 +10,12 @@ using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 using System;
 using UnityEditor;
-using UnityEngine.TextCore.Text;
 
 
 
 // Sets up and starts the main battle scene
 public class BattleManager : MonoBehaviour
 {
-
-
-
     //public List<GameObject> characters = new List<GameObject>();
 
     public List<BattlePlayer> players = new List<BattlePlayer>();
@@ -31,7 +27,6 @@ public class BattleManager : MonoBehaviour
     private bool playerWin = false;
     private bool playerLose = false;
     private bool isPressing = false;
-
 
     public GameManager manager;
 
@@ -61,6 +56,7 @@ public class BattleManager : MonoBehaviour
 
     private Vector2 mousePrevPos;
     private bool InPlay;
+
     private bool TargetSelection = false;
     private BaseBattleCharacter SingleTarget;
 
@@ -159,11 +155,7 @@ public class BattleManager : MonoBehaviour
                 InPlay = false;
                 DeselectAll();
             }
-
-
         }
-
-
     }
 
     void ClickRelease(InputAction.CallbackContext context)

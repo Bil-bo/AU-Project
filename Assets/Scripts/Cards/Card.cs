@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
 
@@ -50,7 +51,7 @@ public abstract class Card : MonoBehaviour
             CardView = gameObject;
             CardBase = gameObject.transform.parent;
             Name = _cardInfo.Name;
-            Description = _cardInfo.Description;
+            Description = ConstructDescription(_cardInfo.Description);
             Cost = _cardInfo.Cost;
             FormMerges(_cardInfo.CardInput, _cardInfo.CardOutput);
             Type = _cardInfo.Type;
@@ -85,6 +86,37 @@ public abstract class Card : MonoBehaviour
             return cardToMerge.Merges[Name];
         }
         return null;
+    }
+
+    private string ConstructDescription(string initDescription)
+    {
+        string finishedDescription = initDescription;
+
+        List<string> placeHolders = new List<string>()
+        {
+            "|D|",
+            "|C|",
+            "|F|"
+        };
+
+        if (finishedDescription.Contains("|D|"))
+        {
+            int index = finishedDescription.IndexOf("{DamageValue}");
+            int i = 0;
+            // Continue replacing until no more occurrences are found
+            while (i > Damage.Count && index != -1)
+            {
+                // Replace the current occurrence of "{DamageValue}" with the actual damage value
+                finishedDescription = finishedDescription.Substring(0, index) +
+                    Damage[i].ToString() +
+                    finishedDescription.Substring(index + "{DamageValue}".Length);
+
+                // Find the index of the next occurrence of "{DamageValue}"
+                index = finishedDescription.IndexOf("{DamageValue}", index + 1);
+
+            }
+        }
+        return finishedDescription;
     }
 
 

@@ -42,6 +42,7 @@ public abstract class StatusEffect: IOnStatusEffectAdded
     // Combine adds two of the same statusEffect together, so that they can stack
     public virtual void Combine(int extraTime)
     {
+        Counter += extraTime;
       
     }
 

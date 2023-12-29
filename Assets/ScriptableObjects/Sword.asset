@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99231315dddaa5b4b983d4ddac998a6e, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
-  Card: {fileID: 0}
-  Name: 
+  Name: Sword
   Description: 
   Cost: 0
   CardInput: []

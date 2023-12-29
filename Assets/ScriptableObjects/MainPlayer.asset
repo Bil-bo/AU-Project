@@ -15,6 +15,7 @@ MonoBehaviour:
   PlayerModel: {fileID: 3517959726302896293, guid: a4ca3067d45cd1643b33d7478c98a82f, type: 3}
   Name: MyGuy
   maxHealth: 100
+  MaxEnergy: 3
   Deck:
   - {fileID: 3484152411740928418, guid: 77a3215c40020b8469f146390a1790ca, type: 3}
   - {fileID: 3484152411740928418, guid: 77a3215c40020b8469f146390a1790ca, type: 3}

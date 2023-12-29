@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Runtime.CompilerServices;
 
+
 public abstract class BaseBattleCharacter : MonoBehaviour, IBroadCastEvent
 {
     public string Name;
