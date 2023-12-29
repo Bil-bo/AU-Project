@@ -27,7 +27,7 @@ public class DealDamage : ICardActions
         switch (TypeOfDamage)
         {
             case DamageType.FLAT:
-                foreach (BaseBattleCharacter target in Target) { target.TakeFlatDamage(Damage); }
+                foreach (BaseBattleCharacter target in Target) { target.TakeDamage(Damage); }
                 break;
             default:
 

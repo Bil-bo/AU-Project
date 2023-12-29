@@ -97,16 +97,9 @@ public abstract class BaseBattleCharacter : MonoBehaviour, IBroadCastEvent
         textPopup.transform.position = new Vector3(textPopup.transform.position.x, textPopup.transform.position.y + 1f, textPopup.transform.position.z - 1f);
     }
 
-    public int CalculateIncomingDamage(float originalDamage)
-    {
-        float finalDamage = originalDamage;
-
-        return Mathf.FloorToInt(finalDamage);
-    }
 
     public void TakeDamage(int damage) //Method for the chars to take damage
     {
-        damage = CalculateIncomingDamage(damage);
         currentHealth -= damage; //We take away a bit of health based on how much damage the char has inflicted
         FlashObject(new Color(1f, 0f, 0f, 0.5f)); //They turn red temporarily when getting attacked
 
@@ -121,10 +114,5 @@ public abstract class BaseBattleCharacter : MonoBehaviour, IBroadCastEvent
 
         }
         UpdateHealthBar();
-    }
-
-    public void TakeFlatDamage(int damage)
-    {
-
     }
 }
