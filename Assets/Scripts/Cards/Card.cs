@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 
 public abstract class Card : MonoBehaviour
 {
@@ -18,47 +20,133 @@ public abstract class Card : MonoBehaviour
 
     private string _Name;
 
-    public string Name { get { return _Name; } set { _Name = value; } }
+    public string Name 
+    {
+        get { return _Name; } 
+        set 
+        { 
+            _Name = value; 
+            CardBase.GetChild(0).GetComponent<TextMeshProUGUI>().text = _Name;
+        } 
+    }
 
-    private string Description;
+    private string _Description;
 
-    public int Cost { get; set; }
+    public string Description
+    {
+        get { return _Description; }
+
+        set
+        {
+            _Description = ConstructDescription(value);
+            CardBase.GetChild(1).GetComponent<TextMeshProUGUI>().text = _Description.ToString();
+        }
+    }
+
+
+    private int _Cost;
+
+    public int Cost 
+    { 
+        get { return _Cost; } 
+    
+        set 
+        { 
+            _Cost = value;
+            CardBase.GetChild(2).GetComponent<TextMeshProUGUI>().text = _Cost.ToString();
+        } 
+    }
 
     public Dictionary<string, GameObject> Merges;
 
-    private CardType Type;
+    private CardType _CardType;
+
+    public CardType CardType
+    {
+        get { return _CardType; }
+
+        set
+        {
+            _CardType = value;
+            CardBase.GetChild(3).GetComponent<TextMeshProUGUI>().text = _CardType.ToString();
+        }
+    }
 
     public Target Target { get; set; }
 
-    public int Range { get; set; }
+    private int _Range;
+    private bool initSet = false;
+    public int Range
+    {
+        get { return _Range; }
 
-    private List<int> _Damage;
+        set
+        {
+            if (!initSet)
+            {
+                _Range = Mathf.Clamp(value, -1, 10);
+                initSet = true;
+                if (_Range > -1) { CardBase.GetChild(4).GetComponent<TextMeshProUGUI>().text = Range.ToString(); } 
+            }
+            else
+            {
+                if (_Range != -1)
+                {
+                    _Range = Mathf.Max(value, 0);
+                    CardBase.GetChild(4).GetComponent<TextMeshProUGUI>().text = _Range.ToString();
+                }
+            }
+        }
+    }
 
 
-    public List<int> Damage { get; set; }
+    private List<int> _Damage = new();
 
-    public int DamageModifier { get; set; }
+
+    public List<int> Damage { get { return _Damage.Select(item => item + DamageModifier).ToList();  } set { _Damage = value; } }
+
+    private int _DamageModifier = 0;
+
+    public int DamageModifier 
+    {
+        get { return _DamageModifier; }
+        set 
+        { 
+            _DamageModifier = value;
+            Description = _cardInfo.Description;
+
+        }
+    }
 
     private List<int> FlatDamage;
 
-    private bool Activated = false;
+    //private bool Activated = false;
 
-    private void OnEnable()
+    private void Awake()
     {
-        if (!Activated)
+        CardView = gameObject;
+        CardBase = gameObject.transform.parent;
+        Name = _cardInfo.Name;
+        Cost = _cardInfo.Cost;
+        FormMerges(_cardInfo.CardInput, _cardInfo.CardOutput);
+        CardType = _cardInfo.Type;
+        Target = _cardInfo.Target;
+        Range = _cardInfo.Range;
+        Damage = _cardInfo.Damage;
+        FlatDamage = _cardInfo.FlatDamage;
+        Description = _cardInfo.Description;
+
+
+    }
+
+    public void DamageListener(BattlePlayer user)
+    {
+        if (CardType == CardType.ATTACK || Damage.Count > 0)
         {
-            Activated = true;
-            CardView = gameObject;
-            CardBase = gameObject.transform.parent;
-            Name = _cardInfo.Name;
-            Description = ConstructDescription(_cardInfo.Description);
-            Cost = _cardInfo.Cost;
-            FormMerges(_cardInfo.CardInput, _cardInfo.CardOutput);
-            Type = _cardInfo.Type;
-            Target = _cardInfo.Target;
-            Range = _cardInfo.Range;
-            Damage = _cardInfo.Damage;
-            FlatDamage = _cardInfo.FlatDamage;
+            try
+            {
+                EventManager.AddListener<AttackChangedEvent>(e => DamageModifier = e.NewAtk, user);
+            } catch {}
         }
     }
 
@@ -101,23 +189,51 @@ public abstract class Card : MonoBehaviour
 
         if (finishedDescription.Contains("|D|"))
         {
-            int index = finishedDescription.IndexOf("{DamageValue}");
+
+            int index = finishedDescription.IndexOf("|D|");
             int i = 0;
             // Continue replacing until no more occurrences are found
-            while (i > Damage.Count && index != -1)
+            while (i < Damage.Count && index != -1)
+            {
+                Debug.Log("Hey there's something here");
+
+                finishedDescription = finishedDescription.Substring(0, index) +
+                    Damage[i].ToString() +
+                    finishedDescription.Substring(index + "|D|".Length);
+
+                index = finishedDescription.IndexOf("|D|", index + 1);
+                i++;
+            }
+        }
+
+        if (finishedDescription.Contains("|C|"))
+        {
+            finishedDescription = finishedDescription.Replace("|C|", (Cost == -1) ? "X" : Cost.ToString());
+        }
+
+        if (finishedDescription.Contains("|F|"))
+        {
+            int index = finishedDescription.IndexOf("|F|");
+            int i = 0;
+            // Continue replacing until no more occurrences are found
+            while (i < Damage.Count && index != -1)
             {
                 // Replace the current occurrence of "{DamageValue}" with the actual damage value
                 finishedDescription = finishedDescription.Substring(0, index) +
                     Damage[i].ToString() +
-                    finishedDescription.Substring(index + "{DamageValue}".Length);
+                    finishedDescription.Substring(index + "|F|".Length);
 
                 // Find the index of the next occurrence of "{DamageValue}"
-                index = finishedDescription.IndexOf("{DamageValue}", index + 1);
+                index = finishedDescription.IndexOf("|F|", index + 1);
+                i++;
 
             }
         }
+
         return finishedDescription;
     }
+
+
 
 
 }

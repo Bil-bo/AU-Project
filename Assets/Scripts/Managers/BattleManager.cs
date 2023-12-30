@@ -165,8 +165,8 @@ public class BattleManager : MonoBehaviour
             List<BaseBattleCharacter> targets = GetTargets(CardData.Target, CardData.Range);
             if (targets.Count > 0) 
             {
-                CurrentPlayer.CurrentEnergy -= CardData.Cost;
                 CardData.Use(CurrentPlayer, targets);
+                CurrentPlayer.CurrentEnergy -= (CardData.Cost == -1) ? CurrentPlayer.CurrentEnergy : CardData.Cost;
             }
 
         }

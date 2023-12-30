@@ -27,7 +27,6 @@ public class PostTakeDamageEvent: IEvent
 // Broadcast from the BaseBattleCharacter TakeDamage method
 public class CharacterDeathEvent: IEvent
 {
-
 }
 
 // Broadcast from the BattleManager CheckDeaths method
@@ -54,7 +53,10 @@ public class EndOfCombatEvent: IEvent { }
 
 
 //BroadCast from the BaseBattleCharacter
-public class AttackChangedEvent: IEvent { }
+public class AttackChangedEvent: IEvent 
+{
+    public int NewAtk { get; set; }
+}
 
 
 // Broadcast from the ActionManager

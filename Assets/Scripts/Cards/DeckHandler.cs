@@ -14,6 +14,7 @@ public class DeckHandler : MonoBehaviour
     public GameObject ifEmptyDeck;
     public GameObject canvas; // Unnecessary but I'm scared to remove
     public GameObject cardPrefab;
+    public RectTransform CardDimensions;
     public BattlePlayer Player;
     private Button button;
 
@@ -133,7 +134,7 @@ public class DeckHandler : MonoBehaviour
         if (canMerge != null)
         {
             if (!CombinedCards.ContainsKey(currentPlayer)) { CombinedCards.Add(currentPlayer, new Dictionary<Guid, GameObject[]>()); }
-            GameObject newCard = CreateCard(canMerge, true);
+            GameObject newCard = CardFactory.CreateCard(canMerge, Player, this.transform, true);
             hand.Add(newCard);
 
             CombinedCards[currentPlayer].Add(newCard.GetComponent<Card>().CardID, new GameObject[] { cardOne.gameObject, cardTwo.gameObject });
@@ -146,20 +147,10 @@ public class DeckHandler : MonoBehaviour
         }
     }
 
-    public GameObject CreateCard(GameObject cardData, bool isActive)
-    {
-        GameObject CardBase = Instantiate(cardPrefab, cardPrefab.transform.position, Quaternion.identity, this.transform);
-        Instantiate(cardData, CardBase.transform);
-        CardBase.SetActive(isActive);
-
-        return CardBase;
-
-    }
-
     // Fans the cards out from the middle of the screen outwards
     private void UpdateDeck()
     {
-        int position = (hand.Count - 1) * 50;
+        int position = Mathf.RoundToInt((hand.Count - 1) * (CardDimensions.rect.width / 2.0f));
 
 
         foreach (GameObject card in hand)
@@ -171,7 +162,7 @@ public class DeckHandler : MonoBehaviour
             rectTransform.anchoredPosition = new Vector2(position, 0);
             card.transform.localScale = Vector3.one;
 
-            position -= 100;
+            position -= Mathf.RoundToInt(rectTransform.rect.width);
             card.SetActive(true);
 
         }
@@ -180,6 +171,8 @@ public class DeckHandler : MonoBehaviour
     public void AddDeck(GameObject player)
     {
         partyDecks[player] = GameData.Instance.BattlePlayers[player];
+        if (CardDimensions == null) { CardDimensions = partyDecks[player][0].GetComponent<RectTransform>(); }
+
         foreach (GameObject card in partyDecks[player])
         {
             card.transform.SetParent(transform, false);

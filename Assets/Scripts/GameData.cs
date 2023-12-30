@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 
@@ -9,7 +11,6 @@ public class GameData : MonoBehaviour
     public static GameData Instance;
 
     public GameObject PlayerPrefab;
-    public GameObject CardPrefab;
 
     private Dictionary<string, bool> doors = new Dictionary<string, bool>();
 
@@ -17,6 +18,8 @@ public class GameData : MonoBehaviour
     public bool isPuzzleComplete { get; set; }
 
     public Dictionary<GameObject, List<GameObject>> BattlePlayers = new();
+
+    public CardFactory Factory;
 
 
 
@@ -41,27 +44,13 @@ public class GameData : MonoBehaviour
     {
         GameObject newPlayer = Instantiate(PlayerPrefab, this.transform);
         newPlayer.GetComponent<BattlePlayer>().info = playerInfo;
-        List<GameObject> Cards = AddCards(playerInfo.Deck);
+        List<GameObject> Cards = CardFactory.CreateCards(playerInfo.Deck, newPlayer.GetComponent<BattlePlayer>(), this.transform);
         Debug.Log(newPlayer.ToString());
         Debug.Log(Cards.ToString());
         BattlePlayers.Add(newPlayer, Cards);
         newPlayer.SetActive(false);
       
     }
-
-    private List<GameObject> AddCards (List<GameObject> initDeck)
-    {
-        List<GameObject> cards = new List<GameObject>();    
-        foreach (GameObject card in initDeck)
-        {
-            GameObject newCard = Instantiate(CardPrefab, this.transform);
-            Instantiate(card, newCard.transform);
-            newCard.SetActive(false);
-            cards.Add(newCard);
-        }
-        return cards;
-    }
-
     public void AddDoor(Door door)
     {
         doors.Add(door.ID, door.isOpen);    

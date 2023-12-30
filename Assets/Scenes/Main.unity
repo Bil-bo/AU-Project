@@ -130,6 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7606664}
   - component: {fileID: 7606663}
+  - component: {fileID: 7606665}
   m_Layer: 0
   m_Name: GameData
   m_TagString: Untagged
@@ -150,8 +151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerPrefab: {fileID: 3517959726302896293, guid: a4ca3067d45cd1643b33d7478c98a82f, type: 3}
-  CardPrefab: {fileID: 4837163492941158079, guid: 426e4d8c911d95e40a2f81b5f9a3e1c0, type: 3}
   battleEnemies: []
+  Factory: {fileID: 0}
 --- !u!4 &7606664
 Transform:
   m_ObjectHideFlags: 0
@@ -167,6 +168,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7606665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7606662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fd812ed28b0cc44cb4264f4e86212f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CardPrefab: {fileID: 4837163492941158079, guid: 426e4d8c911d95e40a2f81b5f9a3e1c0, type: 3}
 --- !u!4 &40053046 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 335664517285112012, guid: 65ee0147e151ae348887d8d7433397c6, type: 3}
