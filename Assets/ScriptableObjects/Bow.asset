@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bow
   m_EditorClassIdentifier: 
   Name: Bow
-  Description: Deals |C| Damage From Range
+  Description: Deals |D| Damage From Range
   Cost: 1
   CardInput: []
   CardOutput: []

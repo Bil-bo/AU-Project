@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,8 +27,11 @@ public class ArrowPointer : MonoBehaviour
     void Start()
     {
         CanvasRect = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+        StartPoint.gameObject.SetActive(false);
+
         ControlPoint.gameObject.SetActive(false);
-        
+        ShowArrow(false);
+
     }
 
     public void SetStartPos(RectTransform cardPos) 
@@ -41,9 +45,20 @@ public class ArrowPointer : MonoBehaviour
         ControlPoint.rectTransform.anchoredPosition = StartPoint.rectTransform.anchoredPosition;
     }
 
+    public void ShowArrow(bool show)
+    {
+        EndPoint.gameObject.SetActive(show);
+
+        foreach (Image middle in MiddleSegments)
+        {
+            middle.gameObject.SetActive(show);
+
+        }
+    }
 
     public void DrawArrow(Vector2 mousePos)
     { 
+        
         EndPoint.rectTransform.anchoredPosition = FindLocalPoint(mousePos);
         ControlPoint.rectTransform.anchoredPosition = new Vector2(StartPoint.rectTransform.anchoredPosition.x, Mathf.Clamp(EndPoint.rectTransform.anchoredPosition.y, StartPoint.rectTransform.anchoredPosition.y, 0f));
         DrawQuadraticBezierCurve(StartPoint.rectTransform.anchoredPosition, ControlPoint.rectTransform.anchoredPosition, EndPoint.rectTransform.anchoredPosition);

@@ -14,7 +14,7 @@ public interface IOnPreTakeDamage : IObserve
 // Broadcast from the BaseBattleCharacter TakeDamage method
 public interface IOnPostTakeDamage : IObserve
 {
-    void OnPostTakeDamage(IEvent eventData);
+    void OnPostTakeDamage(PostTakeDamageEvent eventData);
 }
 
 
@@ -63,7 +63,7 @@ public interface IOnEndOfCombat : IObserve
 //BroadCast from the BaseBattleCharacter
 public interface IOnAttackChanged : IObserve 
 {
-    void OnAttackChanged(IEvent eventData);
+    void OnAttackChanged(AttackChangedEvent eventData);
 }
 
 

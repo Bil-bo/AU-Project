@@ -39,6 +39,12 @@ public class BattleManager : MonoBehaviour
     [SerializeField]
     private ArrowPointer Line;
 
+    [SerializeField]
+    private GameObject StatusFieldPrefab;
+
+    [SerializeField]
+    private GameObject HealthBarPrefab;
+
 
     [SerializeField]
     private List<GameObject> PlayerPositions = new List<GameObject>();
@@ -127,12 +133,14 @@ public class BattleManager : MonoBehaviour
         if (mousePrevPos != inputs.actions["UI/Point"].ReadValue<Vector2>())
         {
             mousePrevPos = inputs.actions["UI/Point"].ReadValue<Vector2>();
-            Line.DrawArrow(mousePrevPos);
+
             Ray ray = Camera.main.ScreenPointToRay(mousePrevPos);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 45f, LayerMask.GetMask("PlayArea")))
             {
                 InPlay = true;
+                Line.ShowArrow(true);
+                Line.DrawArrow(mousePrevPos);
                 HighlightTargets(CardData.Target, CardData.Range, CurrentPlayer);
                 Debug.Log(TargetSelection);
                 if (TargetSelection && Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Default")))
@@ -154,13 +162,14 @@ public class BattleManager : MonoBehaviour
             {
                 InPlay = false;
                 DeselectAll();
+                Line.ShowArrow(false);
             }
         }
     }
 
     void ClickRelease(InputAction.CallbackContext context)
     {
-        if (isPressing && InPlay) 
+        if (isPressing && InPlay && !(CardData.Cost > CurrentPlayer.CurrentEnergy)) 
         {
             List<BaseBattleCharacter> targets = GetTargets(CardData.Target, CardData.Range);
             if (targets.Count > 0) 
@@ -175,6 +184,7 @@ public class BattleManager : MonoBehaviour
         TargetSelection = false;
         SingleTarget = null;
         Card = null;
+        Line.ShowArrow(false);
         DeselectAll();
         Debug.Log("Button Released");
     }
@@ -194,9 +204,12 @@ public class BattleManager : MonoBehaviour
             //Need to add the type of enemy from enemyInput list to the enemy GameObject
             BattleEnemy enemy = enemyBody.GetComponent<BattleEnemy>();
 
+            Instantiate(StatusFieldPrefab, enemyBody.transform);
+            HealthBar healthBar = Instantiate(HealthBarPrefab, enemy.transform).GetComponent<HealthBar>();
+            healthBar.Initialise(enemy.CharID, enemy.maxHealth, enemy.CurrentHealth);
 
             // Assign a unique name to the enemy
-            enemy.name = "Enemy " + enemy.enemyName + (enemyCount + 1);
+            enemy.name = "Enemy " + enemy.EnemyName + (enemyCount + 1);
             enemy.PositionMarker = EnemyPositions[i];
             enemyCount++;
 
@@ -212,7 +225,10 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < party.Count; i++)
         { 
             BattlePlayer playerData = party[i].GetComponent<BattlePlayer>();
-           
+            Instantiate(StatusFieldPrefab, playerData.transform);
+            HealthBar healthBar = Instantiate(HealthBarPrefab, playerData.transform).GetComponent<HealthBar>();
+            healthBar.Initialise(playerData.CharID, playerData.maxHealth, playerData.CurrentHealth);
+
             deckHandler.AddDeck(party[i]);
             party[i].SetActive(true);
             playerData.PositionMarker = PlayerPositions[i];
@@ -245,6 +261,14 @@ public class BattleManager : MonoBehaviour
                     deckHandler.currentPlayer = CurrentPlayer.gameObject;
                     deckHandler.ShowDeck();
                     yield return new WaitForSeconds(0.5f);
+
+                    StartOfTurnEvent gameEvent = new StartOfTurnEvent()
+                    {
+                        CharacterID = CurrentPlayer.CharID,
+                        Character = player
+                    };
+                    EventManager.Broadcast(gameEvent);
+
                     yield return StartCoroutine(player.DoTurn());
                     CheckEnemyDeaths();
                     CheckPlayerDeaths();
@@ -259,6 +283,13 @@ public class BattleManager : MonoBehaviour
                 if (playerWin || playerLose) { continue; }
                 else
                 {
+                    StartOfTurnEvent gameEvent = new StartOfTurnEvent()
+                    {
+                        CharacterID = enemy.CharID,
+                        Character = enemy
+                    };
+                    EventManager.Broadcast(gameEvent);
+
                     yield return StartCoroutine(enemy.DoTurn());
                     CheckPlayerDeaths();
                     CheckEnemyDeaths();

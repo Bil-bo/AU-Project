@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Runtime.CompilerServices;
+using System;
+using UnityEditor;
 
-
-public abstract class BaseBattleCharacter : MonoBehaviour, IBroadCastEvent
+public abstract class BaseBattleCharacter : MonoBehaviour
 {
+
+
+    public Guid CharID { get; } = Guid.NewGuid();
     public string Name;
     public int maxHealth;
-    private int currentHealth;
-    public int attack;
-    public int defense;
+    public int CurrentHealth { get; set; }
+    public int Attack = 0;
+
+    public int Defense = 0;
     public bool dead { get; set;} =  false; 
     private Renderer characterRenderer;
     public GameObject damageNumberPrefab;
@@ -20,7 +24,6 @@ public abstract class BaseBattleCharacter : MonoBehaviour, IBroadCastEvent
     public HUDManager hudManager;
     private Material originalMaterial;
     public int Position = 0;
-    // Start is called before the first frame update
 
     private GameObject _PositionMarker;
     public GameObject Targeter { get; set; }
@@ -41,7 +44,7 @@ public abstract class BaseBattleCharacter : MonoBehaviour, IBroadCastEvent
             transform.localPosition = Vector3.zero;
             Targeter = value.transform.GetChild(0).gameObject;  
             Targeter.transform.SetParent(transform, true);
-            Targeter.transform.localPosition = transform.localPosition + new Vector3(0, 2.0f, 0);
+            Targeter.transform.localPosition = transform.localPosition + new Vector3(0, 2.5f, 0);
             Position = value.GetComponent<PositionPointer>().Position;
         }
     }
@@ -49,9 +52,9 @@ public abstract class BaseBattleCharacter : MonoBehaviour, IBroadCastEvent
     public bool CanSelect { get; set; } = false;
 
 
-    public virtual void Start()
+    protected virtual void Awake()
     {
-        currentHealth = maxHealth; //Initialise health and everything else
+        CurrentHealth = maxHealth; //Initialise health and everything else
         hudManager = FindFirstObjectByType<HUDManager>();
         characterRenderer = GetComponent<Renderer>();
         originalMaterial = new Material(characterRenderer.material);
@@ -61,19 +64,6 @@ public abstract class BaseBattleCharacter : MonoBehaviour, IBroadCastEvent
 
 
     public abstract IEnumerator DoTurn();
-
-    public void ProcessStatusEffects()
-    {
-    }
-
-    public void ApplyStatusEffect()
-    {
-    }
-
-    public void UpdateHealthBar()
-    {
-        hudManager.UpdateHealthBar(gameObject.name, currentHealth, maxHealth); //Visual update for HP
-    }
 
     void FlashObject(Color flashColor)
     {
@@ -100,19 +90,18 @@ public abstract class BaseBattleCharacter : MonoBehaviour, IBroadCastEvent
 
     public void TakeDamage(int damage) //Method for the chars to take damage
     {
-        currentHealth -= damage; //We take away a bit of health based on how much damage the char has inflicted
+        CurrentHealth -= damage; //We take away a bit of health based on how much damage the char has inflicted
         FlashObject(new Color(1f, 0f, 0f, 0.5f)); //They turn red temporarily when getting attacked
 
         DisplayText(damage.ToString());
 
 
-        if (currentHealth <= 0)
+        if (CurrentHealth <= 0)
         {
-            currentHealth = 0; //Killing off characters
+            CurrentHealth = 0; //Killing off characters
             Debug.Log(gameObject.name + " has been defeated.");
             dead = true; 
 
         }
-        UpdateHealthBar();
     }
 }

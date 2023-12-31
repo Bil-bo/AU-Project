@@ -5,10 +5,10 @@ using UnityEngine;
 public abstract class BattleEnemy : BaseBattleCharacter
 {
     [SerializeField]
-    public string enemyName { get; set; }
+    public string EnemyName { get; set; }
 
 
-    public virtual void Attack() {
+    public virtual void AttackPlayer() {
 
         BattlePlayer[] players = FindObjectsByType<BattlePlayer>(FindObjectsSortMode.None); //Attack method for enemy
 
@@ -31,18 +31,15 @@ public abstract class BattleEnemy : BaseBattleCharacter
     }
 
     public override IEnumerator DoTurn(){
-        ProcessStatusEffects(); //Both
 
         hudManager.UpdateTurnText(gameObject.name);
 
-        UpdateHealthBar();
 
-        Attack(); //Enemies can only attack on their turn
+
+        AttackPlayer(); //Enemies can only attack on their turn
         
 
-        
-
-        UpdateHealthBar();
+     
         yield return null;
     }
     

@@ -6,6 +6,7 @@ public class Bow : Card
 { 
     public override void Use(BattlePlayer player, List<BaseBattleCharacter> targets)
     {
+        ActionManager.Instance.AddToBottom(new AddStatusEffect(player, targets, new PoisonEffect(4)));
         ActionManager.Instance.AddToBottom(new DealDamage(player, targets, Damage[0], DamageType.NORMAL));
     }
 

@@ -8,6 +8,7 @@ public class StatusVisualiser : MonoBehaviour
     [SerializeField]
     private TextMeshPro StatusCounter;
 
+    [SerializeField]
     private Renderer StatusRenderer;
 
     private StatusEffect _Effect;
@@ -17,24 +18,20 @@ public class StatusVisualiser : MonoBehaviour
         get { return _Effect; } 
         set 
         {
-            if (_Effect != null) { Effect.CounterChange -= UpdateText; }
+            if (_Effect != null) { Effect.CounterChange -= e => StatusCounter.text = e.ToString(); }
             _Effect = value;
             StatusRenderer.material = StatusEffectSprites.Instance.GetSprite(value.Name);
             StatusCounter.text = value.Counter.ToString();
-            value.CounterChange += UpdateText;
+            value.CounterChange += e => StatusCounter.text = e.ToString(); ;
+            value.Initialise();
 
 
         }
     }
-
-
-    void Start()
+    private void OnDestroy()
     {
-        StatusRenderer = GetComponentInChildren<Renderer>();
+        if (_Effect != null) { Debug.Log("Still Here"); }
+        else { Debug.Log("Nah Its Gone"); }
+        Effect?.Remove();
     }
-
-    void UpdateText(int value)
-    {
-        StatusCounter.text += value.ToString();
-    } 
 }

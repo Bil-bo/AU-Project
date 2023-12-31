@@ -37,17 +37,20 @@ public class DealDamage : ICardActions
                     DamageCalculation calc = new();
                     PreTakeDamageEvent preDamage = new()
                     {
+                        Defender = target.CharID,
                         DmgCalc = calc
                     };
-                    EventManager.Broadcast(preDamage, target);
+                    EventManager.Broadcast(preDamage);
                     target.TakeDamage(calc.CalculateDamage(Damage));
                     PostTakeDamageEvent postDamage = new()
                     {
+                        DefenderID = target.CharID,
+                        Defender = target,
                         Attacker = User,
-                        DmgCalc = calc.CalculateDamage(Damage)
-
+                        DmgCalc = calc.CalculateDamage(Damage),
+                        NewHealth = target.CurrentHealth
                     };
-                    EventManager.Broadcast(postDamage, target);
+                    EventManager.Broadcast(postDamage);
                 }
                 break;
 

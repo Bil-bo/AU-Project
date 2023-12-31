@@ -10,7 +10,6 @@ public abstract class Card : MonoBehaviour
 {
     private Transform CardBase;
 
-
     [SerializeField]
     private CardInfo _cardInfo;
 
@@ -139,17 +138,6 @@ public abstract class Card : MonoBehaviour
 
     }
 
-    public void DamageListener(BattlePlayer user)
-    {
-        if (CardType == CardType.ATTACK || Damage.Count > 0)
-        {
-            try
-            {
-                EventManager.AddListener<AttackChangedEvent>(e => DamageModifier = e.NewAtk, user);
-            } catch {}
-        }
-    }
-
     private void FormMerges(List<string> inputs, List<GameObject> outputs)
     {
         for (int i = 0; i < inputs.Count; i++) 
@@ -180,13 +168,6 @@ public abstract class Card : MonoBehaviour
     {
         string finishedDescription = initDescription;
 
-        List<string> placeHolders = new List<string>()
-        {
-            "|D|",
-            "|C|",
-            "|F|"
-        };
-
         if (finishedDescription.Contains("|D|"))
         {
 
@@ -195,7 +176,6 @@ public abstract class Card : MonoBehaviour
             // Continue replacing until no more occurrences are found
             while (i < Damage.Count && index != -1)
             {
-                Debug.Log("Hey there's something here");
 
                 finishedDescription = finishedDescription.Substring(0, index) +
                     Damage[i].ToString() +
@@ -232,10 +212,6 @@ public abstract class Card : MonoBehaviour
 
         return finishedDescription;
     }
-
-
-
-
 }
 
 

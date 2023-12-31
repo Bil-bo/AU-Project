@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class AddStatusEffect : ICardActions
 {
-    [SerializeField]
-    private GameObject StatusEffectPrefab;
-
     private BaseBattleCharacter User;
     private List<BaseBattleCharacter> Target;
     private StatusEffect Status;
@@ -24,16 +21,21 @@ public class AddStatusEffect : ICardActions
         {
             StatusEffectAddedEvent gameEvent = new StatusEffectAddedEvent()
             {
+                CharacterID = target.CharID,
+                Target = target,
                 Name = Status.Name,
                 Counter = Status.Counter,
 
             };
 
-            EventManager.Broadcast(gameEvent, target);
+            EventManager.Broadcast(gameEvent);
             if (!gameEvent.IsMerged.IsTrue)
             {
-                GameObject newStatusEffect = Object.Instantiate(StatusEffectPrefab, target.gameObject.transform);
+                GameObject statusHolder = target.transform.Find("StatusHolder(Clone)").gameObject;
+                GameObject newStatusEffect = StatusEffectSprites.Instance.CreateStatusVisual(statusHolder.transform);
+                statusHolder.GetComponent<StatusSorter>().OrganiseStatuses();
                 newStatusEffect.GetComponent<StatusVisualiser>().Effect = Status;
+                Status.Target = target;
             }
         }
 

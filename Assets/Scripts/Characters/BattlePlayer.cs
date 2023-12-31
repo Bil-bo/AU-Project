@@ -35,53 +35,22 @@ public class BattlePlayer : BaseBattleCharacter
         get { return _CurrentEnergy; }
         set 
         {
-            _CurrentEnergy = Mathf.Clamp(value, 0, 999);
-            if (_CurrentEnergy <= 0 )
-            {
-                FinishTurn();
-            }
+            _CurrentEnergy = Mathf.Max(value, 0);
         }
-    }
-
-
-   
-
-
-
-    // Awake called to avoid race conditions with the coroutine
-    private void Awake()
-    {
-        hudManager = GameObject.Find("Canvas").GetComponent<HUDManager>();
-        attack = 0;
-        defense = 0;
-    }
-
-
-    // TODO: Find a way to remove this
-    public override void Start()
-    {
-
-        base.Start();
-
     }
 
 
     public override IEnumerator DoTurn()
     {
-
-        ProcessStatusEffects(); //Both
         isMyTurn = true;
         CurrentEnergy = MaxEnergy;
         
-        hudManager.UpdateTurnText(Name);
-        UpdateHealthBar();
 
         while (isMyTurn)
         {
             yield return null;
         }
 
-        UpdateHealthBar();
     }
     
     public void FinishTurn()

@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // DeckHandler Attached to each Player to show and manage their cards
-public class DeckHandler : MonoBehaviour
+public class DeckHandler : MonoBehaviour, IOnAttackChanged
 {
     // Prefab for playtesting when loading directly into the battle scene
     public GameObject ifEmptyDeck;
@@ -51,7 +52,7 @@ public class DeckHandler : MonoBehaviour
         raycaster = gameObject.GetComponent<GraphicRaycaster>();
         eventSystem = GetComponent<EventSystem>();
         button = GetComponentInChildren<Button>();
-
+        EventManager.AddListener<AttackChangedEvent>(OnAttackChanged);
     }
 
     public void ShowDeck()
@@ -64,6 +65,7 @@ public class DeckHandler : MonoBehaviour
         {
             GameObject proxy = InDeck[currentPlayer][i];
             hand.Add(proxy);
+            UpdateDamage(proxy.GetComponentInChildren<Card>(), Player.Attack);
             InDeck[currentPlayer].Remove(proxy);
         }
 
@@ -72,6 +74,24 @@ public class DeckHandler : MonoBehaviour
 
 
     }
+
+    public void OnAttackChanged(AttackChangedEvent evt)
+    {
+        if (evt.ChangedPlayer == Player) 
+        {
+            foreach (GameObject card in hand)
+            {
+                card.GetComponentInChildren<Card>().DamageModifier = evt.NewAtk;
+            }
+        }
+    }
+
+    private void UpdateDamage(Card card, int damageChange)
+    {
+        card.DamageModifier = damageChange;
+
+    }
+
 
     // TODO: Rename this or above
     // Puts all cards in hand back into createdCards, and hides the end turn button
@@ -83,6 +103,7 @@ public class DeckHandler : MonoBehaviour
             GameObject proxy = hand[0];
             InDeck[currentPlayer].Add(proxy);
             hand.Remove(proxy);
+            UpdateDamage(proxy.GetComponentInChildren<Card>(), 0);
             proxy.SetActive(false);
         }
         gameObject.transform.GetChild(0).gameObject.SetActive(false);
@@ -134,7 +155,7 @@ public class DeckHandler : MonoBehaviour
         if (canMerge != null)
         {
             if (!CombinedCards.ContainsKey(currentPlayer)) { CombinedCards.Add(currentPlayer, new Dictionary<Guid, GameObject[]>()); }
-            GameObject newCard = CardFactory.CreateCard(canMerge, Player, this.transform, true);
+            GameObject newCard = CardFactory.CreateCard(canMerge, this.transform, true);
             hand.Add(newCard);
 
             CombinedCards[currentPlayer].Add(newCard.GetComponent<Card>().CardID, new GameObject[] { cardOne.gameObject, cardTwo.gameObject });
@@ -199,15 +220,20 @@ public class DeckHandler : MonoBehaviour
 
     public void ResetCards()
     {
-        foreach (List<GameObject> decks in partyDecks.Values.ToList())
+        foreach (GameObject player in partyDecks.Keys.ToList())
         {
-            foreach(GameObject card in decks)
+            GameData.Instance.BattlePlayers[player] = partyDecks[player];
+            foreach (GameObject card in partyDecks[player])
             {
                 card.SetActive(false);
                 card.transform.SetParent(GameData.Instance.transform, false);
             }
         }
-
-
     }
+
+    private void OnDestroy()
+    {
+        EventManager.RemoveListener<AttackChangedEvent>(OnAttackChanged);
+    }
+
 }

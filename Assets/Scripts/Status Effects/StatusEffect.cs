@@ -8,7 +8,7 @@ using UnityEngine;
 // Also no monobehaviour: no need for inspector and doesn't have to be attached to a GameObject
 public abstract class StatusEffect: IOnStatusEffectAdded
 {
-
+    public Action<int> CounterChange;
     private int _Counter;
 
     public int Counter 
@@ -16,8 +16,8 @@ public abstract class StatusEffect: IOnStatusEffectAdded
         get { return _Counter; } 
         set 
         {
-            _Counter = value;
-            CounterChange.Invoke(value);
+            _Counter = Mathf.Clamp(value, 0, 999);
+            CounterChange?.Invoke(value);
         }
     }
 
@@ -25,18 +25,17 @@ public abstract class StatusEffect: IOnStatusEffectAdded
 
     public string Name;
     public BaseBattleCharacter Target;
-    public Action<int> CounterChange;
 
 
-    public StatusEffect(int counter, BaseBattleCharacter target)
+
+    public StatusEffect(int counter)
     {
         this.Counter = counter;
-        this.Target = target;
     }
 
     public virtual void Initialise()
     {
-        EventManager.AddListener<StatusEffectAddedEvent>(OnStatusEffectAdded, Target);
+        EventManager.AddListener<StatusEffectAddedEvent>(OnStatusEffectAdded);
     }
 
     // Combine adds two of the same statusEffect together, so that they can stack
@@ -48,18 +47,23 @@ public abstract class StatusEffect: IOnStatusEffectAdded
 
     public virtual void OnStatusEffectAdded(StatusEffectAddedEvent eventData) 
     {
-        if (eventData.Name == Name)
+        if (eventData.Name == Name && eventData.Target == Target)
         {
             eventData.IsMerged.IsTrue = true;
             Combine(eventData.Counter);
         }
+    }
+
+    public virtual void Remove()
+    {
+        EventManager.RemoveListener<StatusEffectAddedEvent>(OnStatusEffectAdded);
     }
 }
 
 
 public class PoisonEffect: StatusEffect, IOnStartOfTurn
 {
-    public PoisonEffect(int counter, BaseBattleCharacter target) : base(counter, target)
+    public PoisonEffect(int counter) : base(counter)
     {
         this.Name = "Poison";
     }
@@ -67,12 +71,22 @@ public class PoisonEffect: StatusEffect, IOnStartOfTurn
     public override void Initialise()
     {
         base.Initialise();
-        EventManager.AddListener<StartOfTurnEvent>(OnStartOfTurn, Target);
+        EventManager.AddListener<StartOfTurnEvent>(OnStartOfTurn);
     }
     public void OnStartOfTurn(StartOfTurnEvent eventData)
     {
-        ActionManager.Instance.AddToBottom(new DealDamage(null, new List<BaseBattleCharacter> { Target }, Counter, DamageType.FLAT));
-        Counter--;
+        Debug.Log("StartOfTurnEventCalled");
+        if (eventData.Character == Target)
+        {
+            ActionManager.Instance.AddToBottom(new DealDamage(null, new List<BaseBattleCharacter> { Target }, Counter, DamageType.FLAT));
+            Counter--;
+        }
+    }
+
+    public override void Remove()
+    {
+        base.Remove();
+        EventManager.RemoveListener<StartOfTurnEvent>(OnStartOfTurn);
     }
 
 } 

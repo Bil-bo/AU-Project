@@ -8,25 +8,22 @@ public class EnemyA : BattleEnemy
 
 
     // Start is called before the first frame update
-    public override void Start()
+
+    protected override void Awake()
     {
         maxHealth = 75;
-        base.Start();
-        
+        base.Awake();
     }
 
     public override IEnumerator DoTurn(){
-        ProcessStatusEffects(); //Both
 
         hudManager.UpdateTurnText(gameObject.name);
-
-        UpdateHealthBar();
         
 
         // Basic pattern
         switch(counterField){
             case (0):
-            Attack();
+            AttackPlayer();
             break;
 
             case(1):
@@ -34,11 +31,11 @@ public class EnemyA : BattleEnemy
             break;
 
             case(2):
-            Attack();
+            AttackPlayer();
             break;
             
             default:
-            Attack();
+            AttackPlayer();
             break;
         
 
@@ -47,9 +44,6 @@ public class EnemyA : BattleEnemy
         
         
 
-        
-
-        UpdateHealthBar();
         yield return null;
     }
 
