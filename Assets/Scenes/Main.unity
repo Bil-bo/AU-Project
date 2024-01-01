@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1728,7 +1728,7 @@ GameObject:
   - component: {fileID: 429747786}
   m_Layer: 0
   m_Name: Walls
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1984,7 +1984,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2292618281491278568, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2
+      value: 82.9
       objectReference: {fileID: 0}
     - target: {fileID: 2292618281491278568, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2665,6 +2665,10 @@ PrefabInstance:
     - target: {fileID: 5953293602036635061, guid: 1797b2e443a783b479242df8b8b719d2, type: 3}
       propertyPath: m_Name
       value: PlayerRoaming
+      objectReference: {fileID: 0}
+    - target: {fileID: 5953293602036635061, guid: 1797b2e443a783b479242df8b8b719d2, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5493,7 +5497,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2292618281491278568, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 65
+      value: 53
       objectReference: {fileID: 0}
     - target: {fileID: 2292618281491278568, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5501,7 +5505,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2292618281491278568, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -152
+      value: -157.3
       objectReference: {fileID: 0}
     - target: {fileID: 2292618281491278568, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5536,6 +5540,10 @@ PrefabInstance:
       value: EnemyRoaming
       objectReference: {fileID: 0}
     - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+      propertyPath: chase
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8067447519904012738, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
       propertyPath: battleEnemyInfos.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -5554,7 +5562,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4267710845453900681, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2014880686}
+    - targetCorrespondingSourceObject: {fileID: 4267710845453900681, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2014880687}
   m_SourcePrefab: {fileID: 100100000, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
 --- !u!4 &1268788015 stripped
 Transform:
@@ -5994,7 +6008,7 @@ GameObject:
   - component: {fileID: 1345390509}
   m_Layer: 0
   m_Name: Doors
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8476,6 +8490,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 335664517285112012, guid: 65ee0147e151ae348887d8d7433397c6, type: 3}
   m_PrefabInstance: {fileID: 2029018167}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2014880681 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4267710845453900681, guid: 6edc0821856aadb48a053c94b4a2d7f1, type: 3}
+  m_PrefabInstance: {fileID: 1268788014}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2014880686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2014880681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3cb4ad58d69fbf4391badef6dcaa9f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1962946289}
+  controller: {fileID: 2014880687}
+  chaseRange: 45
+  moveSpeed: 15
+--- !u!143 &2014880687
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2014880681}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &2018490518
 PrefabInstance:
   m_ObjectHideFlags: 0

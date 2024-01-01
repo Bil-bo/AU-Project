@@ -14,6 +14,7 @@ public class MainGameManager : MonoBehaviour
     private GameObject[] pickups;
     public GameObject player;
     private static bool init = false;
+    
 
     // Start is called before the first frame update
     void Start()
