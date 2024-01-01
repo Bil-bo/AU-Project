@@ -7,6 +7,7 @@ using UnityEngine;
 public class EnemyPropsRoaming : MonoBehaviour
 {
     public GameObject [] battleEnemyInfos;
+    
 
 
 }
