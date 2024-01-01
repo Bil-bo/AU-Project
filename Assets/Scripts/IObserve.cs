@@ -19,11 +19,18 @@ public interface IOnPostTakeDamage : IObserve
 
 
 // Broadcast from the BaseBattleCharacter TakeDamage method
-public interface IOnCharacterDeath : IObserve
+public interface IOnPlayerDeath : IObserve
 {
-    void OnCharacterDeath(IEvent eventData);
+    void OnPlayerDeath(PlayerDeathEvent eventData);
 
 }
+
+public interface IOnEnemyDeath : IObserve
+{
+    void OnEnemyDeath(EnemyDeathEvent eventData);
+
+}
+
 
 // Broadcast from the BattleManager CheckDeaths method
 public interface IOnGameOver : IObserve

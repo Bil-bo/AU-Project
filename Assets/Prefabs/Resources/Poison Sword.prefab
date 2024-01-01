@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1821023664163623322}
+  - component: {fileID: -5768841009072193320}
   m_Layer: 0
-  m_Name: Poison Knife
+  m_Name: Poison Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,3 +32,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-5768841009072193320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3484152411740928418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c01f611c41733aa4e9025f7cdc261156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardInfo: {fileID: 11400000, guid: 2731e2a5f3851d548bc3eab6bc09c219, type: 2}

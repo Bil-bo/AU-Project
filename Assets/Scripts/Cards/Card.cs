@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 
 public abstract class Card : MonoBehaviour
 {
-    private Transform CardBase;
+    public Transform CardBase { get; set; }
 
     [SerializeField]
     private CardInfo _cardInfo;
@@ -56,7 +56,7 @@ public abstract class Card : MonoBehaviour
         } 
     }
 
-    public Dictionary<string, GameObject> Merges;
+    public Dictionary<string, GameObject> Merges = new();
 
     private CardType _CardType;
 
@@ -117,7 +117,11 @@ public abstract class Card : MonoBehaviour
         }
     }
 
-    private List<int> FlatDamage;
+    protected List<int> FlatDamage;
+
+
+
+    public Guid UserID;
 
     //private bool Activated = false;
 

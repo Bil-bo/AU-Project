@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -24,36 +25,41 @@ public class DealDamage : ICardActions
     // Simple Effect: Card does damge to target
     public void Effect()
     {
-        switch (TypeOfDamage)
+        foreach (BaseBattleCharacter target in Target)
         {
-            case DamageType.FLAT:
-                foreach (BaseBattleCharacter target in Target) { target.TakeDamage(Damage); }
-                break;
-            default:
+            DamageCalculation calc = new DamageCalculation(Damage);
+            PostTakeDamageEvent postDamage = new();
 
 
-                foreach (BaseBattleCharacter target in Target)
+            if (TypeOfDamage == DamageType.FLAT)
+            {
+                
+                target.TakeDamage(Damage);
+                postDamage.DefenderID = target.CharID;
+                postDamage.DmgCalc = Damage;
+                postDamage.NewHealth = target.CurrentHealth;            
+            }
+
+            else
+            {
+
+                PreTakeDamageEvent preDamage = new()
                 {
-                    DamageCalculation calc = new();
-                    PreTakeDamageEvent preDamage = new()
-                    {
-                        Defender = target.CharID,
-                        DmgCalc = calc
-                    };
-                    EventManager.Broadcast(preDamage);
-                    target.TakeDamage(calc.CalculateDamage(Damage));
-                    PostTakeDamageEvent postDamage = new()
-                    {
-                        DefenderID = target.CharID,
-                        Defender = target,
-                        Attacker = User,
-                        DmgCalc = calc.CalculateDamage(Damage),
-                        NewHealth = target.CurrentHealth
-                    };
-                    EventManager.Broadcast(postDamage);
-                }
-                break;
+                    Defender = target.CharID,
+                    DmgCalc = calc
+                };
+                EventManager.Broadcast(preDamage);
+                target.TakeDamage(calc.CalculateDamage());
 
+                postDamage.DefenderID = target.CharID;
+                postDamage.Attacker = User;
+                postDamage.Defender = target;
+                postDamage.DmgCalc = calc.CalculateDamage();
+                postDamage.NewHealth = target.CurrentHealth;
+
+            }
+
+            EventManager.Broadcast(postDamage);
         }
     }
 }
@@ -75,20 +81,25 @@ public class Modifier
 
 public class DamageCalculation
 {
+    public int OriginalDamage;
     public float ModifiedDamage;
     private List<Modifier> Modifications = new();
 
+    public DamageCalculation(int originalDamage)
+    {
+        OriginalDamage = originalDamage;
+        ModifiedDamage = originalDamage;
+    }
+
     public void AddModifier(Modifier modifier) { Modifications.Add(modifier); }
 
-    public int CalculateDamage(int OriginalDamage)
+    public int CalculateDamage()
     {
-        ModifiedDamage = OriginalDamage;
         Modifications.Sort((a,b) => a.priority.CompareTo(b.priority));
         foreach (var modifier in Modifications) 
         {
             modifier.Modify(ModifiedDamage);
         }
-
         return Mathf.RoundToInt(ModifiedDamage);
 
     }

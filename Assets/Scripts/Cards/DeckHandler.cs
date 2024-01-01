@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // DeckHandler Attached to each Player to show and manage their cards
-public class DeckHandler : MonoBehaviour, IOnAttackChanged
+public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
 {
     // Prefab for playtesting when loading directly into the battle scene
     public GameObject ifEmptyDeck;
@@ -53,6 +53,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged
         eventSystem = GetComponent<EventSystem>();
         button = GetComponentInChildren<Button>();
         EventManager.AddListener<AttackChangedEvent>(OnAttackChanged);
+        EventManager.AddListener<PlayerDeathEvent>(OnPlayerDeath);
     }
 
     public void ShowDeck()
@@ -155,16 +156,30 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged
         if (canMerge != null)
         {
             if (!CombinedCards.ContainsKey(currentPlayer)) { CombinedCards.Add(currentPlayer, new Dictionary<Guid, GameObject[]>()); }
-            GameObject newCard = CardFactory.CreateCard(canMerge, this.transform, true);
+            GameObject newCard = CardFactory.CreateCard(canMerge, this.transform, Player.CharID, true);
             hand.Add(newCard);
 
-            CombinedCards[currentPlayer].Add(newCard.GetComponent<Card>().CardID, new GameObject[] { cardOne.gameObject, cardTwo.gameObject });
-            hand.Remove(cardOne.gameObject);
-            hand.Remove(cardTwo.gameObject);
 
-            cardOne.gameObject.SetActive(false);
-            cardTwo.gameObject.SetActive(false);
+            CombinedCards[currentPlayer].Add(newCard.GetComponentInChildren<Card>().CardID, new GameObject[] { cardOne.CardBase.gameObject, cardTwo.CardBase.gameObject});
+            hand.Remove(cardOne.CardBase.gameObject);
+            hand.Remove(cardTwo.CardBase.gameObject);
+
+            cardOne.CardBase.gameObject.SetActive(false);
+            cardTwo.CardBase.gameObject.SetActive(false);
             UpdateDeck();
+        }
+    }
+
+    public void TryUnmergeCards (Card Merged)
+    {
+        GameObject[] mergedCards = new GameObject[2];
+        if (!CombinedCards.ContainsKey(currentPlayer) || CombinedCards[currentPlayer].TryGetValue(Merged.CardID, out mergedCards))
+        {
+            foreach (var card in mergedCards)
+            {
+                TryUnmergeCards(card.GetComponent<Card>());
+                InDeck[currentPlayer].Add(card);
+            }
         }
     }
 
@@ -200,7 +215,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged
         }
     }
 
-    public GameObject SelectCard(Vector2 mousePos)
+    public bool SelectCard(Vector2 mousePos, out GameObject CardToReturn)
     {
         PointerEventData pointerData = new PointerEventData(eventSystem);
         pointerData.position = mousePos;
@@ -209,13 +224,14 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged
         // Checks if the Raycast hit another card
         foreach (RaycastResult result in results)
         {
-            Debug.Log(result.ToString());
             if (result.gameObject.GetComponentInChildren<Card>() != null)
             {
-                return result.gameObject;
+                CardToReturn = result.gameObject;
+                return true;
             }
         }
-        return null;
+        CardToReturn = null;
+        return false;
     }
 
     public void ResetCards()
@@ -234,6 +250,23 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged
     private void OnDestroy()
     {
         EventManager.RemoveListener<AttackChangedEvent>(OnAttackChanged);
+        EventManager.RemoveListener<PlayerDeathEvent>(OnPlayerDeath);
     }
 
+    public void OnPlayerDeath(PlayerDeathEvent eventData)
+    {
+        GameObject DeadPlayer = eventData.player.gameObject;
+
+        InDeck.Remove(DeadPlayer);
+        CombinedCards.Remove(DeadPlayer);
+        if (Player == eventData.player)
+        {
+            hand.Clear();
+        }
+
+        foreach (GameObject card in partyDecks[DeadPlayer]) { Destroy(card); }
+        partyDecks.Remove(DeadPlayer);
+        GameData.Instance.BattlePlayers.Remove(DeadPlayer);
+
+    }
 }

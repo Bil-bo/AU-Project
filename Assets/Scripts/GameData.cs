@@ -44,9 +44,7 @@ public class GameData : MonoBehaviour
     {
         GameObject newPlayer = Instantiate(PlayerPrefab, this.transform);
         newPlayer.GetComponent<BattlePlayer>().info = playerInfo;
-        List<GameObject> Cards = CardFactory.CreateCards(playerInfo.Deck, this.transform);
-        Debug.Log(newPlayer.ToString());
-        Debug.Log(Cards.ToString());
+        List<GameObject> Cards = CardFactory.CreateCards(playerInfo.Deck, this.transform, newPlayer.GetComponent<BattlePlayer>().CharID);
         BattlePlayers.Add(newPlayer, Cards);
         newPlayer.SetActive(false);
       

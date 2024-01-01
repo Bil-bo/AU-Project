@@ -62,7 +62,6 @@ public class ButtonPad : MonoBehaviour
                     {
                         if (toTrigger.GetComponent<Door>() != null)
                         {
-                            Debug.Log("Setting to true");
                             GameData.Instance.SetDoor(toTrigger.GetComponent<Door>(), true);
                         }
                         toTrigger.SetActive(false);

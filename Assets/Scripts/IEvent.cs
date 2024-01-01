@@ -32,11 +32,19 @@ public class PostTakeDamageEvent: IEvent
 
 
 // Broadcast from the BaseBattleCharacter TakeDamage method
-public class CharacterDeathEvent: IEvent
+public class PlayerDeathEvent: IEvent
 {
     public Guid ID { get; set; }
-    public BaseBattleCharacter Character { get; set; }
+    public BattlePlayer player { get; set; }
 }
+
+
+public class EnemyDeathEvent : IEvent
+{
+    public Guid ID { get; set; }
+    public BattleEnemy enemy { get; set; }
+}
+
 
 // Broadcast from the BattleManager CheckDeaths method
 public class GameOverEvent: IEvent

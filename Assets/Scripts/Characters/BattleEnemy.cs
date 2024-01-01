@@ -21,7 +21,7 @@ public abstract class BattleEnemy : BaseBattleCharacter
             int damage = 5;
 
             ActionManager.Instance.AddToBottom(new DealDamage(this, new List<BaseBattleCharacter> { randomPlayer }, damage, DamageType.NORMAL));
-            Debug.Log(gameObject.name + " does " + damage + " damage to " + randomPlayer.gameObject.name);
+
         }
 
     }
@@ -32,7 +32,6 @@ public abstract class BattleEnemy : BaseBattleCharacter
 
     public override IEnumerator DoTurn(){
 
-        hudManager.UpdateTurnText(gameObject.name);
 
 
 
@@ -42,7 +41,22 @@ public abstract class BattleEnemy : BaseBattleCharacter
      
         yield return null;
     }
-    
+
+    public override void TakeDamage(int damage)
+    {
+        base.TakeDamage(damage);
+
+        if (CurrentHealth == 0)
+        {
+            EnemyDeathEvent enemyDied = new EnemyDeathEvent()
+            {
+                ID = CharID,
+                enemy = this
+            };
+
+            EventManager.Broadcast(enemyDied);
+        }
+    }
 
 
 

@@ -57,10 +57,6 @@ public class HealthBar : MonoBehaviour, IOnPostTakeDamage
 
     public void OnPostTakeDamage(PostTakeDamageEvent eventData)
     {
-        Debug.Log("Event Triggered at:" + transform.parent.name);
-
-        Debug.Log(CharID);
-        Debug.Log(eventData.DefenderID);
         if (CharID == eventData.DefenderID)
         {
             CurrentHealth = eventData.NewHealth;
@@ -72,7 +68,7 @@ public class HealthBar : MonoBehaviour, IOnPostTakeDamage
     private void SetValues()
     {
         HealthPercent = (CurrentHealth * 1.0f) / MaxHealth;
-        Debug.Log(HealthPercent);
+
         HealthText.text = CurrentHealth.ToString() + "/" + MaxHealth.ToString();
 
 

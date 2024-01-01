@@ -17,7 +17,6 @@ public class EnemyA : BattleEnemy
 
     public override IEnumerator DoTurn(){
 
-        hudManager.UpdateTurnText(gameObject.name);
         
 
         // Basic pattern

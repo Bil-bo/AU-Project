@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEditor;
+using Unity.VisualScripting;
 
 public abstract class BaseBattleCharacter : MonoBehaviour
 {
@@ -17,11 +18,8 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     public int Attack = 0;
 
     public int Defense = 0;
-    public bool dead { get; set;} =  false; 
     private Renderer characterRenderer;
     public GameObject damageNumberPrefab;
-
-    public HUDManager hudManager;
     private Material originalMaterial;
     public int Position = 0;
 
@@ -40,12 +38,16 @@ public abstract class BaseBattleCharacter : MonoBehaviour
                 Targeter.SetActive(false);
             }
             _PositionMarker = value;
-            transform.SetParent(PositionMarker.transform, true);
-            transform.localPosition = Vector3.zero;
-            Targeter = value.transform.GetChild(0).gameObject;  
-            Targeter.transform.SetParent(transform, true);
-            Targeter.transform.localPosition = transform.localPosition + new Vector3(0, 2.5f, 0);
-            Position = value.GetComponent<PositionPointer>().Position;
+
+            if (value != null)
+            {
+                transform.SetParent(PositionMarker.transform, true);
+                transform.localPosition = Vector3.zero;
+                Targeter = value.transform.GetChild(0).gameObject;
+                Targeter.transform.SetParent(transform, true);
+                Targeter.transform.localPosition = transform.localPosition + new Vector3(0, 2.5f, 0);
+                Position = value.GetComponent<PositionPointer>().Position;
+            }
         }
     }
 
@@ -55,7 +57,6 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     protected virtual void Awake()
     {
         CurrentHealth = maxHealth; //Initialise health and everything else
-        hudManager = FindFirstObjectByType<HUDManager>();
         characterRenderer = GetComponent<Renderer>();
         originalMaterial = new Material(characterRenderer.material);
 
@@ -88,20 +89,11 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     }
 
 
-    public void TakeDamage(int damage) //Method for the chars to take damage
+    public virtual void TakeDamage(int damage) //Method for the chars to take damage
     {
-        CurrentHealth -= damage; //We take away a bit of health based on how much damage the char has inflicted
+        CurrentHealth = Mathf.Max(0, CurrentHealth - damage); //We take away a bit of health based on how much damage the char has inflicted
         FlashObject(new Color(1f, 0f, 0f, 0.5f)); //They turn red temporarily when getting attacked
 
         DisplayText(damage.ToString());
-
-
-        if (CurrentHealth <= 0)
-        {
-            CurrentHealth = 0; //Killing off characters
-            Debug.Log(gameObject.name + " has been defeated.");
-            dead = true; 
-
-        }
     }
 }

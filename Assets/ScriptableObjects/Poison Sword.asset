@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 99231315dddaa5b4b983d4ddac998a6e, type: 3}
-  m_Name: Sword
+  m_Name: Poison Sword
   m_EditorClassIdentifier: 
-  Name: Sword
-  Description: Deal |D| damage to a Close Enemy
+  Name: Poison Strike
+  Description: Deal |D| Damage. Apply |F| Poison
   Cost: 1
   CardInput: []
   CardOutput: []
   Type: 0
   Target: 2
-  Range: 1
+  Range: 2
   Damage: 1e000000
-  FlatDamage: 
+  FlatDamage: 05000000

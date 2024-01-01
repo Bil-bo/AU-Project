@@ -58,4 +58,22 @@ public class BattlePlayer : BaseBattleCharacter
         isMyTurn = false;
     }
 
+
+    public override void TakeDamage(int damage)
+    {
+        base.TakeDamage(damage);
+
+        if (CurrentHealth == 0)
+        {
+            isMyTurn = false;
+            PlayerDeathEvent playerDied = new PlayerDeathEvent()
+            {
+                ID = CharID,
+                player = this
+            };
+
+            EventManager.Broadcast(playerDied);
+        }
+    }
+
 }

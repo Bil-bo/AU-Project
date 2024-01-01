@@ -12,7 +12,7 @@ public static class EventManager
 
     public static void AddListener<T>(Action<T> evt) where T : IEvent
     {
-        Debug.Log("Adding Listener" + evt.ToString());
+
         if (!s_EventLookups.ContainsKey(evt))
         {
             Action<IEvent> newAction = (e) => evt((T)e);
@@ -24,10 +24,6 @@ public static class EventManager
                 s_Events[typeof(T)] = newAction;
         }
 
-        else
-        {
-            Debug.Log("Nah Not Adding That");
-        }
     }
 
     public static void RemoveListener<T>(Action<T> evt) where T : IEvent
@@ -49,10 +45,8 @@ public static class EventManager
 
     public static void Broadcast(IEvent evt)
     {
-        Debug.Log("BroadCasting Event");
         if (s_Events.TryGetValue(evt.GetType(), out var action))
         {
-            Debug.Log("Found Event");
             action.Invoke(evt);
         }
     }

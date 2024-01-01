@@ -30,8 +30,6 @@ public class StatusVisualiser : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if (_Effect != null) { Debug.Log("Still Here"); }
-        else { Debug.Log("Nah Its Gone"); }
         Effect?.Remove();
     }
 }

@@ -14,16 +14,19 @@ using UnityEditor;
 
 
 // Sets up and starts the main battle scene
-public class BattleManager : MonoBehaviour
+public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 {
     //public List<GameObject> characters = new List<GameObject>();
 
     public List<BattlePlayer> players = new List<BattlePlayer>();
     public List<BattleEnemy> enemies = new List<BattleEnemy>();
+    private List<BattlePlayer> DeadPlayers = new List<BattlePlayer>();
+    private List<BattleEnemy> DeadEnemies = new List<BattleEnemy>();
 
     private BattlePlayer CurrentPlayer;
 
-    private int enemyCount = 0;
+    private int EnemyCount = 0;
+    private int PlayerCount = 0;
     private bool playerWin = false;
     private bool playerLose = false;
     private bool isPressing = false;
@@ -57,8 +60,11 @@ public class BattleManager : MonoBehaviour
 
     private DeckHandler deckHandler;
 
-    private GameObject _Card;
-    private Card CardData;
+    private GameObject _MainCard;
+    private Card MainCardData;
+
+    private GameObject _SecondaryCard;
+    private Card SecondaryCardData;
 
     private Vector2 mousePrevPos;
     private bool InPlay;
@@ -68,16 +74,29 @@ public class BattleManager : MonoBehaviour
 
 
     public GameObject Card { 
-        get { return _Card; }
-        set { _Card = value;
-            if (value != null) { CardData = value.GetComponentInChildren<Card>(); }
-            else { CardData = null; }
+        get { return _MainCard; }
+        set { _MainCard = value;
+            if (value != null) { MainCardData = value.GetComponentInChildren<Card>(); }
+            else { MainCardData = null; }
+        }
+    }
+
+    public GameObject SecondaryCard
+    {
+        get { return _SecondaryCard; }
+        set
+        {
+            _SecondaryCard = value;
+            if (value != null) { SecondaryCardData = value.GetComponentInChildren<Card>(); }
+            else { SecondaryCardData = null; }
         }
     }
 
     private void Awake()
     {
         inputs = GetComponent<PlayerInput>();
+        EventManager.AddListener<PlayerDeathEvent>(OnPlayerDeath);
+        EventManager.AddListener<EnemyDeathEvent>(OnEnemyDeath);
     }
 
     void Start()
@@ -116,12 +135,11 @@ public class BattleManager : MonoBehaviour
         // Start drawing a line
         // start highlighting potential targets
         Vector2 mousePos = inputs.actions["UI/Point"].ReadValue<Vector2>();
-        Debug.Log(mousePos);
-        Card = deckHandler.SelectCard(mousePos);
-        if (Card != null )
+        GameObject newCard;
+        if (deckHandler.SelectCard(mousePos, out newCard) )
         {
+            Card = newCard;
             isPressing = true;
-            Debug.Log(CardData.Name);
             mousePrevPos = mousePos;    
             Line.SetStartPos(Card.GetComponent<RectTransform>());
 
@@ -138,14 +156,13 @@ public class BattleManager : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 45f, LayerMask.GetMask("PlayArea")))
             {
+                SecondaryCard = null;
                 InPlay = true;
                 Line.ShowArrow(true);
                 Line.DrawArrow(mousePrevPos);
-                HighlightTargets(CardData.Target, CardData.Range, CurrentPlayer);
-                Debug.Log(TargetSelection);
+                HighlightTargets(MainCardData.Target, MainCardData.Range, CurrentPlayer);
                 if (TargetSelection && Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Default")))
                 {
-                    Debug.Log(hit.collider.gameObject.name);
                     if (hit.collider.gameObject.TryGetComponent<BaseBattleCharacter>(out BaseBattleCharacter hitCharacter))
                     {
                         if (hitCharacter.CanSelect)
@@ -157,9 +174,21 @@ public class BattleManager : MonoBehaviour
                 }
                 else { SingleTarget = null; }
             }
+            else if (deckHandler.SelectCard(mousePrevPos, out _SecondaryCard))
+            {
+                InPlay = false;
+                DeselectAll();
+                Line.ShowArrow(false);
+                SecondaryCard = _SecondaryCard;
+                if (SecondaryCardData.CanMerge(MainCardData))
+                {
+                    // Highlight it, or something
+                }
+            }
 
             else 
             {
+                SecondaryCard = null;
                 InPlay = false;
                 DeselectAll();
                 Line.ShowArrow(false);
@@ -169,15 +198,22 @@ public class BattleManager : MonoBehaviour
 
     void ClickRelease(InputAction.CallbackContext context)
     {
-        if (isPressing && InPlay && !(CardData.Cost > CurrentPlayer.CurrentEnergy)) 
+        if (isPressing && InPlay && !(MainCardData.Cost > CurrentPlayer.CurrentEnergy)) 
         {
-            List<BaseBattleCharacter> targets = GetTargets(CardData.Target, CardData.Range);
+            List<BaseBattleCharacter> targets = GetTargets(MainCardData.Target, MainCardData.Range);
             if (targets.Count > 0) 
             {
-                CardData.Use(CurrentPlayer, targets);
-                CurrentPlayer.CurrentEnergy -= (CardData.Cost == -1) ? CurrentPlayer.CurrentEnergy : CardData.Cost;
+                MainCardData.Use(CurrentPlayer, targets);
+                CurrentPlayer.CurrentEnergy -= (MainCardData.Cost == -1) ? CurrentPlayer.CurrentEnergy : MainCardData.Cost;
             }
 
+        }
+
+        else if (SecondaryCard != null)
+        {
+            CurrentPlayer.CurrentEnergy -= 1;
+            deckHandler.TryMergeCards(MainCardData, SecondaryCardData);
+            SecondaryCard = null;
         }
 
         isPressing = false;
@@ -186,7 +222,6 @@ public class BattleManager : MonoBehaviour
         Card = null;
         Line.ShowArrow(false);
         DeselectAll();
-        Debug.Log("Button Released");
     }
 
 
@@ -209,9 +244,9 @@ public class BattleManager : MonoBehaviour
             healthBar.Initialise(enemy.CharID, enemy.maxHealth, enemy.CurrentHealth);
 
             // Assign a unique name to the enemy
-            enemy.name = "Enemy " + enemy.EnemyName + (enemyCount + 1);
+            enemy.name = "Enemy " + enemy.EnemyName + (EnemyCount + 1);
             enemy.PositionMarker = EnemyPositions[i];
-            enemyCount++;
+            EnemyCount++;
 
             // SET OTHER PROPERTIES OR COMPONENTS FOR ENEMY HERE
             enemies.Add(enemy);
@@ -232,7 +267,7 @@ public class BattleManager : MonoBehaviour
             deckHandler.AddDeck(party[i]);
             party[i].SetActive(true);
             playerData.PositionMarker = PlayerPositions[i];
-
+            PlayerCount++;
             players.Add(playerData);
 
         }
@@ -252,35 +287,38 @@ public class BattleManager : MonoBehaviour
 
             foreach (BattlePlayer player in players)
             {
-                if (playerWin || playerLose) { continue; }
+                if (playerWin || playerLose || DeadPlayers.Contains(player)) { continue; }
                 else
                 { 
                     CurrentPlayer = player;
                     CurrentPlayer.Targeter.SetActive(true);
                     CurrentPlayer.Targeter.GetComponent<Renderer>().material = TargetMats[0];
-                    deckHandler.currentPlayer = CurrentPlayer.gameObject;
-                    deckHandler.ShowDeck();
-                    yield return new WaitForSeconds(0.5f);
 
                     StartOfTurnEvent gameEvent = new StartOfTurnEvent()
                     {
                         CharacterID = CurrentPlayer.CharID,
                         Character = player
                     };
+
                     EventManager.Broadcast(gameEvent);
 
-                    yield return StartCoroutine(player.DoTurn());
-                    CheckEnemyDeaths();
-                    CheckPlayerDeaths();
-                    CurrentPlayer.Targeter.SetActive(false);
-                    deckHandler.HideDeck();
+                    if (DeadPlayers.Contains(player)) { continue; }
+                    else
+                    {
+                        deckHandler.currentPlayer = CurrentPlayer.gameObject;
+                        deckHandler.ShowDeck();
+                        yield return new WaitForSeconds(0.5f);
+                        yield return StartCoroutine(player.DoTurn());
+                        CurrentPlayer.Targeter.SetActive(false);
+                        deckHandler.HideDeck();
+                    }
                 }
             }
 
 
             foreach (BattleEnemy enemy in enemies)
             {
-                if (playerWin || playerLose) { continue; }
+                if (playerWin || playerLose || DeadEnemies.Contains(enemy)) { continue; }
                 else
                 {
                     StartOfTurnEvent gameEvent = new StartOfTurnEvent()
@@ -289,68 +327,47 @@ public class BattleManager : MonoBehaviour
                         Character = enemy
                     };
                     EventManager.Broadcast(gameEvent);
-
-                    yield return StartCoroutine(enemy.DoTurn());
-                    CheckPlayerDeaths();
-                    CheckEnemyDeaths();
-                    yield return new WaitForSeconds(1f);
+                    if (DeadEnemies.Contains(enemy)) { continue; }
+                    else
+                    {
+                        yield return StartCoroutine(enemy.DoTurn());
+                        yield return new WaitForSeconds(1f);
+                    }
 
                 }
             }
+            Debug.Log(DeadEnemies.Count);
+            if (DeadPlayers.Count > 0 || DeadEnemies.Count > 0) { CleanUp(); }
         }
 
-        if (playerWin)
+
+
+    }
+
+    IEnumerator ExitBattle(bool hasWon)
+    {
+        CleanUp();
+        if (hasWon)
         {
             manager.ShowOverlay("You Won!");
+            
             yield return new WaitForSeconds(2f);
-            ExitBattle();
+
+            foreach (BattlePlayer player in players)
+            {
+                player.transform.DetachChildren();
+                player.transform.parent = GameData.Instance.transform;
+            }
+
+            deckHandler.ResetCards();
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
         }
 
-        // Check if all players are defeated
-        else if (playerLose)
+        else
         {
             manager.ShowOverlay("You Lost!");
         }
-    }
-
-    void CheckPlayerDeaths(){
-        for(int i= 0; i < players.Count; i++) 
-        {
-            if(players[i].GetComponent<BattlePlayer>().dead)
-            {
-                var player = players[i];
-                players.RemoveAt(i);
-                Destroy(player);
-            }
-        }
-        playerLose = (players.Count == 0);
-
-    }
-
-    void CheckEnemyDeaths()
-    {
-        for(int i=0; i<enemies.Count;i++)
-        {
-            if(enemies[i].GetComponent<BattleEnemy>().dead)
-            {
-                var enemy = enemies[i];
-                enemies.RemoveAt(i);
-                Destroy(enemy);
-            }
-        }
-        playerWin = (enemies.Count == 0);
-    }
-
-    public void ExitBattle()
-    {
-        foreach (BattlePlayer player in players)
-        {
-            player.transform.parent = GameData.Instance.transform;
-        }
-
-        deckHandler.ResetCards();
-
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
 
@@ -532,7 +549,93 @@ public class BattleManager : MonoBehaviour
         SetHighlights(all, CurrentPlayer, 3, false);
         CurrentPlayer.Targeter.GetComponent<Renderer>().material = TargetMats[0];
         CurrentPlayer.CanSelect = false;
+    }
 
+    public void OnPlayerDeath(PlayerDeathEvent eventData)
+    {
+        BattlePlayer deadPlayer = eventData.player;
+        DeadPlayers.Add(deadPlayer);
+        PlayerCount--;
+
+        if (PlayerCount == 0)
+        {
+            StopCoroutine(StartBattlePhase());
+            StartCoroutine(ExitBattle(false));
+            // Game Over Lose Function call here, break out of the coroutine
+        }
+
+        else
+        {
+
+            deadPlayer.PositionMarker = null;
+            deadPlayer.transform.SetParent(transform, false);
+            deadPlayer.gameObject.SetActive(false);
+
+            int position = deadPlayer.Position;
+
+
+
+            foreach (BattlePlayer player in players)
+            {
+                if (player == deadPlayer) continue;
+                else { if (player.Position > position) { player.PositionMarker = PlayerPositions[player.Position - 1]; } }
+            }
+        }
+    }
+
+    public void OnEnemyDeath(EnemyDeathEvent eventData)
+    {
+        BattleEnemy deadEnemy = eventData.enemy;
+        DeadEnemies.Add(deadEnemy);
+        EnemyCount--;
+
+        if (EnemyCount == 0)
+        {
+            StopCoroutine(StartBattlePhase());
+            StartCoroutine(ExitBattle(true));
+        }
+
+        else
+        {
+            deadEnemy.PositionMarker = null;
+            deadEnemy.transform.SetParent(transform, false);
+            deadEnemy.gameObject.SetActive(false);
+
+            int position = deadEnemy.Position;
+            foreach (BattleEnemy enemy in enemies)
+            {
+                if (enemy == deadEnemy) continue;
+                else { if (enemy.Position > position) { enemy.PositionMarker = EnemyPositions[enemy.Position - 1]; } }
+            }
+        }
+    }
+
+    private void CleanUp()
+    {
+        
+
+        for (int i = DeadPlayers.Count - 1; i >= 0; i--)
+        {
+            BattlePlayer deadPlayer = DeadPlayers[i];
+            DeadPlayers.RemoveAt(i);  // Remove from DeadPlayers first
+            players.Remove(deadPlayer);  // Remove from players
+            Destroy(deadPlayer.gameObject);
+        }
+
+        // Clean up dead enemies
+        for (int i = DeadEnemies.Count - 1; i >= 0; i--)
+        {
+            BattleEnemy deadEnemy = DeadEnemies[i];
+            DeadEnemies.RemoveAt(i);  // Remove from DeadEnemies first
+            enemies.Remove(deadEnemy);  // Remove from enemies
+            Destroy(deadEnemy.gameObject);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        EventManager.RemoveListener<PlayerDeathEvent>(OnPlayerDeath);
+        EventManager.RemoveListener<EnemyDeathEvent>(OnEnemyDeath);
     }
 
 
