@@ -19,6 +19,9 @@ public class BattleInfo : ScriptableObject
     public int MaxEnergy;
 
     [SerializeField]
+    public int MaxHandSize;
+
+    [SerializeField]
     public List<GameObject> Deck;
 
 

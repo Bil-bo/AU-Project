@@ -130,6 +130,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
     void Click(InputAction.CallbackContext context)
     {
+
         // Tell the deck handler to check if a card is being selected
         // if a card has been selected have it ready here.
         // Start drawing a line

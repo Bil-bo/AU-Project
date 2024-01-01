@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -19,6 +20,9 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
     public BattlePlayer Player;
     private Button button;
 
+    [SerializeField]
+    private TextMeshProUGUI PlayerEnergy;
+
     private EventSystem eventSystem;
 
     private GameObject _currentPlayer;
@@ -28,6 +32,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         {
             _currentPlayer = value;
             Player = _currentPlayer.GetComponent<BattlePlayer>();
+            Player.OnEnergyChanged += (e,m) => PlayerEnergy.text = e.ToString()+"/"+m.ToString();
             button.onClick.AddListener(Player.FinishTurn);
         } 
     }
@@ -62,7 +67,8 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
 
         ShuffleDeck(InDeck[currentPlayer]);
 
-        for (int i = 0; i < Player.maxHand; i++)
+
+        for (int i = 0; i < Player.MaxHand && i < InDeck[currentPlayer].Count; i++)
         {
             GameObject proxy = InDeck[currentPlayer][i];
             hand.Add(proxy);
@@ -253,6 +259,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         // Checks if the Raycast hit another card
         foreach (RaycastResult result in results)
         {
+            Debug.Log(result.gameObject.name);
             if (result.gameObject.GetComponentInChildren<Card>() != null)
             {
                 CardToReturn = result.gameObject;
@@ -290,6 +297,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         CombinedCards.Remove(DeadPlayer);
         if (Player == eventData.player)
         {
+            currentPlayer = null;
             hand.Clear();
         }
 

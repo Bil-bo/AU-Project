@@ -5,13 +5,15 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using UnityEditor;
-using System.Runtime.CompilerServices;
+using System;
 
 public class BattlePlayer : BaseBattleCharacter
 {
 
     public bool isMyTurn = false;
-    public int maxHand { get; set; } = 3;
+
+    public Action<int, int> OnEnergyChanged;
+
 
     private BattleInfo _info;
     public BattleInfo info
@@ -23,10 +25,23 @@ public class BattlePlayer : BaseBattleCharacter
             maxHealth = _info.maxHealth;
             Name = _info.Name;
             MaxEnergy = _info.MaxEnergy;
+            MaxHand = _info.MaxHandSize;
         }
     }
 
-    public int MaxEnergy { get; set; }
+    public int MaxHand { get; set; } = 3;
+
+    private int _MaxEnergy;
+
+    public int MaxEnergy
+    {
+        get { return _MaxEnergy; }
+        set
+        {
+            _MaxEnergy = Mathf.Clamp(value, 1, 999);
+            OnEnergyChanged?.Invoke(CurrentEnergy, MaxEnergy);
+        }
+    }
 
     private int _CurrentEnergy;
 
@@ -36,6 +51,7 @@ public class BattlePlayer : BaseBattleCharacter
         set 
         {
             _CurrentEnergy = Mathf.Max(value, 0);
+            OnEnergyChanged?.Invoke(CurrentEnergy, MaxEnergy);
         }
     }
 

@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Wall
+  - WinText
+  - PickupText
+  - Enemy
+  - Button
+  - Door
+  - Pickup
+  - PlayArea
   layers:
   - Default
   - TransparentFX
@@ -11,7 +19,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - PlayArea
   - 
   - 
   - 

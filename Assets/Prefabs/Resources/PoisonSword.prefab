@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1821023664163623322}
   - component: {fileID: -5768841009072193320}
   m_Layer: 0
-  m_Name: Poison Sword
+  m_Name: PoisonSword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
