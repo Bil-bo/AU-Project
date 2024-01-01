@@ -150,11 +150,13 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
     }
 
 
-    public void TryMergeCards(Card cardOne, Card cardTwo)
+    public bool TryMergeCards(Card cardOne, Card cardTwo)
     {
+        bool merged = false;
         GameObject canMerge = cardOne.CanMerge(cardTwo);
         if (canMerge != null)
         {
+            merged = true;
             if (!CombinedCards.ContainsKey(currentPlayer)) { CombinedCards.Add(currentPlayer, new Dictionary<Guid, GameObject[]>()); }
             GameObject newCard = CardFactory.CreateCard(canMerge, this.transform, Player.CharID, true);
             hand.Add(newCard);
@@ -168,19 +170,46 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
             cardTwo.CardBase.gameObject.SetActive(false);
             UpdateDeck();
         }
+        return merged;
     }
 
-    public void TryUnmergeCards (Card Merged)
+    private bool TryUnmergeCards (Card Merged)
     {
+        bool UnMerged = false;
         GameObject[] mergedCards = new GameObject[2];
-        if (!CombinedCards.ContainsKey(currentPlayer) || CombinedCards[currentPlayer].TryGetValue(Merged.CardID, out mergedCards))
+        if (CombinedCards.ContainsKey(currentPlayer) && CombinedCards[currentPlayer].TryGetValue(Merged.CardID, out mergedCards))
         {
+            UnMerged = true;
             foreach (var card in mergedCards)
             {
-                TryUnmergeCards(card.GetComponent<Card>());
-                InDeck[currentPlayer].Add(card);
+                if(!TryUnmergeCards(card.GetComponentInChildren<Card>()))
+                {
+                    InDeck[currentPlayer].Add(card);
+                }
+                
             }
+
+            Destroy(Merged.CardBase.gameObject);
         }
+
+        return UnMerged;
+           
+    }
+
+    public void UseCard(GameObject card, Card data)
+    {
+        GameObject proxy = card;
+        hand.Remove(proxy);
+
+        if (!TryUnmergeCards(data))
+        {
+            InDeck[currentPlayer].Add(proxy);
+            proxy.SetActive(false);
+        }
+
+        UpdateDeck();
+
+
     }
 
     // Fans the cards out from the middle of the screen outwards

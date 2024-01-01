@@ -73,7 +73,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
     private BaseBattleCharacter SingleTarget;
 
 
-    public GameObject Card { 
+    public GameObject MainCard { 
         get { return _MainCard; }
         set { _MainCard = value;
             if (value != null) { MainCardData = value.GetComponentInChildren<Card>(); }
@@ -138,10 +138,10 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         GameObject newCard;
         if (deckHandler.SelectCard(mousePos, out newCard) )
         {
-            Card = newCard;
+            MainCard = newCard;
             isPressing = true;
             mousePrevPos = mousePos;    
-            Line.SetStartPos(Card.GetComponent<RectTransform>());
+            Line.SetStartPos(MainCard.GetComponent<RectTransform>());
 
         }
     }
@@ -204,6 +204,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
             if (targets.Count > 0) 
             {
                 MainCardData.Use(CurrentPlayer, targets);
+                deckHandler.UseCard(MainCard, MainCardData);
                 CurrentPlayer.CurrentEnergy -= (MainCardData.Cost == -1) ? CurrentPlayer.CurrentEnergy : MainCardData.Cost;
             }
 
@@ -211,15 +212,16 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
         else if (SecondaryCard != null)
         {
-            CurrentPlayer.CurrentEnergy -= 1;
-            deckHandler.TryMergeCards(MainCardData, SecondaryCardData);
+
+            if (deckHandler.TryMergeCards(MainCardData, SecondaryCardData))
+            { CurrentPlayer.CurrentEnergy -= 1; }
             SecondaryCard = null;
         }
 
         isPressing = false;
         TargetSelection = false;
         SingleTarget = null;
-        Card = null;
+        MainCard = null;
         Line.ShowArrow(false);
         DeselectAll();
     }
@@ -367,6 +369,8 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         else
         {
             manager.ShowOverlay("You Lost!");
+            yield return new WaitForSeconds(3f);
+            SceneManager.LoadScene(0);
         }
     }
 
