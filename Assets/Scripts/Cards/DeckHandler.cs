@@ -31,6 +31,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         set 
         {
             _currentPlayer = value;
+            if (Player != null) { Player.OnEnergyChanged += (e, m) => PlayerEnergy.text = e.ToString() + "/" + m.ToString(); }
             Player = _currentPlayer.GetComponent<BattlePlayer>();
             Player.OnEnergyChanged += (e,m) => PlayerEnergy.text = e.ToString()+"/"+m.ToString();
             button.onClick.AddListener(Player.FinishTurn);
