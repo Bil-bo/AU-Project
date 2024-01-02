@@ -99,10 +99,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: 
   maxHealth: 125
-  attack: 10
-  defense: 0
+  Attack: 5
+  Defense: 0
   damageNumberPrefab: {fileID: 4992939234414459512, guid: 3f6074de0f1907043a8f81e74093e7c9, type: 3}
-  hudManager: {fileID: 0}
   Position: 0
 --- !u!136 &2971873283495052051
 CapsuleCollider:

@@ -16,6 +16,7 @@ MonoBehaviour:
   Name: MyGuy
   maxHealth: 100
   MaxEnergy: 3
+  MaxHandSize: 4
   Deck:
   - {fileID: 3484152411740928418, guid: 77a3215c40020b8469f146390a1790ca, type: 3}
   - {fileID: 3484152411740928418, guid: 77a3215c40020b8469f146390a1790ca, type: 3}

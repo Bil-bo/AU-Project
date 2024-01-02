@@ -17,10 +17,7 @@ public abstract class BattleEnemy : BaseBattleCharacter
             // Randomly select a player character
             BattlePlayer randomPlayer = players[Random.Range(0, players.Length)];
 
-            // Attack the randomly selected player
-            int damage = 5;
-
-            ActionManager.Instance.AddToBottom(new DealDamage(this, new List<BaseBattleCharacter> { randomPlayer }, damage, DamageType.NORMAL));
+            ActionManager.Instance.AddToBottom(new DealDamage(this, new List<BaseBattleCharacter> { randomPlayer }, Attack, DamageType.NORMAL));
 
         }
 
