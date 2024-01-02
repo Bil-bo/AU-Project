@@ -11,7 +11,6 @@ public class EnemyA : BattleEnemy
 
     protected override void Awake()
     {
-        maxHealth = 75;
         base.Awake();
     }
 
@@ -45,6 +44,7 @@ public class EnemyA : BattleEnemy
 
         yield return null;
     }
+
 
 
 }

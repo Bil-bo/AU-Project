@@ -55,6 +55,8 @@ public abstract class BattleEnemy : BaseBattleCharacter
         }
     }
 
+    
+
 
 
 }

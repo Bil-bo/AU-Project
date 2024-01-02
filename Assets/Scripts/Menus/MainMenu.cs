@@ -7,6 +7,22 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
 
+    public bool isNewGame;
+
+    
+
+    public void NewGame()
+    {
+        isNewGame = true;
+        SceneManager.LoadScene("Difficulties");
+    }
+
+    public void ContinueGame()
+    {
+        isNewGame = false;
+        SceneManager.LoadScene("Main");
+    }
+
     public void Diffculty()
     {
         SceneManager.LoadScene("Difficulties");
