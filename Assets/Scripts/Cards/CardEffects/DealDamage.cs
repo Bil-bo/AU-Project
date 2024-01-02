@@ -98,7 +98,7 @@ public class DamageCalculation
         Modifications.Sort((a,b) => a.priority.CompareTo(b.priority));
         foreach (var modifier in Modifications) 
         {
-            modifier.Modify(ModifiedDamage);
+           ModifiedDamage = modifier.Modify(ModifiedDamage);
         }
         return Mathf.RoundToInt(ModifiedDamage);
 
