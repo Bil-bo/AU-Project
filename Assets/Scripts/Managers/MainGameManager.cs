@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,16 @@ using UnityEngine.SceneManagement;
 // Slightly Deprecated by GameData
 public class MainGameManager : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject CeilingPrefab;
+
+    [SerializeField]
+    private GameObject WallPrefab;
+
+    [SerializeField]
+    private GameObject WallWithDoorPrefab;
+
+
     private GameObject[] enemies;
     private GameObject[] pickups;
     public GameObject player;
@@ -21,7 +32,7 @@ public class MainGameManager : MonoBehaviour
     {
         enemies = GameObject.FindGameObjectsWithTag("Enemy").OrderBy(enemy => enemy.name).ToArray();
         pickups = GameObject.FindGameObjectsWithTag("Pickup").OrderBy(enemy => enemy.name).ToArray();
-
+        init = PlayerPrefs.GetInt("Init") == 1;
 
         if (init)
         {
@@ -46,9 +57,18 @@ public class MainGameManager : MonoBehaviour
         }
         else
         {
+            PlayerPrefs.SetInt("Init", 1);
+
+            UnityEngine.Random.InitState((int)System.DateTime.Now.Ticks);
+
             init = true;
             PlayerPrefs.SetInt("PickupsCollected", 0);
             GameData.Instance.AddPlayer(player.GetComponent<PlayerPropsRoaming>().BattleInfo);
+
+            ConstructPlayArea();
+
+
+
         }
     }
      
@@ -71,8 +91,14 @@ public class MainGameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    public void ConstructPlayArea() 
+    {
+
+    }
+
+
     // Restarts the Game
-    public void Reset(Vector3 initPos)
+    public void ResetPositions(Vector3 initPos)
     {
         GameData.Instance.Restart();
 

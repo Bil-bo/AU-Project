@@ -151,10 +151,10 @@ public class PlayerPropsRoaming : MonoBehaviour
             if(winText != null)
             {
                 winText.text = "You won!";
-                gameManager.Reset(new Vector3(4,4,4));
+                gameManager.ResetPositions(new Vector3(4, 4, 4));
                 PlayerPrefs.SetInt("PickupsCollected", 0);
-                
-                
+
+
                 StartCoroutine(DelayAndLoadMainMenu());
                              
             }

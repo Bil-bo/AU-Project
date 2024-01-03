@@ -14,13 +14,15 @@ public class MainMenu : MonoBehaviour
 
     public void NewGame()
     {
-        isNewGame = true;
+        PlayerPrefs.SetInt("Init", 0);
+        
         SceneManager.LoadScene("Difficulties");
     }
 
     public void ContinueGame()
     {
-        isNewGame = false;
+        PlayerPrefs.SetInt("Init", 1);
+        
         SceneManager.LoadScene("Main");
     }
 
@@ -40,17 +42,39 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("HowToPlay");
     }
     
-    public void returnMenu()
+    public void ReturnMenu()
     {
         SceneManager.LoadScene("Menu");
     }
 
-    //NOTE - MOVED DIFFICULTY MODIFIERS TO SaveHandler.cs
-    public void StartEasy()
+    public void IsThisThingOn() { }
+
+    public void StartGame(string difficulty = "NORMAL")
     {
-        PlayerPrefs.SetString("Difficulty", "Easy");
+        float HPMult = 1.0f;
+        float DMGMult = 1.0f;
+
+        switch (difficulty.ToUpper())
+        {
+            case "HARD":
+                HPMult = 1.3f;
+                DMGMult = 1.3f;
+                break;
+            case "EASY":
+                HPMult = 1.0f;
+                DMGMult = 1.0f;
+                break;
+            default:
+                break;
+        }
+
+
+        PlayerPrefs.SetFloat("HPMult", HPMult);
+        PlayerPrefs.SetFloat("DMGMUlt", DMGMult);
         SceneManager.LoadScene("Main");
+
     }
+
 
     public void SettingsMenu()
     {
@@ -58,16 +82,4 @@ public class MainMenu : MonoBehaviour
         settingsCanvas.SetActive(true);
     }
 
-    public void StartMedium()
-    {
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        PlayerPrefs.SetString("Difficulty", "Medium");
-        SceneManager.LoadScene("Main");
-    }
-
-    public void StartHard()
-    {
-        PlayerPrefs.SetString("Difficulty", "Hard");
-        SceneManager.LoadScene("Main");
-    }
 }

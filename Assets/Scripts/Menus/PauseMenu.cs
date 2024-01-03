@@ -23,7 +23,7 @@ public class PauseMenu : MonoBehaviour
     public void QuitGame()
     {
         Time.timeScale = 1;
-        gameManager.Reset(new Vector3(4,4,4));
+        gameManager.ResetPositions(new Vector3(4,4,4));
         SceneManager.LoadScene(0);
     }
 

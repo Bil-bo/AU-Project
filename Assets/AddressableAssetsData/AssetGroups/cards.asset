@@ -17,28 +17,8 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 792d1ee50bbbdd8429e5d26b5c3cbd92
   m_SerializeEntries:
-  - m_GUID: 77a3215c40020b8469f146390a1790ca
-    m_Address: Assets/Prefabs/Cards/Bow.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e6dc0da8ae43e4a488992dcdd3d8e8b8
-    m_Address: Assets/Prefabs/Cards/Poison.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 62f834999fc46d5438441ac318c69d77
-    m_Address: Assets/Prefabs/Cards/PoisonBow.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3aceea38f54a3ed4b8f083d6ce5efeeb
-    m_Address: Assets/Prefabs/Cards/PoisonSword.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 800952e0a6d1ff74984db4f4ff37c069
-    m_Address: Assets/Prefabs/Cards/Sword.prefab
+  - m_GUID: 40f3512439e4391419ea79c4ec497f52
+    m_Address: Assets/Prefabs/Cards
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
