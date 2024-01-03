@@ -64,6 +64,10 @@ public class BattlePlayer : BaseBattleCharacter
 
         while (isMyTurn)
         {
+            if ((PlayerPrefs.GetInt("AutoEndTurn") == 1) && CurrentEnergy <= 0)
+            {
+                isMyTurn = false;
+            }
             yield return null;
         }
 
