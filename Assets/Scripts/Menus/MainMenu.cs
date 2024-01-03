@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 // Simple script for buttons in main menu
 public class MainMenu : MonoBehaviour
@@ -49,18 +50,25 @@ public class MainMenu : MonoBehaviour
 
     public void IsThisThingOn() { }
 
-    public void StartGame(string difficulty = "NORMAL")
+    public void StartGame(string difficultyString = "NORMAL")
     {
+        if (!Enum.TryParse(difficultyString, out DifficultyType difficulty))
+        {
+            Debug.LogError($"ArgumentException: Unable to parse '{difficultyString}' into enum {typeof(DifficultyType).Name}");
+            Debug.LogWarning("Difficulty has been set to NORMAL");
+            difficulty = DifficultyType.NORMAL; // Set a default value if needed
+        }
+
         float HPMult = 1.0f;
         float DMGMult = 1.0f;
 
-        switch (difficulty.ToUpper())
+        switch (difficulty)
         {
-            case "HARD":
+            case DifficultyType.HARD:
                 HPMult = 1.3f;
                 DMGMult = 1.3f;
                 break;
-            case "EASY":
+            case DifficultyType.NORMAL:
                 HPMult = 1.0f;
                 DMGMult = 1.0f;
                 break;
@@ -71,6 +79,8 @@ public class MainMenu : MonoBehaviour
 
         PlayerPrefs.SetFloat("HPMult", HPMult);
         PlayerPrefs.SetFloat("DMGMUlt", DMGMult);
+        PlayerPrefs.SetString("Difficulty", difficulty.ToString());
+        PlayerPrefs.Save();
         SceneManager.LoadScene("Main");
 
     }

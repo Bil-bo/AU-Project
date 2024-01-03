@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using TMPro;
 using System.Text.RegularExpressions;
+using System;
 
 public class SaveHandler : MonoBehaviour
 {
@@ -58,19 +59,19 @@ public class SaveHandler : MonoBehaviour
 
     private void SetDifficulty()
     {
-        if (PlayerPrefs.HasKey("Difficulty"))
+        if (PlayerPrefs.HasKey("Difficulty") && Enum.TryParse(PlayerPrefs.GetString("Difficulty"), out DifficultyType difficulty))
         {
-            switch (PlayerPrefs.GetString("Difficulty"))
+            switch (difficulty)
             {
-                case "Easy":
+                case DifficultyType.EASY:
                     PlayerPrefs.SetFloat("HPMult", 0.8f);
                     PlayerPrefs.SetFloat("DMGMult", 0.8f);
                     break;
-                case "Medium":
+                case DifficultyType.NORMAL:
                     PlayerPrefs.SetFloat("HPMult", 1.0f);
                     PlayerPrefs.SetFloat("DMGMult", 1.0f);
                     break;
-                case "Hard":
+                case DifficultyType.HARD:
                     PlayerPrefs.SetFloat("HPMult", 1.3f);
                     PlayerPrefs.SetFloat("DMGMult", 1.3f);
                     break;
@@ -84,44 +85,7 @@ public class SaveHandler : MonoBehaviour
         }
     }
 
-    // Functions assigned to the different buttons
-
-    public void SaveSlotOne()
-    {
-        Save("Slot1");
-        SetSlotText("SaveDataSlot1", saveTextOne);
-    }
-    public void SaveSlotTwo()
-    {
-        Save("Slot2");
-        SetSlotText("SaveDataSlot2", saveTextTwo);
-    }
-
-    public void SaveSlotThree()
-    {
-        Save("Slot3");
-        SetSlotText("SaveDataSlot3", saveTextThree);
-    }
-
-    public void LoadSlotOne()
-    {
-        Load("Slot1");
-        SetSlotText("SaveDataSlot1", loadTextOne);
-    }
-    public void LoadSlotTwo()
-    {
-        Load("Slot2");
-        SetSlotText("SaveDataSlot2", loadTextTwo);
-    }
-
-    public void LoadSlotThree()
-    {
-        Load("Slot3");
-        SetSlotText("SaveDataSlot3", loadTextThree);
-    }
-
-
-    private void Save(string slot)
+    public void Save(string slot)
     {
         Debug.Log("Save");
         

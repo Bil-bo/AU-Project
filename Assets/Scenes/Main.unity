@@ -625,8 +625,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 27
+  m_fontSizeBase: 27
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -764,8 +764,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 27
+  m_fontSizeBase: 27
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1196,14 +1196,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1924085188}
         m_TargetAssemblyTypeName: SaveHandler, Assembly-CSharp
-        m_MethodName: SaveSlotOne
-        m_Mode: 1
+        m_MethodName: Save
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Slot1
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &243927683
@@ -1462,14 +1462,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1924085188}
         m_TargetAssemblyTypeName: SaveHandler, Assembly-CSharp
-        m_MethodName: SaveSlotThree
-        m_Mode: 1
+        m_MethodName: Save
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Slot3
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &294051478
@@ -3599,8 +3599,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 27
+  m_fontSizeBase: 27
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3943,8 +3943,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 27
+  m_fontSizeBase: 27
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -4405,14 +4405,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1924085188}
         m_TargetAssemblyTypeName: SaveHandler, Assembly-CSharp
-        m_MethodName: LoadSlotOne
-        m_Mode: 1
+        m_MethodName: Load
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Slot1
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &794893247
@@ -5126,14 +5126,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1924085188}
         m_TargetAssemblyTypeName: SaveHandler, Assembly-CSharp
-        m_MethodName: LoadSlotTwo
-        m_Mode: 1
+        m_MethodName: Load
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Slot2
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &885571579
@@ -5468,8 +5468,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 27
+  m_fontSizeBase: 27
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -8560,14 +8560,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1924085188}
         m_TargetAssemblyTypeName: SaveHandler, Assembly-CSharp
-        m_MethodName: LoadSlotThree
-        m_Mode: 1
+        m_MethodName: Load
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Slot3
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1371474359
@@ -8853,6 +8853,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5554f5861c8ebf48939e9da95d9e2e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CeilingPrefab: {fileID: 0}
+  WallPrefab: {fileID: 0}
+  WallWithDoorPrefab: {fileID: 0}
   player: {fileID: 1421226998}
 --- !u!4 &1485223038
 Transform:
@@ -10100,14 +10103,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1924085188}
         m_TargetAssemblyTypeName: SaveHandler, Assembly-CSharp
-        m_MethodName: SaveSlotTwo
-        m_Mode: 1
+        m_MethodName: Save
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Slot2
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1718222368
@@ -11997,8 +12000,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 27
+  m_fontSizeBase: 27
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
