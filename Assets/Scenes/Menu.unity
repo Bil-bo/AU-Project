@@ -205,7 +205,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1798985137}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: returnMenu
+        m_MethodName: ReturnMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -374,7 +374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 1165766934}
-  autoEndTurnToggle: {fileID: 0}
+  autoEndTurnToggle: {fileID: 720485301}
   valueText: {fileID: 1736338131}
 --- !u!1 &106503653
 GameObject:
