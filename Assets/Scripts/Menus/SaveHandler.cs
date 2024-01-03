@@ -74,6 +74,5 @@ public class SaveHandler : MonoBehaviour
         player.transform.position = loadedGameData.playerPosition;
         GameData.Instance.isPuzzleComplete = loadedGameData.isPuzzleComplete;
         PlayerPrefs.SetInt("PickupsCollected", loadedGameData.pickups);
-        FindObjectsByType<DoorInit>(FindObjectsSortMode.None)[0].LoadDoors();
     }
 }
