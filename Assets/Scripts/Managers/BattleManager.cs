@@ -357,12 +357,12 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
     IEnumerator ExitBattle(bool hasWon)
     {
-        CleanUp();
         if (hasWon)
         {
             manager.ShowOverlay("You Won!");
             
             yield return new WaitForSeconds(2f);
+            CleanUp();
 
             foreach (BattlePlayer player in players)
             {
@@ -379,6 +379,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         {
             manager.ShowOverlay("You Lost!");
             yield return new WaitForSeconds(3f);
+            CleanUp();
             SceneManager.LoadScene(0);
         }
     }
