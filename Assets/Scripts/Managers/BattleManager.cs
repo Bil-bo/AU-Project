@@ -241,10 +241,17 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
             
             //Need to add the type of enemy from enemyInput list to the enemy GameObject
             BattleEnemy enemy = enemyBody.GetComponent<BattleEnemy>();
+            float HPMult = PlayerPrefs.GetFloat("HPMult",1.0f); //Setting a default for the enemy HP
+            float DMGMult = PlayerPrefs.GetFloat("DMGMult",1.0f); //Setting a default for enemy attack
+            enemy.maxHealth = Mathf.RoundToInt((enemy.maxHealth*HPMult));  //Making sure these values are changed according to difficulty
+            enemy.CurrentHealth = Mathf.RoundToInt((enemy.CurrentHealth*HPMult)); 
+            enemy.Attack = Mathf.RoundToInt((enemy.Attack*DMGMult));
 
             Instantiate(StatusFieldPrefab, enemyBody.transform);
             HealthBar healthBar = Instantiate(HealthBarPrefab, enemy.transform).GetComponent<HealthBar>();
             healthBar.Initialise(enemy.CharID, enemy.maxHealth, enemy.CurrentHealth);
+
+            
 
             // Assign a unique name to the enemy
             enemy.name = "Enemy " + enemy.EnemyName + (EnemyCount + 1);
@@ -253,6 +260,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
             // SET OTHER PROPERTIES OR COMPONENTS FOR ENEMY HERE
             enemies.Add(enemy);
+            
         }
     }
 
@@ -349,12 +357,12 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
     IEnumerator ExitBattle(bool hasWon)
     {
-        CleanUp();
         if (hasWon)
         {
             manager.ShowOverlay("You Won!");
             
             yield return new WaitForSeconds(2f);
+            CleanUp();
 
             foreach (BattlePlayer player in players)
             {
@@ -371,6 +379,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         {
             manager.ShowOverlay("You Lost!");
             yield return new WaitForSeconds(3f);
+            CleanUp();
             SceneManager.LoadScene(0);
         }
     }

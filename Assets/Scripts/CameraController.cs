@@ -46,8 +46,8 @@ public class CameraController : MonoBehaviour
     {
         if (Time.timeScale != 0) //Move camera while game not paused.
         {
-            x += Input.GetAxis("Mouse X") * mouseXSpeedMod;
-            y -= Input.GetAxis("Mouse Y") * mouseYSpeedMod;
+            x += Input.GetAxis("Mouse X") * mouseXSpeedMod * PlayerPrefs.GetFloat("MouseSensitivity", 1f);
+            y -= Input.GetAxis("Mouse Y") * mouseYSpeedMod * PlayerPrefs.GetFloat("MouseSensitivity", 1f);
         }
 
         y = ClampAngle(y, -15, 25);

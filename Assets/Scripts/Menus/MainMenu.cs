@@ -7,6 +7,23 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
 
+    public bool isNewGame;
+    public GameObject mainCanvas;
+    public GameObject settingsCanvas;
+
+
+    public void NewGame()
+    {
+        isNewGame = true;
+        SceneManager.LoadScene("Difficulties");
+    }
+
+    public void ContinueGame()
+    {
+        isNewGame = false;
+        SceneManager.LoadScene("Main");
+    }
+
     public void Diffculty()
     {
         SceneManager.LoadScene("Difficulties");
@@ -34,6 +51,12 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetFloat("HPMult", 0.8f);
         PlayerPrefs.SetFloat("DMGMult", 0.8f);
         SceneManager.LoadScene("Main");
+    }
+
+    public void SettingsMenu()
+    {
+        mainCanvas.SetActive(false);
+        settingsCanvas.SetActive(true);
     }
 
     public void StartMedium()
