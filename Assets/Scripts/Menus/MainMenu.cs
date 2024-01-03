@@ -29,6 +29,7 @@ public class MainMenu : MonoBehaviour
 
     public void Diffculty()
     {
+        PlayerPrefs.SetInt("Init", 0);
         SceneManager.LoadScene("Difficulties");
     }
 
