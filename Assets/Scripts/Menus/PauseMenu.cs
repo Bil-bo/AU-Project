@@ -9,6 +9,7 @@ public class PauseMenu : MonoBehaviour
     public MainGameManager gameManager;
     public GameObject mainPause; //Main pause UI elements
     public GameObject savePause; //Save pause UI elements
+    public GameObject loadPause; //Load pause UI elements
 
     public void ResumeGame()
     {
@@ -31,10 +32,16 @@ public class PauseMenu : MonoBehaviour
         mainPause.SetActive(false);
         savePause.SetActive(true);
     }
+    public void LoadMenu()
+    {
+        mainPause.SetActive(false);
+        loadPause.SetActive(true);
+    }
 
     public void MainPauseMenu()
     {
         mainPause.SetActive(true);
+        loadPause.SetActive(false);
         savePause.SetActive(false);
     }
 

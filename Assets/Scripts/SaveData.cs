@@ -9,6 +9,7 @@ public class SaveData
     public bool[] pickupEnabled;
     public Vector3 playerPosition;
     public int pickups;
+    public string difficulty;
 
     //GameData Attributes
     public bool isPuzzleComplete;

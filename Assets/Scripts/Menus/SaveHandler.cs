@@ -2,26 +2,126 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using TMPro;
+using System.Text.RegularExpressions;
 
 public class SaveHandler : MonoBehaviour
 {
     private GameObject[] enemies;
     private GameObject[] pickups;
     public GameObject player;
+
+    public TMP_Text saveTextOne;
+    public TMP_Text saveTextTwo;
+    public TMP_Text saveTextThree;
+
+    public TMP_Text loadTextOne;
+    public TMP_Text loadTextTwo;
+    public TMP_Text loadTextThree;
+
+    private void Awake()
+    {
+        SetDifficulty(); //SetDifficulty called here to ensure that the function is run before this scripts gameobject (PauseMenu) is disabled
+    }
     // Start is called before the first frame update
     void Start()
     {
         enemies = GameObject.FindGameObjectsWithTag("Enemy").OrderBy(enemy => enemy.name).ToArray();
         pickups = GameObject.FindGameObjectsWithTag("Pickup").OrderBy(pickup => pickup.name).ToArray();
+
+        SetSlotText("SaveDataSlot1", saveTextOne);
+        SetSlotText("SaveDataSlot2", saveTextTwo);
+        SetSlotText("SaveDataSlot3", saveTextThree);
+
+        SetSlotText("SaveDataSlot1", loadTextOne);
+        SetSlotText("SaveDataSlot2", loadTextTwo);
+        SetSlotText("SaveDataSlot3", loadTextThree);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SetSlotText(string slotKey, TMP_Text saveText)
     {
-        
+        if (PlayerPrefs.HasKey(slotKey))
+        {
+            string jsonData = PlayerPrefs.GetString(slotKey);
+            SaveData loadedGameData = JsonUtility.FromJson<SaveData>(jsonData);
+            // Extract the numeric part from the slotKey using regular expressions
+            Match match = Regex.Match(slotKey, @"\d+");
+            string slotNumber = match.Success ? match.Value : "Invalid";
+
+            saveText.text = "Slot " + slotNumber + " - " + loadedGameData.difficulty + " - " + loadedGameData.pickups + " Pickups";
+        }
+        else
+        {
+            saveText.text = "New File";
+        }
     }
 
-    public void Save()
+    private void SetDifficulty()
+    {
+        if (PlayerPrefs.HasKey("Difficulty"))
+        {
+            switch (PlayerPrefs.GetString("Difficulty"))
+            {
+                case "Easy":
+                    PlayerPrefs.SetFloat("HPMult", 0.8f);
+                    PlayerPrefs.SetFloat("DMGMult", 0.8f);
+                    break;
+                case "Medium":
+                    PlayerPrefs.SetFloat("HPMult", 1.0f);
+                    PlayerPrefs.SetFloat("DMGMult", 1.0f);
+                    break;
+                case "Hard":
+                    PlayerPrefs.SetFloat("HPMult", 1.3f);
+                    PlayerPrefs.SetFloat("DMGMult", 1.3f);
+                    break;
+            }
+        }
+        else
+        {
+            //There should always be a difficulty playerpref, but if something goes wrong, will be set to normal difficulty
+            PlayerPrefs.SetFloat("HPMult", 1.0f);
+            PlayerPrefs.SetFloat("DMGMult", 1.0f);
+        }
+    }
+
+    // Functions assigned to the different buttons
+
+    public void SaveSlotOne()
+    {
+        Save("Slot1");
+        SetSlotText("SaveDataSlot1", saveTextOne);
+    }
+    public void SaveSlotTwo()
+    {
+        Save("Slot2");
+        SetSlotText("SaveDataSlot2", saveTextTwo);
+    }
+
+    public void SaveSlotThree()
+    {
+        Save("Slot3");
+        SetSlotText("SaveDataSlot3", saveTextThree);
+    }
+
+    public void LoadSlotOne()
+    {
+        Load("Slot1");
+        SetSlotText("SaveDataSlot1", loadTextOne);
+    }
+    public void LoadSlotTwo()
+    {
+        Load("Slot2");
+        SetSlotText("SaveDataSlot2", loadTextTwo);
+    }
+
+    public void LoadSlotThree()
+    {
+        Load("Slot3");
+        SetSlotText("SaveDataSlot3", loadTextThree);
+    }
+
+
+    private void Save(string slot)
     {
         Debug.Log("Save");
         
@@ -31,7 +131,8 @@ public class SaveHandler : MonoBehaviour
             pickupEnabled = new bool[pickups.Length],
             playerPosition = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z),
             isPuzzleComplete = GameData.Instance.isPuzzleComplete,
-            pickups = PlayerPrefs.GetInt("PickupsCollected")
+            pickups = PlayerPrefs.GetInt("PickupsCollected"),
+            difficulty = PlayerPrefs.GetString("Difficulty")
         };
    
         for (int i = 0; i < enemies.Length; i++)
@@ -46,14 +147,15 @@ public class SaveHandler : MonoBehaviour
 
         string jsonData = JsonUtility.ToJson(gameData);
         Debug.Log(jsonData);
-        PlayerPrefs.SetString("SaveDataSlot1", jsonData);
+        PlayerPrefs.SetString("SaveData" + slot, jsonData);
         PlayerPrefs.Save();
     }
 
-    public void Load()
+    public void Load(string slot)
     {
         Debug.Log("Load");
-        string jsonData = PlayerPrefs.GetString("SaveDataSlot1");
+        string jsonData = PlayerPrefs.GetString("SaveData" + slot);
+        Debug.Log(jsonData);
         SaveData loadedGameData = JsonUtility.FromJson<SaveData>(jsonData);
 
         // Use the loaded data to enable/disable enemies and pickups and set the player position
@@ -74,5 +176,8 @@ public class SaveHandler : MonoBehaviour
         player.transform.position = loadedGameData.playerPosition;
         GameData.Instance.isPuzzleComplete = loadedGameData.isPuzzleComplete;
         PlayerPrefs.SetInt("PickupsCollected", loadedGameData.pickups);
+        PlayerPrefs.SetString("Difficulty", loadedGameData.difficulty);
+        SetDifficulty();
+        PlayerPrefs.Save();
     }
 }

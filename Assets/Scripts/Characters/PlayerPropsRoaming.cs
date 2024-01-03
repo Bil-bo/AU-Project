@@ -25,7 +25,6 @@ public class PlayerPropsRoaming : MonoBehaviour
     public GameData gameData;
     public GameObject pause;
 
-    private int collectedPickups = 0;
     public int maxPickups = 3;
     private bool hasWon = false;
 
@@ -33,7 +32,6 @@ public class PlayerPropsRoaming : MonoBehaviour
     void Start()
     {
         charcon = GetComponent<CharacterController>();
-        collectedPickups = PlayerPrefs.GetInt("PickupsCollected");
         pause.SetActive(false);
         UpdatePickupText();
     }
@@ -106,11 +104,10 @@ public class PlayerPropsRoaming : MonoBehaviour
         {
             case "Pickup":
                 other.GetComponent<PickUpsData>().PickedUp();
-                collectedPickups++;
-                PlayerPrefs.SetInt("PickupsCollected", collectedPickups);
+                PlayerPrefs.SetInt("PickupsCollected", PlayerPrefs.GetInt("PickupsCollected") + 1);
                 UpdatePickupText();
 
-                if(collectedPickups >= maxPickups){
+                if(PlayerPrefs.GetInt("PickupsCollected") >= maxPickups){
                     hasWon = true;
                     DisplayWinMessage();
                 }
@@ -130,7 +127,7 @@ public class PlayerPropsRoaming : MonoBehaviour
         TextMeshProUGUI pickupText = GameObject.FindGameObjectWithTag("PickupText")?.GetComponent<TextMeshProUGUI>();
 
         if(pickupText != null){
-            pickupText.text = "Pickups collected: " + collectedPickups;
+            pickupText.text = "Pickups collected: " + PlayerPrefs.GetInt("PickupsCollected");
         }  
     }
 
@@ -155,13 +152,11 @@ public class PlayerPropsRoaming : MonoBehaviour
             {
                 winText.text = "You won!";
                 gameManager.Reset(new Vector3(4,4,4));
-                collectedPickups = 0;
+                PlayerPrefs.SetInt("PickupsCollected", 0);
                 
                 
                 StartCoroutine(DelayAndLoadMainMenu());
-
-
-                
+                             
             }
         }
     }

@@ -45,11 +45,10 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("Menu");
     }
 
+    //NOTE - MOVED DIFFICULTY MODIFIERS TO SaveHandler.cs
     public void StartEasy()
     {
-
-        PlayerPrefs.SetFloat("HPMult", 0.8f);
-        PlayerPrefs.SetFloat("DMGMult", 0.8f);
+        PlayerPrefs.SetString("Difficulty", "Easy");
         SceneManager.LoadScene("Main");
     }
 
@@ -62,15 +61,13 @@ public class MainMenu : MonoBehaviour
     public void StartMedium()
     {
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        PlayerPrefs.SetFloat("HPMult", 1.0f);
-        PlayerPrefs.SetFloat("DMGMult", 1.0f);
+        PlayerPrefs.SetString("Difficulty", "Medium");
         SceneManager.LoadScene("Main");
     }
 
     public void StartHard()
     {
-        PlayerPrefs.SetFloat("HPMult", 1.3f);
-        PlayerPrefs.SetFloat("DMGMult", 1.3f);
+        PlayerPrefs.SetString("Difficulty", "Hard");
         SceneManager.LoadScene("Main");
     }
 }
