@@ -6,6 +6,7 @@ public abstract class BattleEnemy : BaseBattleCharacter
 {
     [SerializeField]
     public string EnemyName { get; set; }
+    
 
 
     public virtual void AttackPlayer() {
@@ -15,9 +16,12 @@ public abstract class BattleEnemy : BaseBattleCharacter
         if (players.Length > 0) //If we find a player 
         {
             // Randomly select a player character
-            BattlePlayer randomPlayer = players[Random.Range(0, players.Length)];
+            BattlePlayer randomPlayer = players[new System.Random().Next(0, players.Length)];
 
-            ActionManager.Instance.AddToBottom(new DealDamage(this, new List<BaseBattleCharacter> { randomPlayer }, Attack, DamageType.NORMAL));
+            ActionManager.Instance.AddToBottom(new AbsorbHealth(this, new List<BaseBattleCharacter>{ randomPlayer }, Attack, DamageType.NORMAL, 30));
+
+
+            //ActionManager.Instance.AddToBottom(new DealDamage(this, new List<BaseBattleCharacter> { randomPlayer }, Attack, DamageType.NORMAL));
 
         }
 
@@ -54,6 +58,8 @@ public abstract class BattleEnemy : BaseBattleCharacter
             EventManager.Broadcast(enemyDied);
         }
     }
+
+    
 
     
 

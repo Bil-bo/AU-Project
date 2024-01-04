@@ -54,7 +54,7 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     public bool CanSelect { get; set; } = false;
 
 
-    protected virtual void Awake()
+    public virtual void Awake()
     {
         CurrentHealth = maxHealth; //Initialise health and everything else
         characterRenderer = GetComponent<Renderer>();
@@ -95,5 +95,16 @@ public abstract class BaseBattleCharacter : MonoBehaviour
         FlashObject(new Color(1f, 0f, 0f, 0.5f)); //They turn red temporarily when getting attacked
 
         DisplayText(damage.ToString());
+    }
+
+    public void HealthReturn(int thresh)
+    {
+        if(CurrentHealth < maxHealth)
+        {
+            CurrentHealth = Mathf.Max(maxHealth, CurrentHealth + thresh);
+            FlashObject(new Color(0f, 1f, 0f, 0.5f));
+        }
+
+        DisplayText(thresh.ToString());
     }
 }

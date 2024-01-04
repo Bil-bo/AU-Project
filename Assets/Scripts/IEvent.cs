@@ -18,6 +18,12 @@ public class PreTakeDamageEvent: IEvent
 
 }
 
+public class PreHealEvent : IEvent
+{
+    public Guid Defender {get; set; }
+    public DamageCalculation HP {get; set; }
+}
+
 // Broadcast from the BaseBattleCharacter TakeDamage method
 public class PostTakeDamageEvent: IEvent
 {
@@ -28,6 +34,17 @@ public class PostTakeDamageEvent: IEvent
     public int DmgCalc { get; set; }
     public int NewHealth { get; set; }
 
+}
+
+public class PostHealingEvent: IEvent
+{
+    public Guid TargetID {get; set; }
+    public BaseBattleCharacter Target { set; get; }
+    public BaseBattleCharacter Healer {get; set; }
+
+    public int HealAmount{get; set;}
+
+    public int NewHealth {get; set;}
 }
 
 

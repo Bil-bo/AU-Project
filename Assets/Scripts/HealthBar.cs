@@ -4,7 +4,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 
-public class HealthBar : MonoBehaviour, IOnPostTakeDamage
+public class HealthBar : MonoBehaviour, IOnPostTakeDamage, IOnPostHealing
 {
     private Guid CharID;
 
@@ -28,6 +28,7 @@ public class HealthBar : MonoBehaviour, IOnPostTakeDamage
     private void Awake()
     {
         EventManager.AddListener<PostTakeDamageEvent>(OnPostTakeDamage);
+        EventManager.AddListener<PostHealingEvent>(OnPostHealing);
 
 
         if (transform.parent != null)
@@ -83,7 +84,17 @@ public class HealthBar : MonoBehaviour, IOnPostTakeDamage
     private void OnDestroy()
     {
         EventManager.RemoveListener<PostTakeDamageEvent>(OnPostTakeDamage);
+        EventManager.RemoveListener<PostHealingEvent>(OnPostHealing);
         
+    }
+
+    public void OnPostHealing(PostHealingEvent eventData)
+    {
+        if (CharID == eventData.TargetID)
+        {
+            CurrentHealth = eventData.NewHealth;
+            SetValues();
+        }
     }
 
 }

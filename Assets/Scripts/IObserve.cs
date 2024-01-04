@@ -11,10 +11,20 @@ public interface IOnPreTakeDamage : IObserve
 
 }
 
+public interface IOnPreHealing : IObserve
+{
+    void OnPreHeal(IEvent eventData);
+}
+
 // Broadcast from the BaseBattleCharacter TakeDamage method
 public interface IOnPostTakeDamage : IObserve
 {
     void OnPostTakeDamage(PostTakeDamageEvent eventData);
+}
+
+public interface IOnPostHealing : IObserve
+{
+    void OnPostHealing(PostHealingEvent eventData);
 }
 
 

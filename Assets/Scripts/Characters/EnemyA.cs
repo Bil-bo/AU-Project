@@ -5,12 +5,17 @@ using UnityEngine;
 public class EnemyA : BattleEnemy
 { 
     private int counterField = 0;
+    private DamageType damage;
+
+
 
 
     // Start is called before the first frame update
 
-    protected override void Awake()
+    public override void Awake()
     {
+        
+        
         base.Awake();
     }
 
@@ -21,7 +26,10 @@ public class EnemyA : BattleEnemy
         // Basic pattern
         switch(counterField){
             case (0):
+            
+            //ActionManager.Instance.AddToBottom( new AbsorbHealth(this, new List<BaseBattleCharacter>(), 20, DamageType.NORMAL, 30));
             AttackPlayer();
+            Debug.Log("EFFECT IS HAPPENING");
             break;
 
             case(1):
@@ -29,7 +37,10 @@ public class EnemyA : BattleEnemy
             break;
 
             case(2):
+            //ActionManager.Instance.AddToBottom( new AbsorbHealth(this, new List<BaseBattleCharacter>(), 20, DamageType.NORMAL, 30));
             AttackPlayer();
+            Debug.Log("EFFECT IS HAPPENING");
+            //AttackPlayer();
             break;
             
             default:
