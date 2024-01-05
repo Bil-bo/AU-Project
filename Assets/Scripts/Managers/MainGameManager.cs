@@ -1,13 +1,10 @@
-    using System;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 
 
@@ -63,11 +60,17 @@ public class MainGameManager : MonoBehaviour
         Enemies = GameObject.FindGameObjectsWithTag("Enemy").OrderBy(enemy => enemy.name).ToArray();
         Pickups = GameObject.FindGameObjectsWithTag("Pickup").OrderBy(enemy => enemy.name).ToArray();
         Init = PlayerPrefs.GetInt("Init") == 1;
-        Debug.Log(Init);
 
         if (Init)
         {
             Destroy(Addresses.gameObject);
+
+            UnityEngine.Random.InitState(PlayerPrefs.GetInt("seed"));
+
+
+            StartCoroutine(ReconstructPlayArea(PlayerPrefs.GetInt("CurrentLevel", 0)));
+
+
             // Load the enabled state for each enemy and set it
             for (int i = 0; i < Enemies.Length; i++)
             {
@@ -91,16 +94,21 @@ public class MainGameManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("Init", 1);
 
-            UnityEngine.Random.InitState((int)System.DateTime.Now.Ticks);
+
+            int seed = (int)System.DateTime.Now.Ticks;
+
+            UnityEngine.Random.InitState(seed);
+
+            PlayerPrefs.SetInt("seed", seed);
 
             StartCoroutine(Addresses.GenerateLists());
-            Addresses.ListsReady += () => StartCoroutine(ConstructPlayArea());
+            Addresses.ListsReady += () => StartCoroutine(VisualisePlayArea((dict, lst) => ConstructPlayArea(dict, lst)));
+            PlayerPrefs.SetInt("CurrentLevel", 0);
 
 
             Init = true;
             PlayerPrefs.SetInt("PickupsCollected", 0);
             GameData.Instance.AddPlayer(player.GetComponent<PlayerPropsRoaming>().BattleInfo);
-            Debug.Log("In Here");
 
 
 
@@ -126,8 +134,11 @@ public class MainGameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    private IEnumerator ConstructPlayArea() 
+    private IEnumerator VisualisePlayArea(Action<Dictionary<Vector2Int, GameObject>, List<Vector2Int>> result) 
     {
+        List<Vector2Int> levelOne = new();
+        Dictionary<Vector2Int, GameObject> levelOneData = new();
+
 
         for (int i = 0; i < LevelAmount; i++)
         {
@@ -139,8 +150,8 @@ public class MainGameManager : MonoBehaviour
 
             Vector2Int startPos = new Vector2Int(randX, randY);
             coordinates.Add(startPos);
-            Debug.Log(startPos);
 
+            PlayerPrefs.SetString("Level" + i + startPos, LevelStart.name);
 
             coordinateData[startPos] = LevelStart;
 
@@ -152,9 +163,7 @@ public class MainGameManager : MonoBehaviour
             }
 
 
-
-
-            yield return StartCoroutine(Addresses.GetFloors(coordinates.Skip(1).ToList(),
+            yield return StartCoroutine(Addresses.GetFloors(coordinates.Skip(1).ToList(), i,
                 result => coordinateData = coordinateData.Concat(result).ToDictionary(a => a.Key, a => a.Value)));
 
 
@@ -162,67 +171,91 @@ public class MainGameManager : MonoBehaviour
 
             coordinates = coordinateData.Keys.ToList();
 
-            string jsonCoordinates = JsonUtility.ToJson(coordinates);
-            PlayerPrefs.SetString("LevelBuild", jsonCoordinates);
 
-            //coordinates.ForEach(a => Debug.Log("Coordinate"+a));
+            string jsonCoordinates = new CoordWrapper { coordinates = coordinates}.SaveToString();
+            PlayerPrefs.SetString("LevelBuild"+i, jsonCoordinates);
 
-            coordinateData.Keys.ToList().ForEach(a => Debug.Log("Coordinate" + a));
+            if (i == 0)
+            {
+                levelOne = coordinates;
+                levelOneData = coordinateData;
+            }
+        }
 
 
-            List<Vector2Int> seen = new();
-            List<Vector2Int> directions = new List<Vector2Int> {
-                new Vector2Int(0,-1), 
+
+        result.Invoke(levelOneData, levelOne);
+    }
+
+    private void ConstructPlayArea(Dictionary<Vector2Int, GameObject> coordinateData, List<Vector2Int> coordinates)
+    {
+
+        List<Vector2Int> seen = new();
+        List<Vector2Int> directions = new List<Vector2Int> {
+                new Vector2Int(0,-1),
                 new Vector2Int(0, 1),
                 new Vector2Int(-1, 0),
                 new Vector2Int(1, 0)};
 
-            foreach (Vector2Int coordinate in coordinates)
+        foreach (Vector2Int coordinate in coordinates)
+        {
+
+
+
+            GameObject newFloor = Instantiate(coordinateData[coordinate], Floors);
+            coordinateData[coordinate] = newFloor;
+
+
+            Vector3 dimensions = newFloor.GetComponent<MeshRenderer>().bounds.size;
+            newFloor.transform.position = new Vector3(coordinate.x * dimensions.x, 0, coordinate.y * dimensions.z);
+
+
+            //Debug.Log(coordinateData[coordinate].transform.position);
+            foreach (Vector2Int direction in directions)
             {
-                Debug.Log(coordinate);
-
-
-
-                GameObject newFloor = Instantiate(coordinateData[coordinate], Floors);
-                coordinateData[coordinate] = newFloor;  
-                Debug.Log("Floor Name " + coordinateData[coordinate].name);
-
-
-                Vector3 dimensions = newFloor.GetComponent<MeshRenderer>().bounds.size;
-                newFloor.transform.position = new Vector3(coordinate.x * dimensions.x, 0, coordinate.y * dimensions.z);
-
-
-                //Debug.Log(coordinateData[coordinate].transform.position);
-                foreach (Vector2Int direction in directions)
+                if (seen.Contains(coordinate + direction)) { continue; }
+                else if (coordinates.Contains(coordinate + direction))
                 {
-                    if (seen.Contains(coordinate + direction)) { continue; }
-                    else if (coordinates.Contains(coordinate + direction))
-                    {
-                        GameObject door = Instantiate(WallWithDoorPrefab, 
-                            new Vector3(newFloor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15, newFloor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)), 
-                            Quaternion.Euler(new Vector3(0, (direction.x != 0) ? 90 : 0, 0)), Doors);
-                    }
-
-                    else
-                    {
-                        Instantiate(WallPrefab, 
-                            new Vector3(newFloor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15, newFloor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)),
-                            Quaternion.Euler(new Vector3(0, (direction.y != 0) ? 90 : 0, 0)), Walls);
-                    }
-
+                    GameObject door = Instantiate(WallWithDoorPrefab,
+                        new Vector3(newFloor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15, newFloor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)),
+                        Quaternion.Euler(new Vector3(0, (direction.x != 0) ? 90 : 0, 0)), Doors);
                 }
-                Instantiate(CeilingPrefab, newFloor.transform.position + (Vector3.up * 29.5f), Quaternion.identity, Ceilings);
-                seen.Add(coordinate);
+
+                else
+                {
+                    Instantiate(WallPrefab,
+                        new Vector3(newFloor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15, newFloor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)),
+                        Quaternion.Euler(new Vector3(0, (direction.y != 0) ? 90 : 0, 0)), Walls);
+                }
 
             }
-        }
+            Instantiate(CeilingPrefab, newFloor.transform.position + (Vector3.up * 29.5f), Quaternion.identity, Ceilings);
+            seen.Add(coordinate);
 
+        }
     }
 
-    private void SpecialRoomRoll(int level)
+
+    private IEnumerator ReconstructPlayArea(int level)
     {
+        string jsonCoords = PlayerPrefs.GetString("LevelBuild"+level);
+
+        List<Vector2Int> coordinates = JsonUtility.FromJson<CoordWrapper>(jsonCoords).LoadFromString();
 
 
+        coordinates.ForEach(coordinate => { Debug.Log(coordinate); });
+
+        Dictionary<Vector2Int, GameObject> RestoredData = new(); 
+        foreach (var coord in coordinates)
+        {
+            Debug.Log(coord+ " Wants to Spawn "+PlayerPrefs.GetString("Level" + level + coord));
+            var data = Addressables.LoadAssetAsync<GameObject>(PlayerPrefs.GetString("Level" + level + coord));
+            yield return data;
+
+            RestoredData[coord] = data.Result;
+        }
+
+        ConstructPlayArea(RestoredData, coordinates);
     }
 
 
@@ -247,5 +280,21 @@ public class MainGameManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("Pickup" + i + "Enabled", 1);
         }
+    }
+}
+
+[Serializable]
+public class CoordWrapper
+{
+    public List<Vector2Int> coordinates;
+
+    public string SaveToString()
+    {
+        return JsonUtility.ToJson(this);
+    }
+
+    public List<Vector2Int> LoadFromString()
+    {
+        return coordinates;
     }
 }

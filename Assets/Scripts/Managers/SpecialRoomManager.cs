@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,29 +42,42 @@ public class SpecialRoomManager : MonoBehaviour
         List<Vector2Int> coordinates = coordinateData.Keys.ToList();
         if(UnityEngine.Random.Range(0, 101) < RescueChance) 
         {
-            coordinateData[InsertSpecialRoom(coordinates)] = RescueRoom;
+            Vector2Int Inject = InsertSpecialRoom(coordinates);
+            coordinateData[Inject] = RescueRoom;
+            PlayerPrefs.SetString("Level" + level + Inject, RescueRoom.name);
             RescueChance -= (RescueChance < 50) ? RescueChance : 10;
 
         }
 
         if (UnityEngine.Random.Range(0, 101) < ShopChance)
         {
-            coordinateData[InsertSpecialRoom(coordinates)] = Shop;
+            Vector2Int Inject = InsertSpecialRoom(coordinates);
+            coordinateData[Inject] = Shop;
+            PlayerPrefs.SetString("Level" + level + Inject, Shop.name);
         }
 
         if (UnityEngine.Random.Range(0, 101) < SmithyChance)
         {
-            coordinateData[InsertSpecialRoom(coordinates)] = Smithy;
+            Vector2Int Inject = InsertSpecialRoom(coordinates);
+            coordinateData[Inject] = Smithy;
+            PlayerPrefs.SetString("Level" + level + Inject, Smithy.name);
         }
 
-        coordinateData[InsertSpecialRoom(coordinates)] = Treasure;
+        Vector2Int injectTreasure = InsertSpecialRoom(coordinates);
+        coordinateData[injectTreasure] = Shop;
+        PlayerPrefs.SetString("Level" + level + injectTreasure, Treasure.name);
 
         for (int i = 0; i < 2; i++)
         {
-            coordinateData[InsertSpecialRoom(coordinates)] = PickUpRoom;
+            Vector2Int injectPickup = InsertSpecialRoom(coordinates);
+            coordinateData[injectPickup] = PickUpRoom;
+            PlayerPrefs.SetString("Level" + level + injectPickup, PickUpRoom.name);
         }
 
-        coordinateData[InsertBossRoom(coordinates)] = BossRoom;
+        Vector2Int injectBoss = InsertBossRoom(coordinates);
+        coordinateData[injectBoss] = BossRoom;
+        PlayerPrefs.SetString("Level" + level + injectBoss, BossRoom.name);
+
 
 
 

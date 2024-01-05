@@ -57,11 +57,11 @@ public class AddressablesManager : MonoBehaviour
     }
 
 
-    public IEnumerator GetFloors (List<Vector2Int> coordinates, Action<Dictionary<Vector2Int, GameObject>> result) 
+    public IEnumerator GetFloors (List<Vector2Int> coordinates, int level, Action<Dictionary<Vector2Int, GameObject>> result) 
     {
         Dictionary<Vector2Int, GameObject>floors = new Dictionary<Vector2Int, GameObject>();
 
-        yield return StartCoroutine(GenerateRandomFloors(coordinates, result => floors = result));
+        yield return StartCoroutine(GenerateRandomFloors(coordinates, level, result => floors = result));
 
         result?.Invoke(floors);
 
@@ -69,7 +69,7 @@ public class AddressablesManager : MonoBehaviour
     }
 
 
-    private IEnumerator GenerateRandomFloors(List<Vector2Int> coordinates, Action<Dictionary<Vector2Int, GameObject>> result)
+    private IEnumerator GenerateRandomFloors(List<Vector2Int> coordinates, int level, Action<Dictionary<Vector2Int, GameObject>> result)
     {
         Dictionary<Vector2Int,GameObject> coordToFloor = new ();
         foreach (var coordinate in coordinates)
@@ -77,6 +77,9 @@ public class AddressablesManager : MonoBehaviour
             int RandId = UnityEngine.Random.Range(0, Mathf.Max(1, FloorPlanAddresses.Count));
             var handle = Addressables.LoadAssetAsync<GameObject>(FloorPlanAddresses[RandId]);
             yield return handle;
+            Debug.Log(FloorPlanAddresses[RandId]);
+            PlayerPrefs.SetString("Level" + level + coordinate, FloorPlanAddresses[RandId]);
+
             coordToFloor[coordinate] = handle.Result;
         }
 
