@@ -42,7 +42,6 @@ public class DealDamage : ICardActions
 
             else
             {
-
                 PreTakeDamageEvent preDamage = new()
                 {
                     Defender = target.CharID,

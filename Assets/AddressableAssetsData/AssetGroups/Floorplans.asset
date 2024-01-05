@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Floorplans
+  m_EditorClassIdentifier: 
+  m_GroupName: Floorplans
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 1cf3c4d7dcf104a4683056ffbe209f8f
+  m_SerializeEntries:
+  - m_GUID: 93bcae4f9adc5eb41928a4f972f50f23
+    m_Address: FloorPlanNew
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - FloorPlan
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0ee488de0bc36bc4390ccc85ae7a78d4
+    m_Address: SingleEnemy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - FloorPlan
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 56719dbee959f7d4e8686bf92f8831ba
+    m_Address: Boss
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Special
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7e89d596672046342a93a1461fbe3f54
+    m_Address: Rescue
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Special
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 879f053a34abcec42b545b5ade555524
+    m_Address: Shop
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Special
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac5b97df1ebeb4f40821dc400e5828e0
+    m_Address: Smithy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Special
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2da71c7bf23fd1045bfbff6f381f2aa8
+    m_Address: Treasure
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Special
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 7768330f8a329de4dbb5db2a9068ee85, type: 2}
+    - {fileID: 11400000, guid: b5f966c09f411ff48bec2cc1139b2f89, type: 2}

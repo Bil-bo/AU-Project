@@ -17,10 +17,65 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 792d1ee50bbbdd8429e5d26b5c3cbd92
   m_SerializeEntries:
-  - m_GUID: 40f3512439e4391419ea79c4ec497f52
-    m_Address: Assets/Prefabs/Cards
+  - m_GUID: c4db33550c7e3114594c3b3992007e13
+    m_Address: Bless
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c5ab41c89f98e5f4ba6037b32178a315
+    m_Address: Wish
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e6dc0da8ae43e4a488992dcdd3d8e8b8
+    m_Address: Poison
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3aceea38f54a3ed4b8f083d6ce5efeeb
+    m_Address: PoisonSword
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 62f834999fc46d5438441ac318c69d77
+    m_Address: PoisonBow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 77a3215c40020b8469f146390a1790ca
+    m_Address: Bow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 800952e0a6d1ff74984db4f4ff37c069
+    m_Address: Sword
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: afc4c5fc1bc1fc948ae717ffd1f2db36
+    m_Address: Cripple
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21c337599670ffa49beea61fe7168188
+    m_Address: Plague
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4764921edf593f145a2d606aa7d0683a
+    m_Address: Strengthen
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}
