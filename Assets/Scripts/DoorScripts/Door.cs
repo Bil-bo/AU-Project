@@ -6,11 +6,11 @@ using UnityEngine;
 // Simple concept of blocking off areas before the player completes a task
 public class Door : MonoBehaviour
 {
-    public string ID { get; set; }
-    public bool isOpen {  get; set; }
-    public void Initialise(string ID, bool isOpen)
+    [SerializeField]
+    private GameObject realDoor;
+
+    public void SetState(bool state)
     {
-        this.ID = ID;
-        this.isOpen = isOpen;
+        realDoor.SetActive(state);
     }
 }

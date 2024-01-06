@@ -60,10 +60,7 @@ public class ButtonPad : MonoBehaviour
                     // If the Tail activates something, do it here
                     if (toTrigger != null)
                     {
-                        if (toTrigger.GetComponent<Door>() != null)
-                        {
-                            GameData.Instance.SetDoor(toTrigger.GetComponent<Door>(), true);
-                        }
+
                         toTrigger.SetActive(false);
 
                     }

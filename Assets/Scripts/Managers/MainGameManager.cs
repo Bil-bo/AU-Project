@@ -68,31 +68,34 @@ public class MainGameManager : MonoBehaviour
             UnityEngine.Random.InitState(PlayerPrefs.GetInt("seed"));
 
 
-            StartCoroutine(ReconstructPlayArea(PlayerPrefs.GetInt("CurrentLevel", 0)));
+            StartCoroutine(ReconstructPlayArea(PlayerPrefs.GetInt("CurrentLevel", 0), () =>
+            {
+                // Load the enabled state for each enemy and set it
+                for (int i = 0; i < Enemies.Length; i++)
+                {
+                    int enemyEnabled = PlayerPrefs.GetInt("Enemy" + i + "Enabled");
+                    Enemies[i].SetActive(enemyEnabled == 1);
+                }
+                // Load the enabled state for each pickup and set it
+                for (int i = 0; i < Pickups.Length; i++)
+                {
+                    int pickupEnabled = PlayerPrefs.GetInt("Pickup" + i + "Enabled");
+                    Pickups[i].SetActive(pickupEnabled == 1);
+                }
+                // Load the player's position and set it
+                float playerX = PlayerPrefs.GetFloat("PlayerX");
+                float playerY = PlayerPrefs.GetFloat("PlayerY");
+                float playerZ = PlayerPrefs.GetFloat("PlayerZ");
+                player.transform.position = new Vector3(playerX, playerY, playerZ);
+            }));
 
 
-            // Load the enabled state for each enemy and set it
-            for (int i = 0; i < Enemies.Length; i++)
-            {
-                int enemyEnabled = PlayerPrefs.GetInt("Enemy" + i + "Enabled");
-                Enemies[i].SetActive(enemyEnabled == 1);
-            }
-            // Load the enabled state for each pickup and set it
-            for (int i = 0; i < Pickups.Length; i++)
-            {
-                int pickupEnabled = PlayerPrefs.GetInt("Pickup" + i + "Enabled");
-                Pickups[i].SetActive(pickupEnabled == 1);
-            }
-            // Load the player's position and set it
-            float playerX = PlayerPrefs.GetFloat("PlayerX");
-            float playerY = PlayerPrefs.GetFloat("PlayerY");
-            float playerZ = PlayerPrefs.GetFloat("PlayerZ");
-            player.transform.position = new Vector3(playerX, playerY, playerZ);
+
             
         }
         else
         {
-            PlayerPrefs.SetInt("Init", 1);
+
 
 
             int seed = (int)System.DateTime.Now.Ticks;
@@ -104,7 +107,7 @@ public class MainGameManager : MonoBehaviour
             StartCoroutine(Addresses.GenerateLists());
             Addresses.ListsReady += () => StartCoroutine(VisualisePlayArea((dict, lst) => ConstructPlayArea(dict, lst)));
             PlayerPrefs.SetInt("CurrentLevel", 0);
-
+            PlayerPrefs.SetInt("Init", 1);
 
             Init = true;
             PlayerPrefs.SetInt("PickupsCollected", 0);
@@ -209,6 +212,9 @@ public class MainGameManager : MonoBehaviour
             Vector3 dimensions = newFloor.GetComponent<MeshRenderer>().bounds.size;
             newFloor.transform.position = new Vector3(coordinate.x * dimensions.x, 0, coordinate.y * dimensions.z);
 
+            FloorManager floorPlan = newFloor.GetComponent<FloorManager>();
+            floorPlan.Initialise(coordinate);
+
 
             //Debug.Log(coordinateData[coordinate].transform.position);
             foreach (Vector2Int direction in directions)
@@ -217,8 +223,12 @@ public class MainGameManager : MonoBehaviour
                 else if (coordinates.Contains(coordinate + direction))
                 {
                     GameObject door = Instantiate(WallWithDoorPrefab,
-                        new Vector3(newFloor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15, newFloor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)),
-                        Quaternion.Euler(new Vector3(0, (direction.x != 0) ? 90 : 0, 0)), Doors);
+                        new Vector3(newFloor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15,
+                            newFloor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)),
+                            Quaternion.Euler(new Vector3(0, (direction.x != 0) ? 90 : 0, 0)), Doors);
+
+                    floorPlan.DoorList.Add(door.GetComponent<Door>());
+                    coordinateData[coordinate+direction].GetComponent<FloorManager>().DoorList.Add(door.GetComponent<Door>());
                 }
 
                 else
@@ -236,7 +246,7 @@ public class MainGameManager : MonoBehaviour
     }
 
 
-    private IEnumerator ReconstructPlayArea(int level)
+    private IEnumerator ReconstructPlayArea(int level, Action result)
     {
         string jsonCoords = PlayerPrefs.GetString("LevelBuild"+level);
 
@@ -248,7 +258,6 @@ public class MainGameManager : MonoBehaviour
         Dictionary<Vector2Int, GameObject> RestoredData = new(); 
         foreach (var coord in coordinates)
         {
-            Debug.Log(coord+ " Wants to Spawn "+PlayerPrefs.GetString("Level" + level + coord));
             var data = Addressables.LoadAssetAsync<GameObject>(PlayerPrefs.GetString("Level" + level + coord));
             yield return data;
 
@@ -256,6 +265,8 @@ public class MainGameManager : MonoBehaviour
         }
 
         ConstructPlayArea(RestoredData, coordinates);
+        yield return null;
+        result.Invoke();
     }
 
 
