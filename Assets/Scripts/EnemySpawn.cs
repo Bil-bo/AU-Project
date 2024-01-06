@@ -22,19 +22,19 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
 
         if (PlayerPrefs.HasKey(ID))
         {
-            Debug.Log("Key In PlayerPrefs");
+
             SpawnInfo = JsonUtility.FromJson<EnemySpawnerInfo>(PlayerPrefs.GetString(ID));
 
             if (SpawnInfo.Clear)
             {
-                Debug.Log("Area Has Been Cleared");
+
                 gameObject.SetActive(false);
                 return null;
             }
 
             else if (GameData.Instance.EnemySpawnerID == ID)
             {
-                Debug.Log("Battle Has Been Won");
+
                 SpawnInfo.Clear = true;
                 PlayerPrefs.SetString(ID, JsonUtility.ToJson(SpawnInfo));
                 gameObject.SetActive(false);
@@ -45,7 +45,7 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
             {
                 Addressables.LoadAssetAsync<GameObject>(SpawnInfo.EnemyID).Completed += (result) =>
                 {
-                    Debug.Log("Respawning Items");
+
                     GameObject Enemy = Instantiate(result.Result, transform.position, Quaternion.identity);
                     Enemy.transform.SetParent(transform.parent, true);
                     EnemyPropsRoaming enemyData = Enemy.GetComponent<EnemyPropsRoaming>();
@@ -55,7 +55,7 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
                         enemyData.battleEnemyInfos.Add(result.Result);
                     });
 
-                    SpawnInfo.CardsToPassID.ForEach(card => Addressables.LoadAssetAsync<GameObject>(card).Completed += (result) =>
+                    SpawnInfo.CardStore.ForEach(card => Addressables.LoadAssetAsync<GameObject>(card).Completed += (result) =>
                     {
                         enemyData.CardRewardsInfos.Add(result.Result);
                     });
@@ -68,7 +68,7 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
 
         else
         {
-            Debug.Log("Spawning New Items");
+
             SpawnInfo.Clear = false;
             StartCoroutine(AddressablesManager.Instance.GetRandomItem(AddressType.OVERWORLD_ENEMY, result =>
             {
@@ -97,7 +97,7 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
                 {
                     result.ForEach(item =>
                     {
-                        SpawnInfo.CardsToPassID.Add(item.Key);
+                        SpawnInfo.CardStore.Add(item.Key);
                         enemyData.CardRewardsInfos.Add(item.Value);
                     });
                     PlayerPrefs.SetString(ID, JsonUtility.ToJson(SpawnInfo));
@@ -114,12 +114,9 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
 }
 
 [Serializable]
-public class EnemySpawnerInfo
+public class EnemySpawnerInfo : TreasureChestInfo
 {
-    public bool Clear;
     public string EnemyID;
-
-    public List<string> CardsToPassID = new();
     public List<string> EnemiesToPassID = new();
 
 }

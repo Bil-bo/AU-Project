@@ -206,6 +206,18 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
     private void ConstructPlayArea(Dictionary<Vector2Int, GameObject> coordinateData, List<Vector2Int> coordinates)
     {
 
+        foreach (Vector2Int coordinate in coordinates)
+        {
+            GameObject newFloor = Instantiate(coordinateData[coordinate], Floors);
+            coordinateData[coordinate] = newFloor;
+
+
+
+
+
+
+        }
+
         List<Vector2Int> seen = new();
         List<Vector2Int> directions = new List<Vector2Int> {
                 new Vector2Int(0,-1),
@@ -215,19 +227,12 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
 
         foreach (Vector2Int coordinate in coordinates)
         {
+            GameObject floor = coordinateData[coordinate];
+            Vector3 dimensions = floor.GetComponent<MeshRenderer>().bounds.size;
+            floor.transform.position = new Vector3(coordinate.x * dimensions.x, 0, coordinate.y * dimensions.z);
 
-
-
-            GameObject newFloor = Instantiate(coordinateData[coordinate], Floors);
-            coordinateData[coordinate] = newFloor;
-
-
-            Vector3 dimensions = newFloor.GetComponent<MeshRenderer>().bounds.size;
-            newFloor.transform.position = new Vector3(coordinate.x * dimensions.x, 0, coordinate.y * dimensions.z);
-
-            FloorManager floorPlan = newFloor.GetComponent<FloorManager>();
+            FloorManager floorPlan = floor.GetComponent<FloorManager>();
             floorPlan.Initialise(coordinate);
-
 
             //Debug.Log(coordinateData[coordinate].transform.position);
             foreach (Vector2Int direction in directions)
@@ -236,23 +241,24 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
                 else if (coordinates.Contains(coordinate + direction))
                 {
                     GameObject door = Instantiate(WallWithDoorPrefab,
-                        new Vector3(newFloor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15,
-                            newFloor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)),
+                        new Vector3(floor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15,
+                            floor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)),
                             Quaternion.Euler(new Vector3(0, (direction.x != 0) ? 90 : 0, 0)), Doors);
 
                     floorPlan.DoorList.Add(door.GetComponent<Door>());
+                    Debug.Log(floorPlan.name +" "+floorPlan.DoorList.Count);
                     coordinateData[coordinate+direction].GetComponent<FloorManager>().DoorList.Add(door.GetComponent<Door>());
                 }
 
                 else
                 {
                     Instantiate(WallPrefab,
-                        new Vector3(newFloor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15, newFloor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)),
+                        new Vector3(floor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15, floor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)),
                         Quaternion.Euler(new Vector3(0, (direction.y != 0) ? 90 : 0, 0)), Walls);
                 }
 
             }
-            Instantiate(CeilingPrefab, newFloor.transform.position + (Vector3.up * 29.5f), Quaternion.identity, Ceilings);
+            Instantiate(CeilingPrefab, floor.transform.position + (Vector3.up * 29.5f), Quaternion.identity, Ceilings);
             seen.Add(coordinate);
 
         }

@@ -109,6 +109,7 @@ public class SpecialWalker: LevelWalker
         DownChance.Chance = 25;
         LeftChance.Chance = 25;
         RightChance.Chance = 25;
+
     }
 
     public override List<Vector2Int> Walk(List<Vector2Int> setCoordinates)
@@ -136,6 +137,8 @@ public class SpecialWalker: LevelWalker
 public class BossWalker : LevelWalker
 {
     private Vector2Int StartRoom;
+    private List<DirectionChance> directions;
+    
 
     public BossWalker(Vector2Int gridSize, int RoomAmountLeft, Vector2Int StartRoom) : base(gridSize, RoomAmountLeft)
     {
@@ -145,29 +148,59 @@ public class BossWalker : LevelWalker
         DownChance.Chance = 25;
         LeftChance.Chance = 25;
         RightChance.Chance = 25;
+        directions = new List<DirectionChance>() { UpChance, DownChance, LeftChance, RightChance };
+
+
     }
 
     public override List<Vector2Int> Walk(List<Vector2Int> setCoordinates)
     {
         List<Vector2Int> pointsToReturn = new();
-        Vector2Int point = setCoordinates[UnityEngine.Random.Range(0, Mathf.Max(1, setCoordinates.Count))];
+        Vector2Int point = FindFurthestPoint(setCoordinates);
 
         bool walk = true;
         while (walk)
         {
-            point += CalculateDirection();
 
-            if (setCoordinates.Contains(point)) { continue; }
-            else if (Mathf.Abs(point.x - StartRoom.x) + Mathf.Abs(point.y - StartRoom.y) < 2) { continue; }
-            else if (pointsToReturn.Count >= 1) { return pointsToReturn; }
-            else
+
+            foreach (DirectionChance directionChance in directions)
             {
-                pointsToReturn.Add(point);
+                Vector2Int cardinal = point + directionChance.ReturnValue;
+                if (setCoordinates.Contains(point)) { continue; }
+                else if (pointsToReturn.Count >= 1) { return pointsToReturn; }
+                else
+                {
+                    pointsToReturn.Add(point);
+                }
             }
+            point += CalculateDirection();
         }
-
         return pointsToReturn;
     }
+
+    private Vector2Int FindFurthestPoint(List<Vector2Int> coords)
+    {
+        Vector2Int furthest = new Vector2Int(0, 0);
+        float MaxDistance = Mathf.NegativeInfinity;
+        
+        if (coords.Count == 0 || coords == null) { return furthest; }
+
+        foreach(Vector2Int point in coords)
+        {
+            if (point != StartRoom)
+            {
+                float distance = Vector2Int.Distance(point, StartRoom);
+                if (distance > MaxDistance) 
+                { 
+                    furthest = point;
+                    MaxDistance = distance; 
+                }
+            }
+        }
+        return furthest;
+
+    }
+   
 }
 
 

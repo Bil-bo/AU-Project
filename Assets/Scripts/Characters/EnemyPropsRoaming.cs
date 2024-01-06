@@ -12,7 +12,6 @@ public class EnemyPropsRoaming : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collision Occurred");
         if (other.CompareTag("Player"))
         {
             GameData.Instance.battleEnemies = battleEnemyInfos;

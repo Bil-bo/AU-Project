@@ -64,7 +64,7 @@ public class SpecialRoomManager : MonoBehaviour
         }
 
         Vector2Int injectTreasure = InsertSpecialRoom(coordinates);
-        coordinateData[injectTreasure] = Shop;
+        coordinateData[injectTreasure] = Treasure;
         PlayerPrefs.SetString("Level" + level + injectTreasure, Treasure.name);
 
         for (int i = 0; i < 2; i++)
