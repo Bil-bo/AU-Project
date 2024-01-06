@@ -120,4 +120,6 @@ public class StatusEffectAddedEvent : IEvent
     public BoolContainer IsMerged { get; set; } = new BoolContainer();
 }
 
+public class BattleTriggerEvent : IEvent {}
+
 public class BoolContainer { public bool IsTrue { get; set; } = false; }

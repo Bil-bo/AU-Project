@@ -7,6 +7,18 @@ using UnityEngine;
 public class EnemyPropsRoaming : MonoBehaviour
 {
     public List<GameObject> battleEnemyInfos;
-    public List<GameObject> CardRewardsInfos; 
+    public List<GameObject> CardRewardsInfos;
+    public string SpawnerID { get; set; }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Collision Occurred");
+        if (other.CompareTag("Player"))
+        {
+            GameData.Instance.battleEnemies = battleEnemyInfos;
+            GameData.Instance.EnemySpawnerID = SpawnerID;
+            EventManager.Broadcast(new BattleTriggerEvent());
+        }
+    }
 
 }

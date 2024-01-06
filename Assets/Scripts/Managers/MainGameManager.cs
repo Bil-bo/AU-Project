@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 
 // For managing the main scene
 // Slightly Deprecated by GameData
-public class MainGameManager : MonoBehaviour
+public class MainGameManager : MonoBehaviour, IOnTriggerBattle
 {
     [SerializeField]
     private GameObject CeilingPrefab;
@@ -58,6 +58,7 @@ public class MainGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        EventManager.AddListener<BattleTriggerEvent>(OnTriggerBattle);
         Enemies = GameObject.FindGameObjectsWithTag("Enemy").OrderBy(enemy => enemy.name).ToArray();
         Pickups = GameObject.FindGameObjectsWithTag("Pickup").OrderBy(enemy => enemy.name).ToArray();
         Init = PlayerPrefs.GetInt("Init") == 1;
@@ -128,9 +129,9 @@ public class MainGameManager : MonoBehaviour
 
         }
     }
-     
-    // For Saving data between scenes before starting the battle
-    public void EnterBattle()
+
+
+    public void OnTriggerBattle(BattleTriggerEvent eventData)
     {
         PlayerPrefs.SetFloat("PlayerX", player.transform.position.x);
         PlayerPrefs.SetFloat("PlayerY", player.transform.position.y);
@@ -146,6 +147,7 @@ public class MainGameManager : MonoBehaviour
             PlayerPrefs.SetInt("Pickup" + i + "Enabled", Pickups[i].activeSelf ? 1 : 0);
         }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+
     }
 
     private IEnumerator VisualisePlayArea(Action<Dictionary<Vector2Int, GameObject>, List<Vector2Int>> result) 
@@ -303,6 +305,12 @@ public class MainGameManager : MonoBehaviour
             PlayerPrefs.SetInt("Pickup" + i + "Enabled", 1);
         }
     }
+
+    private void OnDestroy()
+    {
+        EventManager.RemoveListener<BattleTriggerEvent>(OnTriggerBattle);
+    }
+
 }
 
 [Serializable]

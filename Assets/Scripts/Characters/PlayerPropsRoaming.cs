@@ -112,12 +112,6 @@ public class PlayerPropsRoaming : MonoBehaviour
                     DisplayWinMessage();
                 }
                 break;
-            case "Enemy":
-                other.gameObject.SetActive(false);
-                var enemyInfoList = other.GetComponent<EnemyPropsRoaming>().battleEnemyInfos;
-                GameData.Instance.battleEnemies = enemyInfoList;
-                gameManager.EnterBattle();
-                break;
         }
     }
 

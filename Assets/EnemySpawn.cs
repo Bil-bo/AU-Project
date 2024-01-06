@@ -49,6 +49,7 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
                     GameObject Enemy = Instantiate(result.Result, transform.position, Quaternion.identity);
                     Enemy.transform.SetParent(transform.parent, true);
                     EnemyPropsRoaming enemyData = Enemy.GetComponent<EnemyPropsRoaming>();
+                    enemyData.SpawnerID = ID;
                     SpawnInfo.EnemiesToPassID.ForEach(enemy => Addressables.LoadAssetAsync<GameObject>(enemy).Completed += (result) =>
                     {
                         enemyData.battleEnemyInfos.Add(result.Result);
@@ -73,8 +74,10 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
             {
                 SpawnInfo.EnemyID = result.Key;
                 GameObject Enemy = Instantiate(result.Value, transform.position, Quaternion.identity);
+
                 Enemy.transform.SetParent(transform.parent, true);    
                 EnemyPropsRoaming enemyData = Enemy.GetComponent<EnemyPropsRoaming>();
+                enemyData.SpawnerID = ID;
 
                 int EnemiesAmount = UnityEngine.Random.Range(1, 5);
                 int CardsAmount = UnityEngine.Random.Range(1, 4);

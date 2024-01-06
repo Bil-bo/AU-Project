@@ -95,3 +95,9 @@ public interface IOnStatusEffectAdded : IObserve
 {
     void OnStatusEffectAdded(StatusEffectAddedEvent eventData);
 }
+
+
+public interface IOnTriggerBattle: IObserve
+{
+    void OnTriggerBattle(BattleTriggerEvent eventData);
+}
