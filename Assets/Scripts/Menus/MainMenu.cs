@@ -16,6 +16,7 @@ public class MainMenu : MonoBehaviour
     public void NewGame()
     {
         PlayerPrefs.SetInt("Init", 0);
+        Debug.Log(PlayerPrefs.GetInt("Init"));
         
         SceneManager.LoadScene("Difficulties");
     }

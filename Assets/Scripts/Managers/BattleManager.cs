@@ -233,7 +233,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         var enemyInput = GameData.Instance.battleEnemies;
 
 
-        for (int i = 0; i < enemyInput.Length; i++)
+        for (int i = 0; i < enemyInput.Count; i++)
         {
             // Instantiate the enemy prefab
 

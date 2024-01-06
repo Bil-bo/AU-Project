@@ -8,7 +8,7 @@ public interface IFloorObject
 
 
     // Pass Back The GameObject to the floorPlan Parent
-    public GameObject Trigger(FloorManager floor);
+    public GameObject Trigger(string floorID, int ObjectID);
 
 
 }

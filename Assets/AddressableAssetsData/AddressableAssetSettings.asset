@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: ba443a26098db1e4b943d18ade642b63
   m_currentHash:
     serializedVersion: 2
-    Hash: 0cc3f365e06b7d12d764480b3ef6c104
+    Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -48,6 +48,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0d2d7a6aaeed5af40ab5ecccedca9e8a, type: 2}
   - {fileID: 11400000, guid: da49c465147eb1f4f8d119e6584c0cb3, type: 2}
   - {fileID: 11400000, guid: bfa9930fbe9058b429d7cf601eb207bc, type: 2}
+  - {fileID: 11400000, guid: 805836400adc2004c925de3574cc67ba, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -92,6 +93,8 @@ MonoBehaviour:
     - Card
     - FloorPlan
     - Special
+    - OverWorld
+    - Battle
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: d96b80dd13c656c44a2139d866cbb13b, type: 2}

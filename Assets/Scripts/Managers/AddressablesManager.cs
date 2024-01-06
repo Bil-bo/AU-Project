@@ -12,6 +12,8 @@ public class AddressablesManager : MonoBehaviour
 {
     private List<string> CardAddresses = new List<string>();
     private List<string> FloorPlanAddresses = new List<string>();
+    private List<string> OverWorldEnemyAddresses = new List<string>();
+    private List<string> BattleEnemyAddresses = new List<string>();
 
     public event Action ListsReady;
 
@@ -38,7 +40,17 @@ public class AddressablesManager : MonoBehaviour
         var floorHandler = Addressables.LoadResourceLocationsAsync("FloorPlan");
         yield return floorHandler.Task;
 
-        OnGenerated(floorHandler, FloorPlanAddresses);
+        OnGenerated(floorHandler, FloorPlanAddresses);   
+        
+        var OverWorldEnemyHandler = Addressables.LoadResourceLocationsAsync("OverWorld");
+        yield return OverWorldEnemyHandler.Task;
+
+        OnGenerated(OverWorldEnemyHandler, OverWorldEnemyAddresses);    
+        
+        var BattleEnemyHandler = Addressables.LoadResourceLocationsAsync("Battle");
+        yield return BattleEnemyHandler.Task;
+
+        OnGenerated(BattleEnemyHandler, BattleEnemyAddresses);
 
         ListsReady?.Invoke();
 
@@ -77,7 +89,6 @@ public class AddressablesManager : MonoBehaviour
             int RandId = UnityEngine.Random.Range(0, Mathf.Max(1, FloorPlanAddresses.Count));
             var handle = Addressables.LoadAssetAsync<GameObject>(FloorPlanAddresses[RandId]);
             yield return handle;
-            Debug.Log(FloorPlanAddresses[RandId]);
             PlayerPrefs.SetString("Level" + level + coordinate, FloorPlanAddresses[RandId]);
 
             coordToFloor[coordinate] = handle.Result;
@@ -87,50 +98,107 @@ public class AddressablesManager : MonoBehaviour
     }
 
 
-    public List<GameObject> GetRandomCards(int amount)
+    public IEnumerator GetRandomItems(int amount, AddressType PullList, Action<List<KeyValuePair<string, GameObject>>> result)
     {
+        List<string> addresses;
+        List<KeyValuePair<string, GameObject>> items = new List<KeyValuePair<string, GameObject>>();
 
-        List<GameObject> cards = new List<GameObject>();
+        switch (PullList)
+        {
+            case AddressType.CARD:
+                addresses = CardAddresses; 
+                break;            
+            case AddressType.FLOORPLAN:
+                addresses = FloorPlanAddresses; 
+                break;            
+            case AddressType.OVERWORLD_ENEMY:
+                addresses = OverWorldEnemyAddresses; 
+                break;            
+            case AddressType.BATTLE_ENEMY:
+                addresses = BattleEnemyAddresses; 
+                break;
+            default:
+                Debug.LogError("Used an enum not in list");
+                addresses = new List<string>();
+                break;
 
-        StartCoroutine(GenerateRandomCards(amount, result => cards = result));
+        }
 
-        return cards;
+
+        yield return StartCoroutine(GenerateRandomItems(amount, addresses, result => items = result));
+
+        result.Invoke(items);
     }
 
 
-    private IEnumerator GenerateRandomCards(int amount, Action<List<GameObject>> result)
+    private IEnumerator GenerateRandomItems(int amount, List<string> addresses, Action<List<KeyValuePair<string, GameObject>>> result)
     {
-        int CompletedCount = 0;
-        List<GameObject> cards = new List<GameObject>();
+        List<KeyValuePair<string, GameObject>> items = new List<KeyValuePair<string, GameObject>>();
         for (int i = 0; i < amount; i++)
         {
-            int RandId = UnityEngine.Random.Range(0, CardAddresses.Count);
-            var handle = Addressables.LoadAssetAsync<GameObject>(CardAddresses[RandId]);
+            int RandId = UnityEngine.Random.Range(0, addresses.Count);
+            var handle = Addressables.LoadAssetAsync<GameObject>(addresses[RandId]);
             yield return handle;
-            cards.Add(handle.Result);
-            CompletedCount++;
-            if (CompletedCount == amount)
-            {
-                result?.Invoke(cards);
-            }
+            items.Add(new KeyValuePair<string, GameObject>(addresses[RandId], handle.Result));
         }
+
+        result?.Invoke(items);
     }
 
-    public GameObject GetRandomCard()
+    public IEnumerator GetRandomItem(AddressType PullList, Action<KeyValuePair<string, GameObject>> result)
     {
-        GameObject card = new();
-        StartCoroutine(GenerateRandomCard(result => card = result));
-        return card;
+        List<string> addresses;
+        KeyValuePair<string, GameObject> item = new KeyValuePair<string, GameObject>();
 
+        switch (PullList)
+        {
+            case AddressType.CARD:
+                addresses = CardAddresses;
+                break;
+            case AddressType.FLOORPLAN:
+                addresses = FloorPlanAddresses;
+                break;
+            case AddressType.OVERWORLD_ENEMY:
+                addresses = OverWorldEnemyAddresses;
+                break;
+            case AddressType.BATTLE_ENEMY:
+                addresses = BattleEnemyAddresses;
+                break;
+            default:
+                Debug.LogError("Used an enum not in list");
+                addresses = new List<string>();
+                break;
+
+        }
+
+
+        yield return StartCoroutine(GenerateRandomItem(addresses, result => item = result));
+
+        result.Invoke(item);
     }
 
 
-    private IEnumerator GenerateRandomCard(Action<GameObject> result)
+    private IEnumerator GenerateRandomItem(List<string> addresses, Action<KeyValuePair<string, GameObject>> result)
     {
-        int RandId = UnityEngine.Random.Range(0, CardAddresses.Count);
-        var handle = Addressables.LoadAssetAsync<GameObject>(CardAddresses[RandId]);
+        KeyValuePair<string, GameObject> item;
+
+        int RandId = UnityEngine.Random.Range(0, addresses.Count);
+        var handle = Addressables.LoadAssetAsync<GameObject>(addresses[RandId]);
         yield return handle;
-        result?.Invoke(handle.Result);
+
+        item  = new KeyValuePair<string, GameObject>(addresses[RandId], handle.Result);
+
+
+        result?.Invoke(item);
     }
 
+}
+
+public enum AddressType
+{
+    CARD,
+    FLOORPLAN,
+    OVERWORLD_ENEMY,
+    BATTLE_ENEMY
+    
 }

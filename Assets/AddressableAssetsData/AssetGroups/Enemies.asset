@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Enemies
+  m_EditorClassIdentifier: 
+  m_GroupName: Enemies
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 443225a264a3a174088b9cb5bbd024b4
+  m_SerializeEntries:
+  - m_GUID: 6edc0821856aadb48a053c94b4a2d7f1
+    m_Address: EnemyRoaming
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - OverWorld
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 73bff409274e9f040afdade454dbb6ff
+    m_Address: EnemyB
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Battle
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 645d0861ee501814f93bb6dfb9a327f3
+    m_Address: EnemyA
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Battle
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 6c54ba1324a0bdc4d9264cc6d722d20b, type: 2}
+    - {fileID: 11400000, guid: 32611a74631e3484685d03eece94803a, type: 2}

@@ -12,10 +12,13 @@ public class GameData : MonoBehaviour
 
     public GameObject PlayerPrefab;
 
-    public GameObject [] battleEnemies;
+    public List<GameObject> battleEnemies;
     public bool isPuzzleComplete { get; set; }
 
     public Dictionary<GameObject, List<GameObject>> BattlePlayers = new();
+
+    public string EnemySpawnerID;
+
 
     public CardFactory Factory;
 

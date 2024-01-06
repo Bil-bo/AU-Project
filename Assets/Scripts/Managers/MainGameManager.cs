@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -95,7 +96,15 @@ public class MainGameManager : MonoBehaviour
         }
         else
         {
-
+            string[] allKeys = PlayerPrefs.GetString("_keys").Split(",");
+            foreach (string key in allKeys)
+            {
+                if (key.Contains("Level"))
+                {
+                    // Delete the key if it contains the specified substring
+                    PlayerPrefs.DeleteKey(key);
+                }
+            }
 
 
             int seed = (int)System.DateTime.Now.Ticks;
@@ -103,12 +112,14 @@ public class MainGameManager : MonoBehaviour
             UnityEngine.Random.InitState(seed);
 
             PlayerPrefs.SetInt("seed", seed);
+            PlayerPrefs.SetInt("CurrentLevel", 0);
+
+
 
             StartCoroutine(Addresses.GenerateLists());
             Addresses.ListsReady += () => StartCoroutine(VisualisePlayArea((dict, lst) => ConstructPlayArea(dict, lst)));
-            PlayerPrefs.SetInt("CurrentLevel", 0);
-            PlayerPrefs.SetInt("Init", 1);
 
+            PlayerPrefs.SetInt("Init", 1);
             Init = true;
             PlayerPrefs.SetInt("PickupsCollected", 0);
             GameData.Instance.AddPlayer(player.GetComponent<PlayerPropsRoaming>().BattleInfo);

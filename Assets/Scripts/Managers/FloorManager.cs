@@ -41,6 +41,7 @@ public class FloorManager : MonoBehaviour
     public void Initialise(Vector2Int coordinate)
     {
         FloorID = "Level"+PlayerPrefs.GetInt("CurrentLevel")+coordinate+gameObject.name;
+        Debug.Log(FloorID);
 
         if (PlayerPrefs.HasKey(FloorID))
         {
@@ -54,10 +55,12 @@ public class FloorManager : MonoBehaviour
 
         if (!Clear)
         {
+            int i = 0;
             foreach (IFloorObject f in transform.GetComponentsInChildren<IFloorObject>())
             {
-                GameObject floorObject = f.Trigger(this);
-                if (floorObject != null) { Uncleared.Add(floorObject); }
+                GameObject floorObject = f.Trigger(FloorID, i);
+                if (floorObject != null) { Uncleared.Add(floorObject); i++; }
+                
             }
 
             if (Uncleared.Count == 0)
@@ -71,13 +74,10 @@ public class FloorManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Something Collided");
+
         if (other.CompareTag("Player"))
         {
-            Debug.Log("His "+other.transform.position);
-            Debug.Log("Mine "+this.transform.position);
 
-            Debug.Log("Player Collided");
             InRoom = true; 
             if (!Clear) { StartCoroutine(CountDown()); }
 
@@ -95,7 +95,7 @@ public class FloorManager : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Something Left");
+
         if (other.CompareTag("Player"))
         {
             InRoom = false;

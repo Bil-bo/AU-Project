@@ -8,7 +8,7 @@ public class GetPlayer : MonoBehaviour, IFloorObject
 
 
 
-    public GameObject Trigger(FloorManager floor)
+    public GameObject Trigger(string floorID, int ObjectID)
     {
         Destroy(gameObject);
         return null;
@@ -16,8 +16,12 @@ public class GetPlayer : MonoBehaviour, IFloorObject
 
     private void OnDestroy()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        player.transform.position = transform.position;
+        try
+        { 
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            player.transform.position = transform.position; 
+        }
+        catch { }
     }
 
 }
