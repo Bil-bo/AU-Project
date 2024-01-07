@@ -18,11 +18,10 @@ public class MainMenu : MonoBehaviour
     {
         string buildPath = PlayerPrefs.GetString(Addressables.kAddressablesRuntimeDataPath);
         PlayerPrefs.DeleteAll();
-
         PlayerPrefs.SetString(Addressables.kAddressablesRuntimeDataPath, buildPath);
         PlayerPrefs.SetInt("Init", 0);
         //Debug.Log(PlayerPrefs.GetInt("Init"));
-        
+
         SceneManager.LoadScene("Difficulties");
     }
 

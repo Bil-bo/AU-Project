@@ -6,9 +6,6 @@ public class GetPlayer : MonoBehaviour, IFloorObject
 {
     public string ID { get; set; }
     
-
-
-
     public GameObject Trigger(string floorID, int ObjectID)
     {
         ID = floorID+gameObject.name+ObjectID;

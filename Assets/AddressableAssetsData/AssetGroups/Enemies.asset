@@ -35,6 +35,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Battle
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 10da9918bbde8f842abc3c6b6707d767
+    m_Address: EnemyBoss
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Boss
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}
   m_SchemaSet:

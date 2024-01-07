@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6787030505399922400}
   - component: {fileID: 2971873283495052051}
   m_Layer: 0
-  m_Name: EnemyB
+  m_Name: EnemyBoss
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da99e0afc10e5e1429ae428f7953919f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Hound
+  Name: Gronk
   maxHealth: 125
   Attack: 5
   Defense: 0

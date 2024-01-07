@@ -63,7 +63,9 @@ public class AddressablesManager : MonoBehaviour
         {
             foreach (var resourceLocation in handler.Result)
             {
+                Debug.Log(resourceLocation);
                 addresses.Add(resourceLocation.PrimaryKey);
+                Debug.Log(addresses.Count);
             }
         }
     }

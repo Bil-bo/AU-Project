@@ -55,6 +55,8 @@ public class DealDamage : ICardActions
                 postDamage.Defender = target;
                 postDamage.DmgCalc = calc.CalculateDamage();
                 postDamage.NewHealth = target.CurrentHealth;
+                Func<float, float> newL = x => x * 0.5f;
+                Modifier m = new Modifier(newL, 1);
 
             }
 
