@@ -17,56 +17,61 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 1cf3c4d7dcf104a4683056ffbe209f8f
   m_SerializeEntries:
-  - m_GUID: 93bcae4f9adc5eb41928a4f972f50f23
-    m_Address: FloorPlanNew
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - FloorPlan
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0ee488de0bc36bc4390ccc85ae7a78d4
-    m_Address: SingleEnemy
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - FloorPlan
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 56719dbee959f7d4e8686bf92f8831ba
-    m_Address: Boss
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Special
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7e89d596672046342a93a1461fbe3f54
-    m_Address: Rescue
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Special
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 879f053a34abcec42b545b5ade555524
-    m_Address: Shop
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Special
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ac5b97df1ebeb4f40821dc400e5828e0
+  - m_GUID: f46ecff59ba1a00448a4a4b4370a0521
     m_Address: Smithy
     m_ReadOnly: 0
     m_SerializedLabels:
     - Special
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2da71c7bf23fd1045bfbff6f381f2aa8
-    m_Address: Treasure
+  - m_GUID: 02ae5017ec9c5b44b916d052b8201c5b
+    m_Address: Shop
     m_ReadOnly: 0
     m_SerializedLabels:
     - Special
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b09b8dff322170b4888f2b45c4d5378f
+  - m_GUID: beb871bed4797ae49bc348beaf1d7fb3
+    m_Address: Rescue
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Special
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 13a4791101e361b4fb4c2b82ce5afe0f
+    m_Address: PickUp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Special
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b6857e5af7b021540a4f5c12cc659548
     m_Address: LevelStart
     m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a31d16fa05838e4ca383df042053468
+    m_Address: Boss
+    m_ReadOnly: 0
     m_SerializedLabels:
     - Special
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d2db50330ae9e344d8ed0bab83e67195
-    m_Address: Pickup
+  - m_GUID: 75a98c7a7bfe0fc4b91d87a0097878a8
+    m_Address: SingleEnemy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - FloorPlan
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e1926402bdd0c844f93565befe9ebe8b
+    m_Address: FloorPlanNew
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - FloorPlan
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 221bc01979e2a604fb34125e90fe226e
+    m_Address: DoubleEnemy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - FloorPlan
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 96d98066cbbdd134b8400662394b5c7f
+    m_Address: Treasure
     m_ReadOnly: 0
     m_SerializedLabels:
     - Special

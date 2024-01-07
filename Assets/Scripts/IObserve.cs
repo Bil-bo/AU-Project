@@ -105,3 +105,7 @@ public interface IOnTreasureCollected : IObserve
 {
     void OnTreasureCollected(TreasureCollectedEvent eventData);
 }
+public interface IOnPickUpCollected : IObserve
+{
+    void OnPickUpCollected(PickupCollectedEvent eventData);
+}

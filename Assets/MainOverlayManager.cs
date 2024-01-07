@@ -1,24 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected
+public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUpCollected
 {
     [SerializeField]
     private RewardPanel panel;
 
+    [SerializeField]
+    private TextMeshProUGUI PickUpText;
+
+    private int PickUpscollected = 0;
+
     private void Start()
     {
         EventManager.AddListener<TreasureCollectedEvent>(OnTreasureCollected);
+        EventManager.AddListener<PickupCollectedEvent>(OnPickUpCollected);
         
+        if (PlayerPrefs.HasKey("PickUpsCollected"))
+        {
+            PickUpscollected = PlayerPrefs.GetInt("PickUpsCollected");
+            PickUpText.text = "PickUps Collected: " + PickUpscollected;
+        }
+        else 
+        {
+            PlayerPrefs.SetInt("PickUpsCollected", 0);
+            PickUpText.text = "PickUps Collected: " + PickUpscollected;
+        }
+
     }
 
 
     public void OnTreasureCollected(TreasureCollectedEvent eventData) 
     {
         StartCoroutine(ShowRewardsScreen(eventData));
+    }
+
+    public void OnPickUpCollected(PickupCollectedEvent eventData)
+    {
+        PickUpscollected++;
+        PickUpText.text = "PickUps Collected: " + PickUpscollected;
     }
 
     private IEnumerator ShowRewardsScreen(TreasureCollectedEvent eventData) 
@@ -51,5 +75,9 @@ public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected
     private void OnDestroy()
     {
         EventManager.RemoveListener<TreasureCollectedEvent>(OnTreasureCollected);
+        EventManager.RemoveListener<PickupCollectedEvent>(OnPickUpCollected);
+
     }
+
+
 }

@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 
 // For managing the main scene
 // Slightly Deprecated by GameData
-public class MainGameManager : MonoBehaviour, IOnTriggerBattle
+public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollected
 {
     [SerializeField]
     private GameObject CeilingPrefab;
@@ -30,14 +30,14 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
 
     [SerializeField]
     private Transform Walls;
-    
+
     [SerializeField]
     private Transform Floors;
 
     [SerializeField]
     private Transform Ceilings;
 
-    [SerializeField] 
+    [SerializeField]
     private Transform Doors;
 
     [SerializeField]
@@ -46,6 +46,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
     public int GridX = 10;
     public int GridY = 10;
     public int LevelAmount = 1;
+    private int PickUpsNum;
 
     private GameObject[] Enemies;
     private GameObject[] Pickups;
@@ -53,12 +54,14 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
     private static bool Init = false;
 
 
-    
+
 
     // Start is called before the first frame update
     void Start()
     {
         EventManager.AddListener<BattleTriggerEvent>(OnTriggerBattle);
+        EventManager.AddListener<PickupCollectedEvent>(OnPickUpCollected);
+
         Enemies = GameObject.FindGameObjectsWithTag("Enemy").OrderBy(enemy => enemy.name).ToArray();
         Pickups = GameObject.FindGameObjectsWithTag("Pickup").OrderBy(enemy => enemy.name).ToArray();
         Init = PlayerPrefs.GetInt("Init") == 1;
@@ -72,6 +75,8 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
 
             StartCoroutine(ReconstructPlayArea(PlayerPrefs.GetInt("CurrentLevel", 0), () =>
             {
+
+                PickUpsNum = PlayerPrefs.GetInt("PickUpsNum");
                 // Load the enabled state for each enemy and set it
                 for (int i = 0; i < Enemies.Length; i++)
                 {
@@ -93,21 +98,10 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
 
 
 
-            
+
         }
         else
         {
-            //string[] allKeys = PlayerPrefs.GetString("_keys").Split(",");
-            //foreach (string key in allKeys)
-            //{
-            //    if (key.Contains("Level"))
-            //    {
-
-            //        PlayerPrefs.DeleteKey(key);
-            //    }
-            //}
-
-
             int seed = (int)System.DateTime.Now.Ticks;
 
             UnityEngine.Random.InitState(seed);
@@ -122,7 +116,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
 
             PlayerPrefs.SetInt("Init", 1);
             Init = true;
-            PlayerPrefs.SetInt("PickupsCollected", 0);
+            PlayerPrefs.SetInt("PickUpsNum", 2*LevelAmount);
             GameData.Instance.AddPlayer(player.GetComponent<PlayerPropsRoaming>().BattleInfo);
 
 
@@ -150,7 +144,13 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
 
     }
 
-    private IEnumerator VisualisePlayArea(Action<Dictionary<Vector2Int, GameObject>, List<Vector2Int>> result) 
+    public void OnPickUpCollected(PickupCollectedEvent eventData)
+    {
+        PickUpsNum -= 1;
+        PlayerPrefs.SetInt("PickUpsNum", PickUpsNum);
+    }
+
+    private IEnumerator VisualisePlayArea(Action<Dictionary<Vector2Int, GameObject>, List<Vector2Int>> result)
     {
         List<Vector2Int> levelOne = new();
         Dictionary<Vector2Int, GameObject> levelOneData = new();
@@ -173,7 +173,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
 
             int RoomAmount = Mathf.RoundToInt(UnityEngine.Random.Range(0, 3) + 5 + ((i + 1) * 2.5f));
 
-            while (coordinates.Count < RoomAmount) 
+            while (coordinates.Count < RoomAmount)
             {
                 coordinates.AddRange(WalkerFactory.CreateWalker(new Vector2Int(GridX, GridY), RoomAmount - coordinates.Count).Walk(coordinates));
             }
@@ -188,8 +188,8 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
             coordinates = coordinateData.Keys.ToList();
 
 
-            string jsonCoordinates = new CoordWrapper { coordinates = coordinates}.SaveToString();
-            PlayerPrefs.SetString("LevelBuild"+i, jsonCoordinates);
+            string jsonCoordinates = new CoordWrapper { coordinates = coordinates }.SaveToString();
+            PlayerPrefs.SetString("LevelBuild" + i, jsonCoordinates);
 
             if (i == 0)
             {
@@ -210,12 +210,6 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
         {
             GameObject newFloor = Instantiate(coordinateData[coordinate], Floors);
             coordinateData[coordinate] = newFloor;
-
-
-
-
-
-
         }
 
         List<Vector2Int> seen = new();
@@ -228,7 +222,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
         foreach (Vector2Int coordinate in coordinates)
         {
             GameObject floor = coordinateData[coordinate];
-            Vector3 dimensions = floor.GetComponent<MeshRenderer>().bounds.size;
+            Vector3 dimensions = floor.GetComponentInChildren<MeshRenderer>().bounds.size;
             floor.transform.position = new Vector3(coordinate.x * dimensions.x, 0, coordinate.y * dimensions.z);
 
             FloorManager floorPlan = floor.GetComponent<FloorManager>();
@@ -246,8 +240,8 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
                             Quaternion.Euler(new Vector3(0, (direction.x != 0) ? 90 : 0, 0)), Doors);
 
                     floorPlan.DoorList.Add(door.GetComponent<Door>());
-                    Debug.Log(floorPlan.name +" "+floorPlan.DoorList.Count);
-                    coordinateData[coordinate+direction].GetComponent<FloorManager>().DoorList.Add(door.GetComponent<Door>());
+                    Debug.Log(floorPlan.name + " " + floorPlan.DoorList.Count);
+                    coordinateData[coordinate + direction].GetComponent<FloorManager>().DoorList.Add(door.GetComponent<Door>());
                 }
 
                 else
@@ -267,14 +261,14 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
 
     private IEnumerator ReconstructPlayArea(int level, Action result)
     {
-        string jsonCoords = PlayerPrefs.GetString("LevelBuild"+level);
+        string jsonCoords = PlayerPrefs.GetString("LevelBuild" + level);
 
         List<Vector2Int> coordinates = JsonUtility.FromJson<CoordWrapper>(jsonCoords).LoadFromString();
 
 
         coordinates.ForEach(coordinate => { Debug.Log(coordinate); });
 
-        Dictionary<Vector2Int, GameObject> RestoredData = new(); 
+        Dictionary<Vector2Int, GameObject> RestoredData = new();
         foreach (var coord in coordinates)
         {
             var data = Addressables.LoadAssetAsync<GameObject>(PlayerPrefs.GetString("Level" + level + coord));
@@ -315,9 +309,10 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
     private void OnDestroy()
     {
         EventManager.RemoveListener<BattleTriggerEvent>(OnTriggerBattle);
+        EventManager.RemoveListener<PickupCollectedEvent>(OnPickUpCollected);
     }
-
 }
+
 
 [Serializable]
 public class CoordWrapper

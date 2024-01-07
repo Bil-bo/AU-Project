@@ -25,7 +25,6 @@ public class PlayerPropsRoaming : MonoBehaviour
     public GameData gameData;
     public GameObject pause;
 
-    public int maxPickups = 3;
     private bool hasWon = false;
 
     // Start is called before the first frame update
@@ -33,7 +32,6 @@ public class PlayerPropsRoaming : MonoBehaviour
     {
         charcon = GetComponent<CharacterController>();
         pause.SetActive(false);
-        UpdatePickupText();
     }
 
     // Temporarily stopping the game: Mainly used for making it back to the main menu
@@ -94,35 +92,6 @@ public class PlayerPropsRoaming : MonoBehaviour
             other.GetComponent<ButtonPad>().collided();
 
         }
-    }
-
-
-    // Picking up pickups, Starting battles
-    private void OnTriggerEnter(Collider other)
-    {
-        switch (other.tag)
-        {
-            case "Pickup":
-                other.GetComponent<PickUpsData>().PickedUp();
-                PlayerPrefs.SetInt("PickupsCollected", PlayerPrefs.GetInt("PickupsCollected") + 1);
-                UpdatePickupText();
-
-                if(PlayerPrefs.GetInt("PickupsCollected") >= maxPickups){
-                    hasWon = true;
-                    DisplayWinMessage();
-                }
-                break;
-        }
-    }
-
-    // Should be done somewhere else prolly
-    private void UpdatePickupText()
-    {
-        TextMeshProUGUI pickupText = GameObject.FindGameObjectWithTag("PickupText")?.GetComponent<TextMeshProUGUI>();
-
-        if(pickupText != null){
-            pickupText.text = "Pickups collected: " + PlayerPrefs.GetInt("PickupsCollected");
-        }  
     }
 
     private IEnumerator DelayAndLoadMainMenu()

@@ -128,4 +128,9 @@ public class TreasureCollectedEvent : IEvent
     public PlayerPropsRoaming Collider {  get; set; }
 }
 
+public class PickupCollectedEvent: IEvent
+{
+    public PickUpsData PickUp { get; set; }
+}
+
 public class BoolContainer { public bool IsTrue { get; set; } = false; }

@@ -1612,6 +1612,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 1600475351}
+  PickUpText: {fileID: 1712212872}
 --- !u!1 &564547471
 GameObject:
   m_ObjectHideFlags: 0
@@ -4261,7 +4262,7 @@ MonoBehaviour:
   CeilingPrefab: {fileID: 2587287665380895817, guid: 3432c0110370a39488b34c06a9f5e8aa, type: 3}
   WallPrefab: {fileID: 6229784493608891389, guid: 4b6400c0a452dc041be7d01d20723012, type: 3}
   WallWithDoorPrefab: {fileID: 8511096808522849562, guid: 3b5f0e868178d9a4684cd296a0a4cf05, type: 3}
-  LevelStart: {fileID: 2192615579875345370, guid: b09b8dff322170b4888f2b45c4d5378f, type: 3}
+  LevelStart: {fileID: 1348632484998969949, guid: b6857e5af7b021540a4f5c12cc659548, type: 3}
   Addresses: {fileID: 1261040180}
   Walls: {fileID: 429747786}
   Floors: {fileID: 141207252}
@@ -4299,12 +4300,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d1ec0dd7ff03a649af31dfd0a694337, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RescueRoom: {fileID: 6038886776474990246, guid: 7e89d596672046342a93a1461fbe3f54, type: 3}
-  BossRoom: {fileID: 6038886776474990246, guid: 56719dbee959f7d4e8686bf92f8831ba, type: 3}
-  Smithy: {fileID: 6038886776474990246, guid: ac5b97df1ebeb4f40821dc400e5828e0, type: 3}
-  PickUpRoom: {fileID: 297229277808543520, guid: d2db50330ae9e344d8ed0bab83e67195, type: 3}
-  Shop: {fileID: 6038886776474990246, guid: 879f053a34abcec42b545b5ade555524, type: 3}
-  Treasure: {fileID: 6038886776474990246, guid: 2da71c7bf23fd1045bfbff6f381f2aa8, type: 3}
+  RescueRoom: {fileID: 1348632484998969949, guid: beb871bed4797ae49bc348beaf1d7fb3, type: 3}
+  BossRoom: {fileID: 1348632484998969949, guid: 7a31d16fa05838e4ca383df042053468, type: 3}
+  Smithy: {fileID: 1348632484998969949, guid: f46ecff59ba1a00448a4a4b4370a0521, type: 3}
+  PickUpRoom: {fileID: 1348632484998969949, guid: 13a4791101e361b4fb4c2b82ce5afe0f, type: 3}
+  Shop: {fileID: 1348632484998969949, guid: 02ae5017ec9c5b44b916d052b8201c5b, type: 3}
+  Treasure: {fileID: 1348632484998969949, guid: 96d98066cbbdd134b8400662394b5c7f, type: 3}
   RescueChance: 75
   SmithyChance: 50
   ShopChance: 60
