@@ -17,6 +17,9 @@ public class RewardPanel : MonoBehaviour
     [SerializeField]
     private List<Button> PlayerButton = new List<Button>();
 
+    [SerializeField]
+    private Button EndRewardsButton;
+
     private List<GameObject> CardRewards = new List<GameObject>();
 
     private List<GameObject> SelectedCards = new();
@@ -84,6 +87,8 @@ public class RewardPanel : MonoBehaviour
         {
             yield return null;
         }
+
+        gameObject.SetActive(false);
     }
 
     private void ShowPlayerSelect(bool active) 
@@ -104,5 +109,9 @@ public class RewardPanel : MonoBehaviour
         }
     }
 
-
+    public void SkipRewards()
+    {
+        StopCoroutine(SelectRewards());
+        RewardsToChoose = 0;
+    }
 }

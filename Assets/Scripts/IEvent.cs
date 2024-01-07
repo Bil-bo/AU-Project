@@ -122,4 +122,10 @@ public class StatusEffectAddedEvent : IEvent
 
 public class BattleTriggerEvent : IEvent {}
 
+public class TreasureCollectedEvent : IEvent
+{
+    public List<GameObject> Treasure { get; set; } = new();
+    public PlayerPropsRoaming Collider {  get; set; }
+}
+
 public class BoolContainer { public bool IsTrue { get; set; } = false; }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -10,6 +11,9 @@ public class TreasureChest : MonoBehaviour, IFloorObject
     public TreasureChestInfo ChestInfo = new();
     
     public List<GameObject> ChestList = new List<GameObject>();
+
+    [SerializeField]
+    private RewardPanel panel;
 
     public GameObject Trigger(string floorID, int objectID)
     {
@@ -27,7 +31,6 @@ public class TreasureChest : MonoBehaviour, IFloorObject
             {
                 Debug.Log("Area Has Been Cleared");
                 gameObject.SetActive(false);
-                return null;
             }
 
             else
@@ -37,7 +40,6 @@ public class TreasureChest : MonoBehaviour, IFloorObject
                     ChestList.Add(result.Result);
                     
                 });
-                return gameObject;
 
             }
         }
@@ -57,17 +59,25 @@ public class TreasureChest : MonoBehaviour, IFloorObject
                 PlayerPrefs.SetString(ID, JsonUtility.ToJson(ChestList));
 
             }));
-
-
-            return gameObject;
         }
+
+        return null;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("The Player Touched me");
+            gameObject.SetActive(false);
+
+            TreasureCollectedEvent gameEvent = new TreasureCollectedEvent()
+            {
+                Collider = other.GetComponent<PlayerPropsRoaming>(),
+                Treasure = ChestList
+            };
+
+            EventManager.Broadcast(gameEvent);
+
         }
     }
 

@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ChestList: []
+  panel: {fileID: 0}
 --- !u!65 &-6871127998316683123
 BoxCollider:
   m_ObjectHideFlags: 0
