@@ -17,8 +17,10 @@ public class MainMenu : MonoBehaviour
     public void NewGame()
     {
         string buildPath = PlayerPrefs.GetString(Addressables.kAddressablesRuntimeDataPath);
+        string logPath = PlayerPrefs.GetString(Addressables.kAddressablesRuntimeBuildLogPath);
         PlayerPrefs.DeleteAll();
         PlayerPrefs.SetString(Addressables.kAddressablesRuntimeDataPath, buildPath);
+        PlayerPrefs.SetString(Addressables.kAddressablesRuntimeBuildLogPath, logPath);
         PlayerPrefs.SetInt("Init", 0);
         //Debug.Log(PlayerPrefs.GetInt("Init"));
 
