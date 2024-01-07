@@ -106,9 +106,6 @@ public class FloorManager : MonoBehaviour
     private IEnumerator CountDown() 
     {
         yield return new WaitForSeconds(2f);
-        Debug.Log("Number of Doors = "+DoorList.Count);
-        Debug.Log("Cleared " + Clear);
-        Debug.Log("In Room " + InRoom);
 
         if (InRoom) { DoorList.ForEach(door => door.SetState(true)); }
 

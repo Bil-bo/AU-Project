@@ -10,7 +10,7 @@ public class Ladder : MonoBehaviour, IFloorObject
 
     public GameObject Trigger(string floorID, int ObjectID)
     {
-        ID = floorID+gameObject.name+ObjectID;
+        ID = floorID+"Object" +ObjectID;
 
 
         LevelMove = PlayerPrefs.GetInt("CurrentLevel") + 1;

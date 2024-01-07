@@ -281,7 +281,8 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
         List<Vector2Int> coordinates = JsonUtility.FromJson<CoordWrapper>(jsonCoords).LoadFromString();
 
 
-        coordinates.ForEach(coordinate => { Debug.Log(coordinate); });
+
+
 
         Dictionary<Vector2Int, GameObject> RestoredData = new();
         foreach (var coord in coordinates)

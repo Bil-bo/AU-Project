@@ -263,7 +263,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         // Checks if the Raycast hit another card
         foreach (RaycastResult result in results)
         {
-            Debug.Log(result.gameObject.name);
+
             if (result.gameObject.GetComponentInChildren<Card>() != null)
             {
                 CardToReturn = result.gameObject;

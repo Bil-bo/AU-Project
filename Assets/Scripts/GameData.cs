@@ -18,13 +18,7 @@ public class GameData : MonoBehaviour
 
     public string EnemySpawnerID;
 
-
     public CardFactory Factory;
-
-
-
-
-
 
     private void Awake()
     {

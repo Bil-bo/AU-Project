@@ -92,7 +92,7 @@ public abstract class BaseBattleCharacter : MonoBehaviour
         int finalDamage = Mathf.Max(damage-Defense, 0);
         CurrentHealth = Mathf.Max(0, CurrentHealth - finalDamage); //We take away a bit of health based on how much damage the char has inflicted
         FlashObject(new Color(1f, 0f, 0f, 0.5f)); //They turn red temporarily when getting attacked
-        Debug.Log(CurrentHealth);
+
         DisplayText(finalDamage.ToString());
     }
 

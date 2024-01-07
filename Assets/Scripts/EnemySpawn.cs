@@ -8,17 +8,20 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
 {
     public string ID { get; set; }
 
-    private EnemySpawnerInfo SpawnInfo = new();
+    private EnemySpawnerInfo SpawnInfo = new()
+    {
+        Clear = false,
+    };
 
     public GameObject Trigger(string floorID, int objectID)
     {
-        ID = floorID+gameObject.name+objectID;
+        ID = floorID+"Object"+objectID;
 
-
-
+        Debug.Log(ID);
+        Debug.Log(GameData.Instance.EnemySpawnerID);
         if (PlayerPrefs.HasKey(ID))
         {
-
+            Debug.Log("I have the key");
             SpawnInfo = JsonUtility.FromJson<EnemySpawnerInfo>(PlayerPrefs.GetString(ID));
 
             if (SpawnInfo.Clear)
@@ -30,7 +33,6 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
 
             else if (GameData.Instance.EnemySpawnerID == ID)
             {
-
                 SpawnInfo.Clear = true;
                 PlayerPrefs.SetString(ID, JsonUtility.ToJson(SpawnInfo));
                 gameObject.SetActive(false);
@@ -64,7 +66,7 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
 
         else
         {
-
+            Debug.Log("no key");
             SpawnInfo.Clear = false;
             StartCoroutine(AddressablesManager.Instance.GetRandomItem(AddressType.OVERWORLD_ENEMY, result =>
             {

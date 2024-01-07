@@ -16,6 +16,7 @@ public class AddressablesManager : MonoBehaviour
     private List<string> BattleEnemyAddresses = new List<string>();
     private List<string> OverWorldBossEnemyAddresses = new List<string>();
     private List<string> BattleBossEnemyAddresses = new List<string>();
+    private List<string> RescuePlayers = new List<string>();
 
     public event Action ListsReady;
 

@@ -16,7 +16,6 @@ public class EnemyA : BattleEnemy
             
             //ActionManager.Instance.AddToBottom( new AbsorbHealth(this, new List<BaseBattleCharacter>(), 20, DamageType.NORMAL, 30));
             AttackPlayer();
-            Debug.Log("EFFECT IS HAPPENING");
             break;
 
             case(1):
@@ -26,7 +25,6 @@ public class EnemyA : BattleEnemy
             case(2):
             //ActionManager.Instance.AddToBottom( new AbsorbHealth(this, new List<BaseBattleCharacter>(), 20, DamageType.NORMAL, 30));
             AttackPlayer();
-            Debug.Log("EFFECT IS HAPPENING");
             //AttackPlayer();
             break;
             

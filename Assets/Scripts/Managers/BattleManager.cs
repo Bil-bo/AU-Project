@@ -357,7 +357,6 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
                 }
             }
-            Debug.Log(DeadEnemies.Count);
             if (DeadPlayers.Count > 0 || DeadEnemies.Count > 0) { CleanUp(); }
         }
     }
@@ -393,6 +392,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         else
         {
             manager.ShowOverlay("You Lost!");
+            PlayerPrefs.SetInt("Init", 0);
             yield return new WaitForSeconds(3f);
             CleanUp();
             SceneManager.LoadScene(0);

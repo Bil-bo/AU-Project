@@ -75,7 +75,6 @@ public class PoisonEffect: StatusEffect, IOnStartOfTurn
     }
     public void OnStartOfTurn(StartOfTurnEvent eventData)
     {
-        Debug.Log("StartOfTurnEventCalled");
         if (eventData.Character == Target)
         {
             ActionManager.Instance.AddToBottom(new DealDamage(null, new List<BaseBattleCharacter> { Target }, Counter, DamageType.FLAT));

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceed5655dec1be242a536d5d807511f1, type: 3}
+  m_Name: AnotherPlayer
+  m_EditorClassIdentifier: 
+  PlayerModel: {fileID: 3517959726302896293, guid: a4ca3067d45cd1643b33d7478c98a82f, type: 3}
+  Name: Jim
+  maxHealth: 75
+  MaxEnergy: 2
+  MaxHandSize: 5
+  Deck:
+  - {fileID: 3484152411740928418, guid: 77a3215c40020b8469f146390a1790ca, type: 3}
+  - {fileID: 3484152411740928418, guid: 77a3215c40020b8469f146390a1790ca, type: 3}
+  - {fileID: 3484152411740928418, guid: e6dc0da8ae43e4a488992dcdd3d8e8b8, type: 3}
+  - {fileID: 3484152411740928418, guid: 77a3215c40020b8469f146390a1790ca, type: 3}
+  - {fileID: 3484152411740928418, guid: 800952e0a6d1ff74984db4f4ff37c069, type: 3}
+  - {fileID: 3484152411740928418, guid: 800952e0a6d1ff74984db4f4ff37c069, type: 3}
+  - {fileID: 3484152411740928418, guid: 3aceea38f54a3ed4b8f083d6ce5efeeb, type: 3}
+  - {fileID: 3484152411740928418, guid: 62f834999fc46d5438441ac318c69d77, type: 3}
+  - {fileID: 3484152411740928418, guid: 77a3215c40020b8469f146390a1790ca, type: 3}
+  - {fileID: 3484152411740928418, guid: e6dc0da8ae43e4a488992dcdd3d8e8b8, type: 3}

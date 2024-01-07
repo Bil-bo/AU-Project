@@ -11,7 +11,7 @@ public class FinalBossPropsRoaming : EnemyPropsRoaming, IFloorObject
 
     public GameObject Trigger(string floorID, int ObjectID)
     {
-        ID = floorID + gameObject.name + ObjectID;
+        ID = floorID + "Object" + ObjectID;
 
         if (PlayerPrefs.HasKey(ID))
         {

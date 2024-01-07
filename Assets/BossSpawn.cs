@@ -5,7 +5,10 @@ public class BossSpawn : MonoBehaviour, IFloorObject
 {
     public string ID { get;  set; }
 
-    private EnemySpawnerInfo BossSpawnInfo = new();
+    private EnemySpawnerInfo BossSpawnInfo = new()
+    {
+        Clear = false
+    };
 
     public GameObject Trigger(string floorID, int objectID)
     {

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MainPlayer
   m_EditorClassIdentifier: 
   PlayerModel: {fileID: 3517959726302896293, guid: a4ca3067d45cd1643b33d7478c98a82f, type: 3}
-  Name: MyGuy
+  Name: Bob
   maxHealth: 100
   MaxEnergy: 3
   MaxHandSize: 4
