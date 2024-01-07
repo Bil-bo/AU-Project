@@ -17,18 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 792d1ee50bbbdd8429e5d26b5c3cbd92
   m_SerializeEntries:
-  - m_GUID: c4db33550c7e3114594c3b3992007e13
-    m_Address: Bless
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Card
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c5ab41c89f98e5f4ba6037b32178a315
-    m_Address: Wish
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Card
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e6dc0da8ae43e4a488992dcdd3d8e8b8
     m_Address: Poison
     m_ReadOnly: 0
@@ -55,24 +43,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 800952e0a6d1ff74984db4f4ff37c069
     m_Address: Sword
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Card
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: afc4c5fc1bc1fc948ae717ffd1f2db36
-    m_Address: Cripple
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Card
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 21c337599670ffa49beea61fe7168188
-    m_Address: Plague
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Card
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4764921edf593f145a2d606aa7d0683a
-    m_Address: Strengthen
     m_ReadOnly: 0
     m_SerializedLabels:
     - Card

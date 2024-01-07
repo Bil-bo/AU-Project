@@ -46,4 +46,13 @@ public class CardFactory : MonoBehaviour
         return cards;
     }
 
+    public static GameObject CreateRewardCard(GameObject card, Transform parent, bool isActive = false)
+    {
+        GameObject newCard = Instantiate(instance.CardPrefab, parent);
+        Instantiate(card, newCard.transform);
+
+        newCard.SetActive(isActive);
+        return newCard;
+    }
+
 }

@@ -97,15 +97,15 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle
         }
         else
         {
-            string[] allKeys = PlayerPrefs.GetString("_keys").Split(",");
-            foreach (string key in allKeys)
-            {
-                if (key.Contains("Level"))
-                {
-                    // Delete the key if it contains the specified substring
-                    PlayerPrefs.DeleteKey(key);
-                }
-            }
+            //string[] allKeys = PlayerPrefs.GetString("_keys").Split(",");
+            //foreach (string key in allKeys)
+            //{
+            //    if (key.Contains("Level"))
+            //    {
+
+            //        PlayerPrefs.DeleteKey(key);
+            //    }
+            //}
 
 
             int seed = (int)System.DateTime.Now.Ticks;

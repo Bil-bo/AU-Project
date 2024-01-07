@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public RewardPanel panel;
+
     public GameObject overlayCanvas;
     public TMP_Text overlayText;
     private string message = "";

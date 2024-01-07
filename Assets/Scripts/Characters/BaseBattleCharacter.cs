@@ -9,8 +9,6 @@ using Unity.VisualScripting;
 
 public abstract class BaseBattleCharacter : MonoBehaviour
 {
-
-
     public Guid CharID { get; } = Guid.NewGuid();
     public string Name;
     public int maxHealth;
@@ -93,18 +91,18 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     {
         CurrentHealth = Mathf.Max(0, CurrentHealth - damage); //We take away a bit of health based on how much damage the char has inflicted
         FlashObject(new Color(1f, 0f, 0f, 0.5f)); //They turn red temporarily when getting attacked
-
+        Debug.Log(CurrentHealth);
         DisplayText(damage.ToString());
     }
 
-    public void HealthReturn(int thresh)
+    public void RestoreHealth(int heal)
     {
         if(CurrentHealth < maxHealth)
         {
-            CurrentHealth = Mathf.Max(maxHealth, CurrentHealth + thresh);
+            CurrentHealth = Mathf.Min(maxHealth, CurrentHealth + heal);
             FlashObject(new Color(0f, 1f, 0f, 0.5f));
         }
 
-        DisplayText(thresh.ToString());
+        DisplayText(heal.ToString());
     }
 }

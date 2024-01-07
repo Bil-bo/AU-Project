@@ -1,15 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
-using System;
-using UnityEditor;
 
 
 
@@ -33,6 +27,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
     public GameManager manager;
 
+    [SerializeField]
     private PlayerInput inputs;
 
 
@@ -73,6 +68,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
     private BaseBattleCharacter SingleTarget;
 
 
+
     public GameObject MainCard { 
         get { return _MainCard; }
         set { _MainCard = value;
@@ -101,7 +97,9 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
     void Start()
     {
+        if (inputs == null) { inputs = GetComponent<PlayerInput>(); }
 
+        if (Line == null) { Line = GameObject.FindGameObjectWithTag("Arrow").GetComponentInChildren<ArrowPointer>(); }  
         var clickInput = inputs.actions["UI/Click"];
         clickInput.started += Click;
         clickInput.canceled += ClickRelease;
@@ -310,15 +308,15 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
                         CharacterID = CurrentPlayer.CharID,
                         Character = player
                     };
-
                     EventManager.Broadcast(gameEvent);
 
-                    if (DeadPlayers.Contains(player)) { continue; }
+                    yield return null;
+                    if (DeadPlayers.Contains(player) || player.CurrentHealth <= 0) { continue; }
                     else
                     {
                         deckHandler.currentPlayer = CurrentPlayer.gameObject;
                         deckHandler.ShowDeck();
-                        yield return new WaitForSeconds(0.5f);
+                        yield return null;
                         yield return StartCoroutine(player.DoTurn());
                         CurrentPlayer.Targeter.SetActive(false);
                         deckHandler.HideDeck();
@@ -338,7 +336,8 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
                         Character = enemy
                     };
                     EventManager.Broadcast(gameEvent);
-                    if (DeadEnemies.Contains(enemy)) { continue; }
+                    yield return null;
+                    if (DeadEnemies.Contains(enemy) || enemy.CurrentHealth <= 0 || gameEvent.Character.CurrentHealth == 0) { continue; }
                     else
                     {
                         yield return StartCoroutine(enemy.DoTurn());
@@ -350,19 +349,24 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
             Debug.Log(DeadEnemies.Count);
             if (DeadPlayers.Count > 0 || DeadEnemies.Count > 0) { CleanUp(); }
         }
-
-
-
     }
 
     IEnumerator ExitBattle(bool hasWon)
     {
+        deckHandler.gameObject.SetActive(false);
         if (hasWon)
         {
+
             manager.ShowOverlay("You Won!");
             
             yield return new WaitForSeconds(2f);
             CleanUp();
+
+            manager.ShowOverlay("");
+
+            yield return StartCoroutine(manager.panel.ShowRewards(GameData.Instance.CardRewards, players));
+            yield return new WaitForSeconds(5f);
+
 
             foreach (BattlePlayer player in players)
             {
@@ -648,6 +652,9 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
     private void OnDestroy()
     {
+        var clickInput = inputs.actions["UI/Click"];
+        clickInput.started -= Click;
+        clickInput.canceled -= ClickRelease;
         EventManager.RemoveListener<PlayerDeathEvent>(OnPlayerDeath);
         EventManager.RemoveListener<EnemyDeathEvent>(OnEnemyDeath);
     }

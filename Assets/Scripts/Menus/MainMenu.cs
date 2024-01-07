@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.AddressableAssets;
 
 // Simple script for buttons in main menu
 public class MainMenu : MonoBehaviour
@@ -15,8 +16,12 @@ public class MainMenu : MonoBehaviour
 
     public void NewGame()
     {
+        string buildPath = PlayerPrefs.GetString(Addressables.kAddressablesRuntimeDataPath);
+        PlayerPrefs.DeleteAll();
+
+        PlayerPrefs.SetString(Addressables.kAddressablesRuntimeDataPath, buildPath);
         PlayerPrefs.SetInt("Init", 0);
-        Debug.Log(PlayerPrefs.GetInt("Init"));
+        //Debug.Log(PlayerPrefs.GetInt("Init"));
         
         SceneManager.LoadScene("Difficulties");
     }

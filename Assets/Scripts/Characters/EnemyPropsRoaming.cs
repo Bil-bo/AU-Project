@@ -15,6 +15,7 @@ public class EnemyPropsRoaming : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             GameData.Instance.battleEnemies = battleEnemyInfos;
+            GameData.Instance.CardRewards = CardRewardsInfos;
             GameData.Instance.EnemySpawnerID = SpawnerID;
             EventManager.Broadcast(new BattleTriggerEvent());
         }

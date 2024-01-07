@@ -1,8 +1,4 @@
-﻿using System;
-using UnityEditor.Timeline.Actions;
-using UnityEngine;
-
-internal class ChangeAttack : ICardActions
+﻿internal class ChangeAttack : ICardActions
 {
 
     private BaseBattleCharacter Target;

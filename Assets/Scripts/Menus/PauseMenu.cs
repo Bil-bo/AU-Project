@@ -23,7 +23,7 @@ public class PauseMenu : MonoBehaviour
     public void QuitGame()
     {
 
-        GameData.Instance.EnemySpawnerID = null;
+        GameData.Instance.Restart();
         Time.timeScale = 1;
         //gameManager.ResetPositions(new Vector3(4,4,4));
         SceneManager.LoadScene(0);

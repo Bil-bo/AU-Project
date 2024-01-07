@@ -30,6 +30,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         get { return _currentPlayer; }
         set 
         {
+            if (Player != null) { button.onClick.RemoveListener(Player.FinishTurn); }
             _currentPlayer = value;
             if (Player != null) { Player.OnEnergyChanged += (e, m) => PlayerEnergy.text = e.ToString() + "/" + m.ToString(); }
             Player = _currentPlayer.GetComponent<BattlePlayer>();
@@ -229,10 +230,12 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         {
 
             RectTransform rectTransform = card.GetComponent<RectTransform>();
-            rectTransform.anchorMax.Set(0.5f, 0);
-            rectTransform.anchorMax.Set(0.5f, 0);
-            rectTransform.anchoredPosition = new Vector2(position, 0);
-            card.transform.localScale = Vector3.one;
+            rectTransform.localScale = Vector3.one;
+            rectTransform.anchorMin = new Vector2(0.5f, 0);
+            rectTransform.anchorMax = new Vector2(0.5f, 0);
+            rectTransform.pivot = new Vector2(0.5f, 0);
+            rectTransform.anchoredPosition = new Vector3(position, 0, 0);
+
 
             position -= Mathf.RoundToInt(rectTransform.rect.width);
             card.SetActive(true);
@@ -275,7 +278,6 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
     {
         foreach (GameObject player in partyDecks.Keys.ToList())
         {
-            GameData.Instance.BattlePlayers[player] = partyDecks[player];
             foreach (GameObject card in partyDecks[player])
             {
                 card.SetActive(false);

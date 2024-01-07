@@ -5,23 +5,23 @@ using UnityEngine;
 public class GetPlayer : MonoBehaviour, IFloorObject
 {
     public string ID { get; set; }
+    
 
 
 
     public GameObject Trigger(string floorID, int ObjectID)
     {
-        Destroy(gameObject);
-        return null;
-    }
-
-    private void OnDestroy()
-    {
-        try
-        { 
+        ID = floorID+gameObject.name+ObjectID;
+        Debug.Log("Grabbing Player");
+        if (!PlayerPrefs.HasKey(ID))
+        {
+            PlayerPrefs.SetString(ID, ID);
+            Debug.Log("Initial Load");
             GameObject player = GameObject.FindGameObjectWithTag("Player");
-            player.transform.position = transform.position; 
+            player.transform.position = transform.position;
         }
-        catch { }
+
+        return null;
     }
 
 }

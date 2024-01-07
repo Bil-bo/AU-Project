@@ -12,6 +12,7 @@ TagManager:
   - Door
   - Pickup
   - PlayArea
+  - Arrow
   layers:
   - Default
   - TransparentFX

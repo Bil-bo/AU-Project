@@ -5,7 +5,6 @@ using UnityEngine;
 public class EnemyA : BattleEnemy
 { 
     private int counterField = 0;
-    private DamageType damage;
 
 
 
@@ -33,7 +32,7 @@ public class EnemyA : BattleEnemy
             break;
 
             case(1):
-            Defend();
+            AttackPlayer();
             break;
 
             case(2):

@@ -44,7 +44,7 @@ public class AbsorbHealth : ICardActions
                 preHeal.Defender = user.CharID;
                 preHeal.HP = new DamageCalculation(Damage*(AbsorbPercentage/100));
                 EventManager.Broadcast(preHeal);
-                user.HealthReturn(preHeal.HP.CalculateDamage());
+                user.RestoreHealth(preHeal.HP.CalculateDamage());
 
                            
             }
@@ -67,9 +67,9 @@ public class AbsorbHealth : ICardActions
                 postDamage.NewHealth = target.CurrentHealth;
 
                 preHeal.Defender = user.CharID;
-                preHeal.HP = new DamageCalculation(calc.CalculateDamage()*(AbsorbPercentage/100));
+                preHeal.HP = new DamageCalculation(Mathf.Max(0, calc.CalculateDamage()*(AbsorbPercentage/100)));
                 EventManager.Broadcast(preHeal);
-                user.HealthReturn(preHeal.HP.CalculateDamage());
+                user.RestoreHealth(preHeal.HP.CalculateDamage());
 
                 
 

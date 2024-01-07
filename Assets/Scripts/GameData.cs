@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 
@@ -13,6 +10,8 @@ public class GameData : MonoBehaviour
     public GameObject PlayerPrefab;
 
     public List<GameObject> battleEnemies;
+
+    public List<GameObject> CardRewards;
     public bool isPuzzleComplete { get; set; }
 
     public Dictionary<GameObject, List<GameObject>> BattlePlayers = new();
@@ -54,5 +53,15 @@ public class GameData : MonoBehaviour
     public void Restart()
     {
         isPuzzleComplete = false;
+        EnemySpawnerID = null; 
+        CardRewards = new List<GameObject>();
+        BattlePlayers = new Dictionary<GameObject, List<GameObject>>();
+
+        foreach(Transform c in transform)
+        {
+            Destroy(c.gameObject);
+        }
+        transform.DetachChildren();
+
     }
 }
