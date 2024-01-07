@@ -115,6 +115,11 @@ public interface IOnBossDefeated : IObserve
     void OnBossDefeated(BossDefeatedEvent eventData);
 }
 
+public interface IOnFinalBossDefeated : IObserve
+{
+    void OnFinalBossDefeated(FinalBossDefeatedEvent eventData);
+}
+
 public interface IOnLevelPassed : IObserve
 {
     void OnLevelPassed(LevelPassedEvent eventData);

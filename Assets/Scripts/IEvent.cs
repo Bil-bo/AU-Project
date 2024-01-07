@@ -134,6 +134,8 @@ public class PickupCollectedEvent: IEvent
 }
 
 public class BossDefeatedEvent : IEvent {}
+
+public class FinalBossDefeatedEvent : IEvent { }
 public class LevelPassedEvent : IEvent
 {
     public int MoveToLevel { get; set; }

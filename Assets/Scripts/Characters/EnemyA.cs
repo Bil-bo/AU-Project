@@ -6,18 +6,6 @@ public class EnemyA : BattleEnemy
 { 
     private int counterField = 0;
 
-
-
-
-    // Start is called before the first frame update
-
-    public override void Awake()
-    {
-        
-        
-        base.Awake();
-    }
-
     public override IEnumerator DoTurn(){
 
         

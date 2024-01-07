@@ -200,7 +200,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
                 result => coordinateData = coordinateData.Concat(result).ToDictionary(a => a.Key, a => a.Value)));
 
 
-            coordinateData = SpecialRoomManager.SpecialRoomRoll(i, coordinateData);
+            coordinateData = SpecialRoomManager.SpecialRoomRoll(LevelAmount, i, coordinateData);
 
             coordinates = coordinateData.Keys.ToList();
 

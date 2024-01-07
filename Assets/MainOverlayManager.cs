@@ -4,8 +4,9 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
-public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUpCollected
+public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUpCollected, IOnFinalBossDefeated
 {
     [SerializeField]
     private RewardPanel panel;
@@ -13,12 +14,16 @@ public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUp
     [SerializeField]
     private TextMeshProUGUI PickUpText;
 
+    [SerializeField]
+    private TextMeshProUGUI WinText;
+
     private int PickUpscollected = 0;
 
     private void Start()
     {
         EventManager.AddListener<TreasureCollectedEvent>(OnTreasureCollected);
         EventManager.AddListener<PickupCollectedEvent>(OnPickUpCollected);
+        EventManager.AddListener<FinalBossDefeatedEvent>(OnFinalBossDefeated);
         
         if (PlayerPrefs.HasKey("PickUpsCollected"))
         {
@@ -45,7 +50,7 @@ public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUp
         PickUpText.text = "PickUps Collected: " + PickUpscollected;
     }
 
-    private IEnumerator ShowRewardsScreen(TreasureCollectedEvent eventData) 
+    private IEnumerator ShowRewardsScreen(TreasureCollectedEvent eventData)
     {
         eventData.Collider.GetComponent<PlayerInput>().enabled = false;
        
@@ -68,14 +73,25 @@ public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUp
 
         controller.enabled = true;
 
+    }
 
+    public void OnFinalBossDefeated(FinalBossDefeatedEvent eventData)
+    {
+        StartCoroutine(Congrats());
+    }
 
+    private IEnumerator Congrats()
+    {
+        WinText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(8);
+        SceneManager.LoadScene("Menu");
     }
 
     private void OnDestroy()
     {
         EventManager.RemoveListener<TreasureCollectedEvent>(OnTreasureCollected);
         EventManager.RemoveListener<PickupCollectedEvent>(OnPickUpCollected);
+        EventManager.RemoveListener<FinalBossDefeatedEvent>(OnFinalBossDefeated);
 
     }
 

@@ -12,6 +12,9 @@ public class SpecialRoomManager : MonoBehaviour
 
     [SerializeField]
     private GameObject BossRoom;
+    
+    [SerializeField]
+    private GameObject SuperBossRoom;
 
     [SerializeField]
     private GameObject Smithy;
@@ -37,7 +40,7 @@ public class SpecialRoomManager : MonoBehaviour
     private int ShopChance = 60;
 
 
-    public Dictionary<Vector2Int, GameObject> SpecialRoomRoll(int level, Dictionary<Vector2Int, GameObject> coordinateData)
+    public Dictionary<Vector2Int, GameObject> SpecialRoomRoll(int levelNum, int level, Dictionary<Vector2Int, GameObject> coordinateData)
     {
         List<Vector2Int> coordinates = coordinateData.Keys.ToList();
         if(UnityEngine.Random.Range(0, 101) < RescueChance) 
@@ -75,8 +78,17 @@ public class SpecialRoomManager : MonoBehaviour
         }
 
         Vector2Int injectBoss = InsertBossRoom(coordinates);
-        coordinateData[injectBoss] = BossRoom;
-        PlayerPrefs.SetString("Level" + level + injectBoss, BossRoom.name);
+
+        if (levelNum == level+1)
+        {
+            coordinateData[injectBoss] = SuperBossRoom;
+            PlayerPrefs.SetString("Level" + level + injectBoss, SuperBossRoom.name);
+        }
+        else
+        {
+            coordinateData[injectBoss] = BossRoom;
+            PlayerPrefs.SetString("Level" + level + injectBoss, BossRoom.name);
+        }
 
 
 

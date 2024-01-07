@@ -80,6 +80,12 @@ MonoBehaviour:
     - Special
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b33227fc1996d6f498ce38970c71184b
+    m_Address: SuperBossRoom
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Special
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}
   m_SchemaSet:

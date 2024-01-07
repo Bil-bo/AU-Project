@@ -24,8 +24,6 @@ public class StatusVisualiser : MonoBehaviour
             StatusCounter.text = value.Counter.ToString();
             value.CounterChange += e => UpdateText(e);
             value.Initialise();
-
-
         }
     }
 
