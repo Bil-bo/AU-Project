@@ -13,7 +13,7 @@ public static class PlayerPrefsUtility
 
         if (registryKey != null)
         {
-            string allPrefs = "ALL PLAYERPREFS:\n"; // Initialize an empty string to store all preferences
+            string allPrefs = "ALL PLAYERPREFS:\n"; 
             foreach (string key in registryKey.GetValueNames())
             {
                 string value = registryKey.GetValue(key).ToString();
