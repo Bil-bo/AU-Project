@@ -18,15 +18,28 @@ public class StatusVisualiser : MonoBehaviour
         get { return _Effect; } 
         set 
         {
-            if (_Effect != null) { Effect.CounterChange -= e => StatusCounter.text = e.ToString(); }
+            if (_Effect != null) { Effect.CounterChange -= e => UpdateText(e); }
             _Effect = value;
             StatusRenderer.material = StatusEffectSprites.Instance.GetSprite(value.Name);
             StatusCounter.text = value.Counter.ToString();
-            value.CounterChange += e => StatusCounter.text = e.ToString(); ;
+            value.CounterChange += e => UpdateText(e);
             value.Initialise();
 
 
         }
+    }
+
+    private void UpdateText(int c)
+    {
+        if (c == 0)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            StatusCounter.text = c.ToString();  
+        }
+
     }
     private void OnDestroy()
     {

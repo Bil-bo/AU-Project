@@ -17,7 +17,7 @@ public abstract class StatusEffect: IOnStatusEffectAdded
         set 
         {
             _Counter = Mathf.Clamp(value, 0, 999);
-            CounterChange?.Invoke(value);
+            CounterChange?.Invoke(_Counter);
         }
     }
 

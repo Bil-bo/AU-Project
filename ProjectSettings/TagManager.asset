@@ -13,6 +13,7 @@ TagManager:
   - Pickup
   - PlayArea
   - Arrow
+  - FinalBoss
   layers:
   - Default
   - TransparentFX
