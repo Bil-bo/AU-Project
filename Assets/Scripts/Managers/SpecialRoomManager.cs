@@ -95,7 +95,7 @@ public class SpecialRoomManager : MonoBehaviour
     public Vector2Int InsertBossRoom(List<Vector2Int> coordinates)
     {
 
-        return WalkerFactory.CreateBossWalker().Walk(coordinates)[0];
+        return WalkerFactory.CreateBossWalker(coordinates[0]).Walk(coordinates)[0];
 
     }
 

@@ -12,17 +12,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ladder
       objectReference: {fileID: 0}
+    - target: {fileID: 4402726592331739955, guid: ce85e762dccc47e40bc7336f1e538bbf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6371936550509604569, guid: ce85e762dccc47e40bc7336f1e538bbf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6371936550509604569, guid: ce85e762dccc47e40bc7336f1e538bbf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6371936550509604569, guid: ce85e762dccc47e40bc7336f1e538bbf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 11
+      value: -17
       objectReference: {fileID: 0}
     - target: {fileID: 6371936550509604569, guid: ce85e762dccc47e40bc7336f1e538bbf, type: 3}
       propertyPath: m_LocalRotation.w
@@ -80,7 +84,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5735489108917866917, guid: 431f6c521e827af4aaa795fb6a94a290, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5735489108917866917, guid: 431f6c521e827af4aaa795fb6a94a290, type: 3}
       propertyPath: m_LocalPosition.z
@@ -189,10 +193,10 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2008617567898745576, guid: 46a1b2af2ca618b4c89f2f11db58e10b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8255776140453151143}
+      addedObject: {fileID: 8655624186088047969}
     - targetCorrespondingSourceObject: {fileID: 2008617567898745576, guid: 46a1b2af2ca618b4c89f2f11db58e10b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8655624186088047969}
+      addedObject: {fileID: 8255776140453151143}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6878976450197789439, guid: 46a1b2af2ca618b4c89f2f11db58e10b, type: 3}
       insertIndex: -1

@@ -45,6 +45,13 @@ MonoBehaviour:
     - Boss
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 54d459c730663fa4eb368604795c3ce1
+    m_Address: EnemyBossRoaming
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RoamingBoss
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}
   m_SchemaSet:

@@ -55,7 +55,7 @@ public class FloorManager : MonoBehaviour
         if (!Clear)
         {
             int i = 0;
-            foreach (IFloorObject f in transform.GetComponentsInChildren<IFloorObject>())
+            foreach (IFloorObject f in transform.GetComponentsInChildren<IFloorObject>(true))
             {
                 GameObject floorObject = f.Trigger(FloorID, i);
                 if (floorObject != null) { Uncleared.Add(floorObject); i++; }

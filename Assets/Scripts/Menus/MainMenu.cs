@@ -45,7 +45,6 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetString(Addressables.kAddressablesRuntimeDataPath, buildPath);
         PlayerPrefs.SetString(Addressables.kAddressablesRuntimeBuildLogPath, logPath);
         PlayerPrefs.SetInt("Init", 0);
-        //Debug.Log(PlayerPrefs.GetInt("Init"));
 
         SceneManager.LoadScene("Difficulties");
     }
@@ -99,9 +98,9 @@ public class MainMenu : MonoBehaviour
                 HPMult = 1.3f;
                 DMGMult = 1.3f;
                 break;
-            case DifficultyType.NORMAL:
-                HPMult = 1.0f;
-                DMGMult = 1.0f;
+            case DifficultyType.EASY:
+                HPMult = 0.8f;
+                DMGMult = 0.8f;
                 break;
             default:
                 break;

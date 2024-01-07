@@ -4271,7 +4271,7 @@ MonoBehaviour:
   SpecialRoomManager: {fileID: 1485223039}
   GridX: 10
   GridY: 10
-  LevelAmount: 1
+  LevelAmount: 3
   player: {fileID: 1421226998}
 --- !u!4 &1485223038
 Transform:

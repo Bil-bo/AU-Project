@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 
 // For managing the main scene
 // Slightly Deprecated by GameData
-public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollected
+public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollected, IOnLevelPassed
 {
     [SerializeField]
     private GameObject CeilingPrefab;
@@ -61,6 +61,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
     {
         EventManager.AddListener<BattleTriggerEvent>(OnTriggerBattle);
         EventManager.AddListener<PickupCollectedEvent>(OnPickUpCollected);
+        EventManager.AddListener<LevelPassedEvent>(OnLevelPassed);
 
         Enemies = GameObject.FindGameObjectsWithTag("Enemy").OrderBy(enemy => enemy.name).ToArray();
         Pickups = GameObject.FindGameObjectsWithTag("Pickup").OrderBy(enemy => enemy.name).ToArray();
@@ -150,6 +151,23 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
         PlayerPrefs.SetInt("PickUpsNum", PickUpsNum);
     }
 
+    public void OnLevelPassed(LevelPassedEvent eventData)
+    {
+        PlayerPrefs.SetInt("CurrentLevel", eventData.MoveToLevel);
+
+        DestroyPlayArea(Walls);
+        DestroyPlayArea(Doors);
+        DestroyPlayArea(Ceilings);
+        DestroyPlayArea(Floors);
+
+        StartCoroutine(ReconstructPlayArea(eventData.MoveToLevel, () => { }));
+    }
+
+    private void DestroyPlayArea(Transform parentDestroy)
+    {
+        foreach (Transform child in parentDestroy) { Destroy(child.gameObject); }
+    } 
+
     private IEnumerator VisualisePlayArea(Action<Dictionary<Vector2Int, GameObject>, List<Vector2Int>> result)
     {
         List<Vector2Int> levelOne = new();
@@ -189,6 +207,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
 
 
             string jsonCoordinates = new CoordWrapper { coordinates = coordinates }.SaveToString();
+            Debug.Log("Level "+ i +" coordinates = " + jsonCoordinates);
             PlayerPrefs.SetString("LevelBuild" + i, jsonCoordinates);
 
             if (i == 0)

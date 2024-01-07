@@ -89,10 +89,11 @@ public abstract class BaseBattleCharacter : MonoBehaviour
 
     public virtual void TakeDamage(int damage) //Method for the chars to take damage
     {
-        CurrentHealth = Mathf.Max(0, CurrentHealth - damage); //We take away a bit of health based on how much damage the char has inflicted
+        int finalDamage = Mathf.Max(damage-Defense, 0);
+        CurrentHealth = Mathf.Max(0, CurrentHealth - finalDamage); //We take away a bit of health based on how much damage the char has inflicted
         FlashObject(new Color(1f, 0f, 0f, 0.5f)); //They turn red temporarily when getting attacked
         Debug.Log(CurrentHealth);
-        DisplayText(damage.ToString());
+        DisplayText(finalDamage.ToString());
     }
 
     public void RestoreHealth(int heal)

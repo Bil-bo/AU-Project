@@ -133,4 +133,10 @@ public class PickupCollectedEvent: IEvent
     public PickUpsData PickUp { get; set; }
 }
 
+public class BossDefeatedEvent : IEvent {}
+public class LevelPassedEvent : IEvent
+{
+    public int MoveToLevel { get; set; }
+}
+
 public class BoolContainer { public bool IsTrue { get; set; } = false; }

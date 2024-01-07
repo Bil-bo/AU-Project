@@ -109,3 +109,13 @@ public interface IOnPickUpCollected : IObserve
 {
     void OnPickUpCollected(PickupCollectedEvent eventData);
 }
+
+public interface IOnBossDefeated : IObserve
+{
+    void OnBossDefeated(BossDefeatedEvent eventData);
+}
+
+public interface IOnLevelPassed : IObserve
+{
+    void OnLevelPassed(LevelPassedEvent eventData);
+}

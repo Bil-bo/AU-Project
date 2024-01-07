@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: ba443a26098db1e4b943d18ade642b63
   m_currentHash:
     serializedVersion: 2
-    Hash: 2706efe86e10f254f2e910f4c080a3c5
+    Hash: 1798adbbe41bdacba9ca9a6fbb9eb11b
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -97,6 +97,7 @@ MonoBehaviour:
     - Battle
     - Boss
     - PreLoad
+    - RoamingBoss
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: d96b80dd13c656c44a2139d866cbb13b, type: 2}
