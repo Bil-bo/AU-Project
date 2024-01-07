@@ -57,24 +57,28 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - FloorPlan
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e1926402bdd0c844f93565befe9ebe8b
     m_Address: FloorPlanNew
     m_ReadOnly: 0
     m_SerializedLabels:
     - FloorPlan
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 221bc01979e2a604fb34125e90fe226e
     m_Address: DoubleEnemy
     m_ReadOnly: 0
     m_SerializedLabels:
     - FloorPlan
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 96d98066cbbdd134b8400662394b5c7f
     m_Address: Treasure
     m_ReadOnly: 0
     m_SerializedLabels:
     - Special
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}

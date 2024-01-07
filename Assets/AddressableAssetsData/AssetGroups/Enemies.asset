@@ -22,24 +22,28 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - OverWorld
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 73bff409274e9f040afdade454dbb6ff
     m_Address: EnemyB
     m_ReadOnly: 0
     m_SerializedLabels:
     - Battle
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 645d0861ee501814f93bb6dfb9a327f3
     m_Address: EnemyA
     m_ReadOnly: 0
     m_SerializedLabels:
     - Battle
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 10da9918bbde8f842abc3c6b6707d767
     m_Address: EnemyBoss
     m_ReadOnly: 0
     m_SerializedLabels:
     - Boss
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}

@@ -22,30 +22,35 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Card
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3aceea38f54a3ed4b8f083d6ce5efeeb
     m_Address: PoisonSword
     m_ReadOnly: 0
     m_SerializedLabels:
     - Card
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 62f834999fc46d5438441ac318c69d77
     m_Address: PoisonBow
     m_ReadOnly: 0
     m_SerializedLabels:
     - Card
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 77a3215c40020b8469f146390a1790ca
     m_Address: Bow
     m_ReadOnly: 0
     m_SerializedLabels:
     - Card
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 800952e0a6d1ff74984db4f4ff37c069
     m_Address: Sword
     m_ReadOnly: 0
     m_SerializedLabels:
     - Card
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}

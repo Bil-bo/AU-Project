@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 // Simple script for buttons in main menu
 public class MainMenu : MonoBehaviour
@@ -12,6 +13,28 @@ public class MainMenu : MonoBehaviour
     public bool isNewGame;
     public GameObject mainCanvas;
     public GameObject settingsCanvas;
+
+    IEnumerator Start()
+    {
+        AsyncOperationHandle<IList<GameObject>> loadAllHandle = Addressables.LoadAssetsAsync<GameObject>("PreLoad", null);
+
+        yield return loadAllHandle;
+
+        if (loadAllHandle.Status == AsyncOperationStatus.Succeeded)
+        {
+            IList<GameObject> allLoadedAssets = loadAllHandle.Result;
+            foreach (var asset in allLoadedAssets)
+            {
+                Debug.Log("Loaded Asset: " + asset.name);
+            }
+        }
+        else
+        {
+            Debug.LogError("Failed to load addressables.");
+        }
+
+        Addressables.Release(loadAllHandle);
+    }
 
 
     public void NewGame()
