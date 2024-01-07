@@ -38,9 +38,9 @@ public class FloorManager : MonoBehaviour
     }
 
 
-    public void Initialise(Vector2Int coordinate)
+    public void Initialise(Vector2Int coordinate, int level)
     {
-        FloorID = "Level"+PlayerPrefs.GetInt("CurrentLevel")+coordinate+gameObject.name;
+        FloorID = "Level"+level+coordinate+gameObject.name;
 
         if (PlayerPrefs.HasKey(FloorID))
         {

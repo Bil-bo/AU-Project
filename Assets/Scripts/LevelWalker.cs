@@ -187,14 +187,13 @@ public class BossWalker : LevelWalker
 
         foreach(Vector2Int point in coords)
         {
-            Debug.Log(point);
             if (point != StartRoom)
             {
-                Debug.Log("Furthest from start point: " + MaxDistance);
+
                 float distance = Vector2Int.Distance(point, StartRoom);
                 if (distance > MaxDistance) 
                 {
-                    Debug.Log("Distance from start point: "+distance);
+
                     furthest = point;
                     MaxDistance = distance; 
                 }

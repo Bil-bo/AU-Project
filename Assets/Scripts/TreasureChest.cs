@@ -18,7 +18,6 @@ public class TreasureChest : MonoBehaviour, IFloorObject
     public GameObject Trigger(string floorID, int objectID)
     {
         ID = floorID + gameObject.name + objectID;
-        Debug.Log(ID);
 
 
 

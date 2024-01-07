@@ -13,7 +13,6 @@ public class BossSpawn : MonoBehaviour, IFloorObject
     public GameObject Trigger(string floorID, int objectID)
     {
         ID = floorID + gameObject.name + objectID;
-        Debug.Log(ID);
         if (PlayerPrefs.HasKey(ID))
         {
 
@@ -34,7 +33,7 @@ public class BossSpawn : MonoBehaviour, IFloorObject
                 
                 BossDefeatedEvent defeatedEvent = new BossDefeatedEvent();
                 EventManager.Broadcast(defeatedEvent);
-
+                transform.parent.transform.Find("Ladder").gameObject.SetActive(true);
                 gameObject.SetActive(false);
                 return null;
             }
@@ -107,6 +106,7 @@ public class BossSpawn : MonoBehaviour, IFloorObject
                 {
                     BossSpawnInfo.EnemiesToPassID.Add(result.Key);
                     enemyData.battleEnemyInfos.Add(result.Value);
+                    PlayerPrefs.SetString(ID, JsonUtility.ToJson(BossSpawnInfo));
 
                 }));
 

@@ -8,17 +8,36 @@ public class GetPlayer : MonoBehaviour, IFloorObject
     
     public GameObject Trigger(string floorID, int ObjectID)
     {
+
         ID = floorID+gameObject.name+ObjectID;
-        Debug.Log("Grabbing Player");
+
         if (!PlayerPrefs.HasKey(ID))
         {
-            PlayerPrefs.SetString(ID, ID);
-            Debug.Log("Initial Load");
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            player.transform.position = transform.position;
+            PlayerPrefs.SetInt(ID, 0);
+
+            return gameObject;
         }
 
-        return null;
+        else
+        {
+            PlayerPrefs.SetInt(ID, 1);
+            Debug.Log("Should pull now");
+            StartCoroutine(PullPlayer());
+
+            return null;
+        }
+
+
+    }
+
+    private IEnumerator PullPlayer()
+    {
+        yield return null;
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Debug.Log(transform.position);
+        player.transform.position = transform.position;
+        
+
     }
 
 }

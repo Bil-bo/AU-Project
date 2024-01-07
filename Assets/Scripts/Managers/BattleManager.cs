@@ -241,7 +241,8 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
             BattleEnemy enemy = enemyBody.GetComponent<BattleEnemy>();
             float HPMult = PlayerPrefs.GetFloat("HPMult",1.0f); //Setting a default for the enemy HP
             float DMGMult = PlayerPrefs.GetFloat("DMGMult",1.0f); //Setting a default for enemy attack
-            enemy.maxHealth = Mathf.RoundToInt((enemy.maxHealth*HPMult));  //Making sure these values are changed according to difficulty
+            Debug.Log(enemy.maxHealth);
+            enemy.maxHealth = Mathf.RoundToInt(enemy.maxHealth*HPMult);  //Making sure these values are changed according to difficulty
             enemy.CurrentHealth = Mathf.RoundToInt((enemy.CurrentHealth*HPMult)); 
             enemy.Attack = Mathf.RoundToInt((enemy.Attack*DMGMult));
 

@@ -44,13 +44,13 @@ MonoBehaviour:
   - m_GUID: b6857e5af7b021540a4f5c12cc659548
     m_Address: LevelStart
     m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7a31d16fa05838e4ca383df042053468
-    m_Address: Boss
-    m_ReadOnly: 0
     m_SerializedLabels:
     - Special
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a31d16fa05838e4ca383df042053468
+    m_Address: LevelEnd
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 75a98c7a7bfe0fc4b91d87a0097878a8
     m_Address: SingleEnemy

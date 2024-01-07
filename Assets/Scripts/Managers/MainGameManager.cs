@@ -91,10 +91,15 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
                     Pickups[i].SetActive(pickupEnabled == 1);
                 }
                 // Load the player's position and set it
-                float playerX = PlayerPrefs.GetFloat("PlayerX");
-                float playerY = PlayerPrefs.GetFloat("PlayerY");
-                float playerZ = PlayerPrefs.GetFloat("PlayerZ");
-                player.transform.position = new Vector3(playerX, playerY, playerZ);
+
+                if (PlayerPrefs.HasKey("PlayerX"))
+                {
+                    Debug.Log("Setting Values");
+                    float playerX = PlayerPrefs.GetFloat("PlayerX");
+                    float playerY = PlayerPrefs.GetFloat("PlayerY");
+                    float playerZ = PlayerPrefs.GetFloat("PlayerZ");
+                    player.transform.position = new Vector3(playerX, playerY, playerZ);
+                }
             }));
 
 
@@ -109,16 +114,16 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
 
             PlayerPrefs.SetInt("seed", seed);
             PlayerPrefs.SetInt("CurrentLevel", 0);
-
+            PlayerPrefs.SetInt("Init", 1);
+            Init = true;
+            PlayerPrefs.SetInt("PickUpsNum", 2 * LevelAmount);
+            GameData.Instance.AddPlayer(player.GetComponent<PlayerPropsRoaming>().BattleInfo);
 
 
             StartCoroutine(Addresses.GenerateLists());
-            Addresses.ListsReady += () => StartCoroutine(VisualisePlayArea((dict, lst) => ConstructPlayArea(dict, lst)));
+            Addresses.ListsReady += () => StartCoroutine(VisualisePlayArea());
 
-            PlayerPrefs.SetInt("Init", 1);
-            Init = true;
-            PlayerPrefs.SetInt("PickUpsNum", 2*LevelAmount);
-            GameData.Instance.AddPlayer(player.GetComponent<PlayerPropsRoaming>().BattleInfo);
+
 
 
 
@@ -154,24 +159,18 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
     public void OnLevelPassed(LevelPassedEvent eventData)
     {
         PlayerPrefs.SetInt("CurrentLevel", eventData.MoveToLevel);
+        PlayerPrefs.DeleteKey("PlayerX");
+        PlayerPrefs.DeleteKey("PlayerY");
+        PlayerPrefs.DeleteKey("PlayerZ");
 
-        DestroyPlayArea(Walls);
-        DestroyPlayArea(Doors);
-        DestroyPlayArea(Ceilings);
-        DestroyPlayArea(Floors);
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
 
-        StartCoroutine(ReconstructPlayArea(eventData.MoveToLevel, () => { }));
     }
 
-    private void DestroyPlayArea(Transform parentDestroy)
+    private IEnumerator VisualisePlayArea()
     {
-        foreach (Transform child in parentDestroy) { Destroy(child.gameObject); }
-    } 
 
-    private IEnumerator VisualisePlayArea(Action<Dictionary<Vector2Int, GameObject>, List<Vector2Int>> result)
-    {
-        List<Vector2Int> levelOne = new();
-        Dictionary<Vector2Int, GameObject> levelOneData = new();
 
 
         for (int i = 0; i < LevelAmount; i++)
@@ -210,19 +209,17 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
             Debug.Log("Level "+ i +" coordinates = " + jsonCoordinates);
             PlayerPrefs.SetString("LevelBuild" + i, jsonCoordinates);
 
-            if (i == 0)
-            {
-                levelOne = coordinates;
-                levelOneData = coordinateData;
-            }
+
+            ConstructPlayArea(coordinateData, coordinates, i);
+            yield return new WaitForSeconds(1f);
+
         }
-
-
-
-        result.Invoke(levelOneData, levelOne);
+        yield return null;
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
     }
 
-    private void ConstructPlayArea(Dictionary<Vector2Int, GameObject> coordinateData, List<Vector2Int> coordinates)
+    private void ConstructPlayArea(Dictionary<Vector2Int, GameObject> coordinateData, List<Vector2Int> coordinates, int level)
     {
 
         foreach (Vector2Int coordinate in coordinates)
@@ -245,7 +242,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
             floor.transform.position = new Vector3(coordinate.x * dimensions.x, 0, coordinate.y * dimensions.z);
 
             FloorManager floorPlan = floor.GetComponent<FloorManager>();
-            floorPlan.Initialise(coordinate);
+            floorPlan.Initialise(coordinate, level);
 
             //Debug.Log(coordinateData[coordinate].transform.position);
             foreach (Vector2Int direction in directions)
@@ -259,7 +256,6 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
                             Quaternion.Euler(new Vector3(0, (direction.x != 0) ? 90 : 0, 0)), Doors);
 
                     floorPlan.DoorList.Add(door.GetComponent<Door>());
-                    Debug.Log(floorPlan.name + " " + floorPlan.DoorList.Count);
                     coordinateData[coordinate + direction].GetComponent<FloorManager>().DoorList.Add(door.GetComponent<Door>());
                 }
 
@@ -296,13 +292,11 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
             RestoredData[coord] = data.Result;
         }
 
-        ConstructPlayArea(RestoredData, coordinates);
+        ConstructPlayArea(RestoredData, coordinates, level);
         yield return null;
         result.Invoke();
     }
 
-
-    //private List<Vector2Int> 
 
 
     // Restarts the Game
@@ -329,6 +323,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
     {
         EventManager.RemoveListener<BattleTriggerEvent>(OnTriggerBattle);
         EventManager.RemoveListener<PickupCollectedEvent>(OnPickUpCollected);
+        EventManager.RemoveListener<LevelPassedEvent>(OnLevelPassed);
     }
 }
 

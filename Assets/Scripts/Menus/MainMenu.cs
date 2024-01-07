@@ -23,10 +23,6 @@ public class MainMenu : MonoBehaviour
         if (loadAllHandle.Status == AsyncOperationStatus.Succeeded)
         {
             IList<GameObject> allLoadedAssets = loadAllHandle.Result;
-            foreach (var asset in allLoadedAssets)
-            {
-                Debug.Log("Loaded Asset: " + asset.name);
-            }
         }
         else
         {

@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6371936550509604569, guid: ce85e762dccc47e40bc7336f1e538bbf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -17
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 6371936550509604569, guid: ce85e762dccc47e40bc7336f1e538bbf, type: 3}
       propertyPath: m_LocalRotation.w
@@ -186,7 +186,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5969000838258029870, guid: 46a1b2af2ca618b4c89f2f11db58e10b, type: 3}
       propertyPath: m_Name
-      value: Boss
+      value: LevelEnd
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
