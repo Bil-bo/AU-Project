@@ -94,7 +94,6 @@ public class SaveHandler : MonoBehaviour
             enemyEnabled = new bool[enemies.Length],
             pickupEnabled = new bool[pickups.Length],
             playerPosition = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z),
-            isPuzzleComplete = GameData.Instance.isPuzzleComplete,
             pickups = PlayerPrefs.GetInt("PickupsCollected"),
             difficulty = PlayerPrefs.GetString("Difficulty")
         };
@@ -138,7 +137,6 @@ public class SaveHandler : MonoBehaviour
         }
 
         player.transform.position = loadedGameData.playerPosition;
-        GameData.Instance.isPuzzleComplete = loadedGameData.isPuzzleComplete;
         PlayerPrefs.SetInt("PickupsCollected", loadedGameData.pickups);
         PlayerPrefs.SetString("Difficulty", loadedGameData.difficulty);
         SetDifficulty();
