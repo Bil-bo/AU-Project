@@ -12,7 +12,9 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     public Guid CharID { get; } = Guid.NewGuid();
     public string Name;
     public int maxHealth;
-    public int CurrentHealth { get; set; }
+
+
+    public int CurrentHealth; 
     public int Attack = 0;
 
     public int Defense = 0;

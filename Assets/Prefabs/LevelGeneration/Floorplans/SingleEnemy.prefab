@@ -9,6 +9,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 6593660952526992795}
     m_Modifications:
     - target: {fileID: 4396247058104716535, guid: 2902985d8c2f5df4cbfe3430a7fa2269, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4396247058104716535, guid: 2902985d8c2f5df4cbfe3430a7fa2269, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}

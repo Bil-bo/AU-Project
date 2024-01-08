@@ -23,6 +23,7 @@ public class BattlePlayer : BaseBattleCharacter
         {
             _info = value;
             maxHealth = _info.maxHealth;
+            CurrentHealth = _info.maxHealth;
             Name = _info.Name;
             MaxEnergy = _info.MaxEnergy;
             MaxHand = _info.MaxHandSize;

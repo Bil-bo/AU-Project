@@ -141,4 +141,9 @@ public class LevelPassedEvent : IEvent
     public int MoveToLevel { get; set; }
 }
 
+public class PlayerRescuedEvent : IEvent
+{
+    public string SpawnerID { get; set; }
+}
+
 public class BoolContainer { public bool IsTrue { get; set; } = false; }

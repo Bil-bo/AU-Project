@@ -16,7 +16,11 @@ public class FloorManager : MonoBehaviour
         set 
         {
             _Clear = value; 
-            if (value) { PlayerPrefs.SetInt(FloorID, 1); }
+            if (value) 
+            { 
+                PlayerPrefs.SetInt(FloorID, 1);
+                DoorList.ForEach(door => door.SetState(false));
+            }
         }
         
 
@@ -25,18 +29,7 @@ public class FloorManager : MonoBehaviour
 
     private bool InRoom = false;
 
-    private List<GameObject> _Uncleared = new();
-
-    public List<GameObject> Uncleared
-    {
-        get { return _Uncleared; }
-        set
-        {
-            _Uncleared = value;
-            Clear = _Uncleared.Count > 0;
-        }
-    }
-
+    public List<GameObject> Uncleared = new();
 
     public void Initialise(Vector2Int coordinate, int level)
     {
@@ -87,9 +80,18 @@ public class FloorManager : MonoBehaviour
                 PlayerPrefs.SetFloat("PlayerZ", transform.position.z);
             }
         }
+    }
 
+    public void AddToList(GameObject obj)
+    {
+        Uncleared.Add(obj);
+    }
 
-        
+    public void RemoveFromList(GameObject obj)
+    {
+        Uncleared.Remove(obj);
+        if (Uncleared.Count >= 0) { }
+        Clear = Uncleared.Count <= 0;
     }
 
     private void OnTriggerExit(Collider other)
