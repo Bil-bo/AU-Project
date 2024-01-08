@@ -16,12 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: ba443a26098db1e4b943d18ade642b63
-  m_SerializeEntries:
-  - m_GUID: c1ab4e581ae99dc419c4ebe9587644fa
-    m_Address: Assets/Prefabs/Supports/Overworld/PlayerRescue.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}
   m_SchemaSet:

@@ -14,6 +14,7 @@ TagManager:
   - PlayArea
   - Arrow
   - FinalBoss
+  - Support
   layers:
   - Default
   - TransparentFX

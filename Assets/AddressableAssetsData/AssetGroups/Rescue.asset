@@ -12,11 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
   m_Name: Rescue
   m_EditorClassIdentifier: 
-  m_GroupName: Packed Assets
+  m_GroupName: Rescue
   m_Data:
     m_SerializedData: []
   m_GUID: 94ecdafc8cbaa774ebb1319b53cec9fe
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: c1ab4e581ae99dc419c4ebe9587644fa
+    m_Address: PlayerRescue
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Support
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}
   m_SchemaSet:
