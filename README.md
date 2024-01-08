@@ -29,3 +29,4 @@ https://gist.github.com/jasonmarziani/7b4769673d0b593457609b392536e9f9 - Fisher-
 https://forum.unity.com/threads/third-person-camera-rotate.197592/ - Camera Controller
 https://discussions.unity.com/t/what-is-the-most-effective-way-to-structure-card-effects-in-a-single-player-game/216011/2 - Inspiration for the Card Creation
 https://learn.unity.com/project/fps-template
+https://www.boristhebrave.com/2020/09/12/dungeon-generation-in-binding-of-isaac/
