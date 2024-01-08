@@ -124,3 +124,7 @@ public interface IOnLevelPassed : IObserve
 {
     void OnLevelPassed(LevelPassedEvent eventData);
 }
+public interface IOnPlayerRescued : IObserve
+{
+    void OnPlayerRescued(PlayerRescuedEvent eventData);
+}

@@ -64,6 +64,11 @@ public class AddressablesManager : MonoBehaviour
         yield return BossBattleEnemyHandler.Task;
 
         OnGenerated(BossBattleEnemyHandler, BattleBossEnemyAddresses);
+                
+        var RescueHandler = Addressables.LoadResourceLocationsAsync("Support");
+        yield return RescueHandler.Task;
+
+        OnGenerated(RescueHandler, RescuePlayers);
 
         ListsReady?.Invoke();
 
@@ -131,6 +136,9 @@ public class AddressablesManager : MonoBehaviour
             case AddressType.OVERWORLD_BOSS:
                 return OverWorldBossEnemyAddresses;
 
+            case AddressType.SUPPORT:
+                return RescuePlayers;
+
             default:
                 Debug.LogError("Used an enum not in list");
                 throw new NotImplementedException();
@@ -196,6 +204,7 @@ public enum AddressType
     OVERWORLD_ENEMY,
     BATTLE_ENEMY,
     OVERWORLD_BOSS,
-    BOSS
+    BOSS,
+    SUPPORT
     
 }

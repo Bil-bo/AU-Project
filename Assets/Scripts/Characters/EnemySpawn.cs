@@ -17,11 +17,10 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
     {
         ID = floorID+"Object"+objectID;
 
-        Debug.Log(ID);
-        Debug.Log(GameData.Instance.EnemySpawnerID);
+
         if (PlayerPrefs.HasKey(ID))
         {
-            Debug.Log("I have the key");
+
             SpawnInfo = JsonUtility.FromJson<EnemySpawnerInfo>(PlayerPrefs.GetString(ID));
 
             if (SpawnInfo.Clear)
@@ -66,7 +65,6 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
 
         else
         {
-            Debug.Log("no key");
             SpawnInfo.Clear = false;
             StartCoroutine(AddressablesManager.Instance.GetRandomItem(AddressType.OVERWORLD_ENEMY, result =>
             {
