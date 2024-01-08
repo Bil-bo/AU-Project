@@ -15,17 +15,19 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
     // Prefab for playtesting when loading directly into the battle scene
     public GameObject ifEmptyDeck;
     public GameObject canvas; // Unnecessary but I'm scared to remove
-    public GameObject cardPrefab;
-    public RectTransform CardDimensions;
-    public BattlePlayer Player;
+    public GameObject cardPrefab; // Deprecated
+    public RectTransform CardDimensions; // For deciding where cards go
+    public BattlePlayer Player; // The script of the current player
     private Button button;
 
     [SerializeField]
     private TextMeshProUGUI PlayerEnergy;
 
-    private EventSystem eventSystem;
+    private EventSystem eventSystem; // For raycasting
 
     private GameObject _currentPlayer;
+
+    // Property to set the GameObject and the BattlePlayer at the same time
     public GameObject currentPlayer { 
         get { return _currentPlayer; }
         set 
@@ -46,10 +48,10 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         } 
     }
 
-    // Original Deck - The player's current deck - not to be altered here only to create cards from
+    // Party Deck - The player's current deck - not to be altered here only to create cards from
     // hand - cards to be shown in the battle scene
-    // Created Cards - Instantiated cards that can be drawn from
-    // Combined cards - Holds cards that have been combined from: unimplemented - restoring combined cards if a respective combined card is used
+    // InDecK - Instantiated cards that can be drawn from
+    // Combined cards - Holds cards that have been combined from
     public List<GameObject> hand = new List<GameObject>();
     GraphicRaycaster raycaster;
 
@@ -58,8 +60,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
     public Dictionary<GameObject, List<GameObject>> InDeck = new Dictionary<GameObject, List<GameObject>>();
     public Dictionary<GameObject, Dictionary<Guid, GameObject[]>> CombinedCards = new Dictionary<GameObject, Dictionary<Guid, GameObject[]>>();
 
-
-    // Scared to remove
+    // Setup
     private void Start()
     {
         canvas = gameObject;
@@ -70,13 +71,14 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         EventManager.AddListener<PlayerDeathEvent>(OnPlayerDeath);
     }
 
+    // Show the current players deck
     public void ShowDeck()
     {
         if (!InDeck.ContainsKey(currentPlayer)) { InitialiseDeck(); }
 
         ShuffleDeck(InDeck[currentPlayer]);
 
-
+        // Show as many cards as player will allow
         for (int i = 0; i < Player.MaxHand && i < InDeck[currentPlayer].Count; i++)
         {
             GameObject proxy = InDeck[currentPlayer][i];
@@ -91,6 +93,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
 
     }
 
+    // Update the cards in the hand on dynamic change
     public void OnAttackChanged(AttackChangedEvent evt)
     {
         if (evt.ChangedPlayer == Player) 
@@ -102,6 +105,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         }
     }
 
+    // update the modifier at turn start
     private void UpdateDamage(Card card, int damageChange)
     {
         card.DamageModifier = damageChange;
@@ -109,8 +113,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
     }
 
 
-    // TODO: Rename this or above
-    // Puts all cards in hand back into createdCards, and hides the end turn button
+    // Puts all cards in hand back into createdCards
     public void HideDeck()
     {
         int counter = hand.Count;
@@ -125,6 +128,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
+    // Sets up the initial deck
     public void InitialiseDeck()
     {
         if (partyDecks[currentPlayer].Count == 0) { partyDecks[currentPlayer] = CreateDefaultList(partyDecks[currentPlayer]); }
@@ -164,7 +168,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         return cards;
     }
 
-
+    // Attempts to merge two cards together, stores them away if possible
     public bool TryMergeCards(Card cardOne, Card cardTwo)
     {
         bool merged = false;
@@ -188,6 +192,8 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         return merged;
     }
 
+    // Recursively splits cards back up into their components
+    // A merged card will always split back into its most unmergd form
     private bool TryUnmergeCards (Card Merged)
     {
         bool UnMerged = false;
@@ -211,6 +217,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
            
     }
 
+    // Hides a used card
     public void UseCard(GameObject card, Card data)
     {
         GameObject proxy = card;
@@ -250,6 +257,8 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         }
     }
 
+    // Adds a players hand to the deck
+    // Also gets dimensions of first player added
     public void AddDeck(GameObject player)
     {
         partyDecks[player] = GameData.Instance.BattlePlayers[player];
@@ -261,6 +270,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         }
     }
 
+    // Graphics raycasting, finding a card on the UI
     public bool SelectCard(Vector2 mousePos, out GameObject CardToReturn)
     {
         PointerEventData pointerData = new PointerEventData(eventSystem);
@@ -281,6 +291,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         return false;
     }
 
+    // Moves all cards back so they don't get destroyed
     public void ResetCards()
     {
         foreach (GameObject player in partyDecks.Keys.ToList())
@@ -293,12 +304,16 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         }
     }
 
+
+    // Listener handling
+
     private void OnDestroy()
     {
         EventManager.RemoveListener<AttackChangedEvent>(OnAttackChanged);
         EventManager.RemoveListener<PlayerDeathEvent>(OnPlayerDeath);
     }
 
+    // Deletes player hand
     public void OnPlayerDeath(PlayerDeathEvent eventData)
     {
         GameObject DeadPlayer = eventData.player.gameObject;

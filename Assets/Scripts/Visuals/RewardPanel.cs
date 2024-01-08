@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+// Panel to allow the player to select a reward
 public class RewardPanel : MonoBehaviour
 {
 
@@ -28,6 +30,8 @@ public class RewardPanel : MonoBehaviour
 
     private int RewardsToChoose;
 
+
+    // For locking the coroutine
     public IEnumerator ShowRewards(List<GameObject> rewards, List<BattlePlayer> players)
     {
         gameObject.SetActive(true);
@@ -38,6 +42,8 @@ public class RewardPanel : MonoBehaviour
 
         for (int i = 0; i < rewards.Count; i++)
         {
+
+            // Set cards to toggle transforms
             GameObject card = CardFactory.CreateRewardCard(rewards[i], CardButtons[i].transform, true);
             Debug.Log(card.name);    
             CardRewards.Add(card);
@@ -64,6 +70,7 @@ public class RewardPanel : MonoBehaviour
 
     }
 
+    // Selecting a card to give to a player
     private void SelectButton(bool isOn, GameObject card)
     {
         if (isOn && !SelectedCards.Contains(card))
@@ -79,7 +86,7 @@ public class RewardPanel : MonoBehaviour
         }
     }
 
-
+    // loop lock
     private IEnumerator SelectRewards()
     {
         RewardsToChoose = CardRewards.Count;
@@ -91,6 +98,8 @@ public class RewardPanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+
+    // Make players visible
     private void ShowPlayerSelect(bool active) 
     {
         for (int i = 0; i < ActivePlayers; i++)
@@ -99,6 +108,7 @@ public class RewardPanel : MonoBehaviour
         }       
     }
 
+    // Add the cards to the player's deck
     private void AddToDeck(GameObject player) 
     {
         GameData.Instance.BattlePlayers[player].AddRange(SelectedCards);
@@ -110,6 +120,8 @@ public class RewardPanel : MonoBehaviour
         }
     }
 
+
+    // If the player doesn't want rewards
     public void SkipRewards()
     {
         StopCoroutine(SelectRewards());

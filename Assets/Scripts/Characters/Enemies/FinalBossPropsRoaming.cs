@@ -4,11 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+
+// Effectively an already instantiated enemy, rather than a spawner
 public class FinalBossPropsRoaming : EnemyPropsRoaming, IFloorObject
 {
     public string ID { get; set; }
+
+    // For saving purposes
     public EnemySpawnerInfo SpawnInfo { get; set; } = new EnemySpawnerInfo();
 
+
+    // Called by floor
     public GameObject Trigger(string floorID, int ObjectID)
     {
         ID = floorID + "Object" + ObjectID;
@@ -54,6 +60,8 @@ public class FinalBossPropsRoaming : EnemyPropsRoaming, IFloorObject
             }
         }
 
+
+        // Done on first load to get initial state
         else
         {
 

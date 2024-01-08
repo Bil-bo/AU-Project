@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
+
+// Manager for intial load of assets
 public class AddressablesManager : MonoBehaviour
 {
     private List<string> CardAddresses = new List<string>();
@@ -114,6 +114,7 @@ public class AddressablesManager : MonoBehaviour
         result?.Invoke(coordToFloor);
     }
 
+    // Getting the correct list
     private List<string> GetAddressList(AddressType pull)
     {
         switch (pull)

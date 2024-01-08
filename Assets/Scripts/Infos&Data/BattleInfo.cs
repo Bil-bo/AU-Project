@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+// Initial data of players
 [CreateAssetMenu(fileName = "Battle", menuName = "BattleData")] 
 public class BattleInfo : ScriptableObject
 {

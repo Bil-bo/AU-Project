@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+// Deals damage and heals user
 public class AbsorbHealth : ICardActions
 {
     private BaseBattleCharacter user;
@@ -22,7 +25,6 @@ public class AbsorbHealth : ICardActions
     
     public virtual void Effect()
     {
-        //Subject to change
 
         foreach (BaseBattleCharacter target in Target)
         {
@@ -86,21 +88,6 @@ public class AbsorbHealth : ICardActions
 
             EventManager.Broadcast(postDamage);
         }
-
-
-
-           /* int absorbed = 20;
-            user.CurrentHealth += absorbed;
-            int actualAbsorbed = Mathf.Min(absorbed, target.CurrentHealth);
-
-            Debug.Log($"User Health: {user.CurrentHealth}, Target Health Before Absorb: {target.CurrentHealth}");
-        
-            // Ensure that target.TakeDamage handles negative values appropriately
-            target.TakeDamage(actualAbsorbed);
-        
-            Debug.Log($"Target Health After Absorb: {target.CurrentHealth}"); */
-        
-
     }
 
     

@@ -7,11 +7,15 @@ using System.Linq;
 using UnityEditor;
 using System;
 
+
+// Base class for all playable characters
+// Since all character share the same behaviour, you only need a different model for cool effects
 public class BattlePlayer : BaseBattleCharacter
 {
-
+    // for coroutine loop
     public bool isMyTurn = false;
 
+    // Simple Action for observer
     public Action<int, int> OnEnergyChanged;
 
 
@@ -56,7 +60,7 @@ public class BattlePlayer : BaseBattleCharacter
         }
     }
 
-
+    // Lock a player's turn in until otherwise
     public override IEnumerator DoTurn()
     {
         isMyTurn = true;
@@ -74,12 +78,14 @@ public class BattlePlayer : BaseBattleCharacter
 
     }
     
+
+    // For the deck buttons
     public void FinishTurn()
     {
         isMyTurn = false;
     }
 
-
+    // For calling player death
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);

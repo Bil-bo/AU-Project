@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MenuScreen : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // Deciding whether or not to show continue
     void Start()
     {
 

@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
-
+// Basic damage attack
 public class DealDamage : ICardActions
 {
 
@@ -66,6 +66,9 @@ public class DealDamage : ICardActions
     }
 }
 
+// Class for modifying damage before it is dealt
+// priority so some effects go before others
+// Like an effect that nulls all damage should go last
 public class Modifier
 {
     public Func<float, float> Modify { get; set; }
@@ -81,6 +84,7 @@ public class Modifier
 
 }
 
+// Class for dynamically handling damage calculations
 public class DamageCalculation
 {
     public int OriginalDamage;
@@ -95,6 +99,8 @@ public class DamageCalculation
 
     public void AddModifier(Modifier modifier) { Modifications.Add(modifier); }
 
+
+    // Sort by priority
     public int CalculateDamage()
     {
         Modifications.Sort((a,b) => a.priority.CompareTo(b.priority));

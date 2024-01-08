@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+
+// For supports instantiated in the battle scene
+// Add to party on rescue
 public class RescuePropsBound : MonoBehaviour
 {
     public string SpawnerID { get; set; }

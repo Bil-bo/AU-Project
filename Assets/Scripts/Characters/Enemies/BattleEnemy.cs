@@ -19,10 +19,6 @@ public abstract class BattleEnemy : BaseBattleCharacter
             BattlePlayer randomPlayer = players[new System.Random().Next(0, players.Length)];
 
             ActionManager.Instance.AddToBottom(new AbsorbHealth(this, new List<BaseBattleCharacter>{ randomPlayer }, Attack, DamageType.NORMAL, 30));
-
-
-            //ActionManager.Instance.AddToBottom(new DealDamage(this, new List<BaseBattleCharacter> { randomPlayer }, Attack, DamageType.NORMAL));
-
         }
 
     }
@@ -33,16 +29,13 @@ public abstract class BattleEnemy : BaseBattleCharacter
 
     public override IEnumerator DoTurn(){
 
-
-
-
         AttackPlayer(); //Enemies can only attack on their turn
-        
 
-     
         yield return null;
     }
 
+
+    // Override for enemyDeathEvent
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);

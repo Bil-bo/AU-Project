@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+
+// Spawn a regaular enemy
 public class EnemySpawn : MonoBehaviour, IFloorObject
 {
     public string ID { get; set; }
@@ -17,12 +19,13 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
     {
         ID = floorID+"Object"+objectID;
 
-
+        // After init
         if (PlayerPrefs.HasKey(ID))
         {
 
             SpawnInfo = JsonUtility.FromJson<EnemySpawnerInfo>(PlayerPrefs.GetString(ID));
 
+            // If enemy defeated
             if (SpawnInfo.Clear)
             {
 
@@ -30,6 +33,7 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
                 return null;
             }
 
+            // If enemy just defeated
             else if (GameData.Instance.EnemySpawnerID == ID)
             {
                 SpawnInfo.Clear = true;
@@ -38,6 +42,8 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
                 return null;
             }
 
+
+            // Init enemy from save
             else
             {
                 Addressables.LoadAssetAsync<GameObject>(SpawnInfo.EnemyID).Completed += (result) =>
@@ -63,6 +69,7 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
             }
         }
 
+        // Create and save enemy
         else
         {
             SpawnInfo.Clear = false;
@@ -109,6 +116,7 @@ public class EnemySpawn : MonoBehaviour, IFloorObject
     }
 }
 
+// For use with player prefs
 [Serializable]
 public class EnemySpawnerInfo : TreasureChestInfo
 {

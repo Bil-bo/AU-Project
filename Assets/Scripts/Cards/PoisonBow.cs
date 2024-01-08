@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
+
+// Merged card, high range and poisons
 public class PoisonBow : Card
 {
     public override void Use(BattlePlayer player, List<BaseBattleCharacter> targets)

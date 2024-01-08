@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+
+// Simple Factory for instantiating cards
+// Static to be used anywhere in the code
+// Singleton for only on eto exist
 [Serializable]
 public class CardFactory : MonoBehaviour
 {
@@ -46,6 +50,7 @@ public class CardFactory : MonoBehaviour
         return cards;
     }
 
+    // Card without initial parent
     public static GameObject CreateRewardCard(GameObject card, Transform parent, bool isActive = false)
     {
         GameObject newCard = Instantiate(instance.CardPrefab, parent);

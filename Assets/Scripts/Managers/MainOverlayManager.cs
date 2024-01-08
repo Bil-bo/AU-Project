@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
+
+// Main scene canvas
 public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUpCollected, IOnFinalBossDefeated
 {
     [SerializeField]
@@ -19,6 +21,7 @@ public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUp
 
     private int PickUpscollected = 0;
 
+    // Listener Handling
     private void Start()
     {
         EventManager.AddListener<TreasureCollectedEvent>(OnTreasureCollected);
@@ -38,12 +41,13 @@ public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUp
 
     }
 
-
+    // Show a rewards screen
     public void OnTreasureCollected(TreasureCollectedEvent eventData) 
     {
         StartCoroutine(ShowRewardsScreen(eventData));
     }
 
+    // Update Pickup Text
     public void OnPickUpCollected(PickupCollectedEvent eventData)
     {
         PickUpscollected++;
@@ -51,6 +55,8 @@ public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUp
         PickUpText.text = "PickUps Collected: " + PickUpscollected;
     }
 
+
+    // For locking the player into selecting a reward
     private IEnumerator ShowRewardsScreen(TreasureCollectedEvent eventData)
     {
         eventData.Collider.GetComponent<PlayerInput>().enabled = false;
@@ -88,6 +94,7 @@ public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUp
         SceneManager.LoadScene("Menu");
     }
 
+    //Listener handling
     private void OnDestroy()
     {
         EventManager.RemoveListener<TreasureCollectedEvent>(OnTreasureCollected);

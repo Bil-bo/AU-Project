@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+
+// Separate manager for abstracting some data away from main game manager
 public class SpecialRoomManager : MonoBehaviour
 {
 
@@ -40,6 +42,7 @@ public class SpecialRoomManager : MonoBehaviour
     private int ShopChance = 60;
 
 
+    // Find which special rooms should be created
     public Dictionary<Vector2Int, GameObject> SpecialRoomRoll(int levelNum, int level, Dictionary<Vector2Int, GameObject> coordinateData)
     {
         List<Vector2Int> coordinates = coordinateData.Keys.ToList();
@@ -79,6 +82,7 @@ public class SpecialRoomManager : MonoBehaviour
 
         Vector2Int injectBoss = InsertBossRoom(coordinates);
 
+        // Final level has final boss (stronger + no ladder)
         if (levelNum == level+1)
         {
             coordinateData[injectBoss] = SuperBossRoom;
@@ -97,6 +101,7 @@ public class SpecialRoomManager : MonoBehaviour
 
     }
 
+    // Find a place to insert the room
     public Vector2Int InsertSpecialRoom(List<Vector2Int> coordinates)
     {
 
@@ -104,6 +109,8 @@ public class SpecialRoomManager : MonoBehaviour
 
     }
 
+
+    // Find a place to insert the boss room
     public Vector2Int InsertBossRoom(List<Vector2Int> coordinates)
     {
 

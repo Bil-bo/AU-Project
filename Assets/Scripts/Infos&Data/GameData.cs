@@ -12,7 +12,6 @@ public class GameData : MonoBehaviour
     public List<GameObject> battleEnemies;
 
     public List<GameObject> CardRewards;
-    public bool isPuzzleComplete { get; set; }
 
     public Dictionary<GameObject, List<GameObject>> BattlePlayers = new();
 
@@ -34,6 +33,8 @@ public class GameData : MonoBehaviour
         }
     }
 
+
+    // Adding a new player to the party
     public void AddPlayer(BattleInfo playerInfo)
     {
         GameObject newPlayer = Instantiate(PlayerPrefab, this.transform);
@@ -45,8 +46,7 @@ public class GameData : MonoBehaviour
     }
 
     public void Restart()
-    {
-        isPuzzleComplete = false;
+    { 
         EnemySpawnerID = null; 
         CardRewards = new List<GameObject>();
         BattlePlayers = new Dictionary<GameObject, List<GameObject>>();

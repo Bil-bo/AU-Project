@@ -1,7 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
+// Poisons an enemy
 public class Poison : Card
 {
     public override void Use(BattlePlayer player, List<BaseBattleCharacter> targets)

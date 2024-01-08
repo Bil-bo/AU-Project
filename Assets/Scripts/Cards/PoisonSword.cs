@@ -1,7 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
+
+// Merged card
+// Extra damage, range and poison damage
 public class PoisonSword : Card
 {
     public override void Use(BattlePlayer player, List<BaseBattleCharacter> targets)

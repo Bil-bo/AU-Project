@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
+
+// Pickup objects
 public class PickUpsData : MonoBehaviour, IFloorObject
 {
     public string ID { get; set; }

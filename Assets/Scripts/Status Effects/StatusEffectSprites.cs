@@ -4,6 +4,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
+
+// Static singleton that holds the materials used by the status effect's gameobject
 public class StatusEffectSprites : MonoBehaviour
 {
     public static StatusEffectSprites Instance;

@@ -4,15 +4,22 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 
+
+// For visualising the enemies health 
 public class HealthBar : MonoBehaviour, IOnPostTakeDamage, IOnPostHealing
 {
-    private Guid CharID;
 
+    // The character the health bar is listening to
+    private Guid CharID;
     public int MaxHealth {  get; set; }
     public int CurrentHealth { get; set; }
 
+
+    // currenthealth / maxhealth
     private float HealthPercent = 1f;
 
+
+    // For moving the bar to make it appear to decrease from one end
     [SerializeField]
     Transform Bar;
 
@@ -24,7 +31,7 @@ public class HealthBar : MonoBehaviour, IOnPostTakeDamage, IOnPostHealing
 
     private Material MaterialCopy;
 
-
+    // Listener handling
     private void Awake()
     {
         EventManager.AddListener<PostTakeDamageEvent>(OnPostTakeDamage);
@@ -38,6 +45,8 @@ public class HealthBar : MonoBehaviour, IOnPostTakeDamage, IOnPostHealing
 
     }
 
+
+    // set up
     public void Initialise(Guid character, int MaxHealth, int CurrentHealth)
     {
         this.MaxHealth = MaxHealth;
@@ -66,6 +75,8 @@ public class HealthBar : MonoBehaviour, IOnPostTakeDamage, IOnPostHealing
         
     }
 
+
+    // Set the new values
     private void SetValues()
     {
         HealthPercent = (CurrentHealth * 1.0f) / MaxHealth;

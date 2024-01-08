@@ -1,14 +1,14 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using System;
-using UnityEditor;
-using Unity.VisualScripting;
 
+
+// Base from which all battle characters inherit from
 public abstract class BaseBattleCharacter : MonoBehaviour
 {
+
+    // Unique identifier
     public Guid CharID { get; } = Guid.NewGuid();
     public string Name;
     public int maxHealth;
@@ -26,6 +26,7 @@ public abstract class BaseBattleCharacter : MonoBehaviour
     private GameObject _PositionMarker;
     public GameObject Targeter { get; set; }
 
+    // Set a targeter to this scripts' gameobject
     public GameObject PositionMarker 
     { 
         get { return _PositionMarker; }
@@ -66,6 +67,8 @@ public abstract class BaseBattleCharacter : MonoBehaviour
 
     public abstract IEnumerator DoTurn();
 
+
+    // On damage
     void FlashObject(Color flashColor)
     {
         Material originalMaterial = characterRenderer.material;

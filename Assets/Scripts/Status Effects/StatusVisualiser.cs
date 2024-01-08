@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+
+// Game object that holds the status effect behaviour
 public class StatusVisualiser : MonoBehaviour
 {
     [SerializeField]
@@ -27,6 +27,7 @@ public class StatusVisualiser : MonoBehaviour
         }
     }
 
+    // Delete everything once the counter hits 0
     private void UpdateText(int c)
     {
         if (c == 0)

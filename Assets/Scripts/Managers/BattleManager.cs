@@ -9,22 +9,29 @@ using System;
 
 
 // Sets up and starts the main battle scene
+// Main manager of most objects in the battle scene
 public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 {
-    //public List<GameObject> characters = new List<GameObject>();
+   // Lists for active objects 
 
     public List<BattlePlayer> players = new List<BattlePlayer>();
     public List<BattleEnemy> enemies = new List<BattleEnemy>();
+
+   // Lists for inactive objects
+
     private List<BattlePlayer> DeadPlayers = new List<BattlePlayer>();
     private List<BattleEnemy> DeadEnemies = new List<BattleEnemy>();
 
+
+    // Current Players turn
     private BattlePlayer CurrentPlayer;
 
     private int EnemyCount = 0;
     private int PlayerCount = 0;
     private bool playerWin = false;
     private bool playerLose = false;
-    private bool isPressing = false;
+    private bool isPressing = false;  // For cursor
+
 
     public GameManager manager;
 
@@ -96,6 +103,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         EventManager.AddListener<EnemyDeathEvent>(OnEnemyDeath);
     }
 
+    // Initialise scene
     void Start()
     {
         if (inputs == null) { inputs = GetComponent<PlayerInput>(); }
@@ -146,12 +154,16 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         }
     }
 
+    // Whilst the mouse is being pressed down
     void ClickHold()
     {
+
+        // Check if the mouse has moved, for saving some unecessary procedures
         if (mousePrevPos != inputs.actions["UI/Point"].ReadValue<Vector2>())
         {
             mousePrevPos = inputs.actions["UI/Point"].ReadValue<Vector2>();
 
+            // Check if in play area
             Ray ray = Camera.main.ScreenPointToRay(mousePrevPos);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 45f, LayerMask.GetMask("PlayArea")))
@@ -160,7 +172,10 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
                 InPlay = true;
                 Line.ShowArrow(true);
                 Line.DrawArrow(mousePrevPos);
+
                 HighlightTargets(MainCardData.Target, MainCardData.Range, CurrentPlayer);
+
+                // Check if targeting viable target
                 if (TargetSelection && Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Default")))
                 {
                     if (hit.collider.gameObject.TryGetComponent<BaseBattleCharacter>(out BaseBattleCharacter hitCharacter))
@@ -174,6 +189,8 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
                 }
                 else { SingleTarget = null; }
             }
+
+            // If the player wants to merge a card
             else if (deckHandler.SelectCard(mousePrevPos, out _SecondaryCard))
             {
                 InPlay = false;
@@ -186,6 +203,8 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
                 }
             }
 
+
+            // reset all
             else 
             {
                 SecondaryCard = null;
@@ -196,6 +215,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         }
     }
 
+    // Activate the correct effect if doable
     void ClickRelease(InputAction.CallbackContext context)
     {
         if (isPressing && InPlay && !(MainCardData.Cost > CurrentPlayer.CurrentEnergy)) 
@@ -227,6 +247,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
     }
 
 
+    // Initialise enemies
     void GenerateEnemies()
     {
         var enemyInput = GameData.Instance.battleEnemies;
@@ -273,7 +294,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         }
     }
 
-
+    // Initialise player
     void GeneratePlayers()
     {
         List<GameObject> party = GameData.Instance.BattlePlayers.Keys.ToList();
@@ -308,6 +329,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
             foreach (BattlePlayer player in players)
             {
+                // Checking if the player is dead
                 if (playerWin || playerLose || DeadPlayers.Contains(player)) { continue; }
                 else
                 { 
@@ -323,6 +345,8 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
                     EventManager.Broadcast(gameEvent);
 
                     yield return null;
+
+                    // Checking if the player died to a start of turn effect
                     if (DeadPlayers.Contains(player) || player.CurrentHealth <= 0) { continue; }
                     else
                     {
@@ -336,7 +360,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
                 }
             }
 
-
+            // Same deal
             foreach (BattleEnemy enemy in enemies)
             {
                 if (playerWin || playerLose || DeadEnemies.Contains(enemy)) { continue; }
@@ -349,6 +373,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
                     };
                     EventManager.Broadcast(gameEvent);
                     yield return null;
+
                     if (DeadEnemies.Contains(enemy) || enemy.CurrentHealth <= 0 || gameEvent.Character.CurrentHealth == 0) { continue; }
                     else
                     {
@@ -358,10 +383,12 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
                 }
             }
+            // Get rid of dead characters
             if (DeadPlayers.Count > 0 || DeadEnemies.Count > 0) { CleanUp(); }
         }
     }
 
+    // If all players or all enemies are dead
     IEnumerator ExitBattle(bool hasWon)
     {
         deckHandler.gameObject.SetActive(false);
@@ -375,8 +402,11 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
             manager.ShowOverlay("");
 
+            // Earn rewards
+
             yield return StartCoroutine(manager.panel.ShowRewards(GameData.Instance.CardRewards, players));
             yield return new WaitForSeconds(5f);
+
 
 
             foreach (BattlePlayer player in players)
@@ -387,6 +417,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
 
             deckHandler.ResetCards();
 
+            // Go back to the roaming scene
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
         }
 
@@ -394,14 +425,16 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         {
             manager.ShowOverlay("You Lost!");
             PlayerPrefs.SetInt("Init", 0);
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(3f); // wallow
             GameData.Instance.Restart();
             CleanUp();
+
+            // Go back to the menu
             SceneManager.LoadScene(0);
         }
     }
 
-
+    // Find what the card wants to target
     private List<BaseBattleCharacter> GetTargets(Target targets, int range)
     {
         List<BaseBattleCharacter> toReturn = new();
@@ -473,7 +506,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
     }
 
 
-
+    // Highlight what the card wants to target
     private void HighlightTargets (Target targets, int range, BattlePlayer comparePlayer)
     {
         switch (targets)
@@ -538,6 +571,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         }
     }
 
+    // Abstracted common behaviour for finding highlights
     private void SetHighlights(List<BaseBattleCharacter> charToHighlight, BattlePlayer comparePlayer, int MatIndex, bool setActive = true, int range = 0, bool playerRange = false, bool enemyRange = false)
     {
         foreach (BaseBattleCharacter character in charToHighlight)
@@ -582,6 +616,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         CurrentPlayer.CanSelect = false;
     }
 
+    // Player death event
     public void OnPlayerDeath(PlayerDeathEvent eventData)
     {
         BattlePlayer deadPlayer = eventData.player;
@@ -614,6 +649,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         }
     }
 
+    // Enemy death event
     public void OnEnemyDeath(EnemyDeathEvent eventData)
     {
         BattleEnemy deadEnemy = eventData.enemy;
@@ -663,6 +699,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         }
     }
 
+    // Listener handling
     private void OnDestroy()
     {
         var clickInput = inputs.actions["UI/Click"];

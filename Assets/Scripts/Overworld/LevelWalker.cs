@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// variable classes for creating a layout for the game
 public abstract class LevelWalker
 {
 
     List<Vector2Int> coordinatesGenerated = new();
 
+
+    // Wrapper for directions
     protected class DirectionChance
     {
         public int Chance;
@@ -23,19 +27,21 @@ public abstract class LevelWalker
 
     protected int ChanceToBreak;
 
-
-
     protected Vector2Int GridSize;
     protected int RoomsLeft;
 
-
+    // Init
     public LevelWalker(Vector2Int gridSize, int RoomAmountLeft)
     {
         this.GridSize = gridSize;
         this.RoomsLeft = RoomAmountLeft;
     }
 
-
+    // At base: move in a direction
+    // If occupied, die
+    // If outside bounds, die
+    // If finished, die
+    // Random chance, die
     public virtual List<Vector2Int> Walk(List<Vector2Int> setCoordinates) 
     {
         List<Vector2Int> pointsToReturn = new();
@@ -60,6 +66,7 @@ public abstract class LevelWalker
         return pointsToReturn;
     }
 
+    // Pick a random direction
     protected Vector2Int CalculateDirection()
     {
         int randomValue = UnityEngine.Random.Range(0, 101);
@@ -87,6 +94,7 @@ public abstract class LevelWalker
 }
 
 
+// Concretion of base class
 public class BasicWalker: LevelWalker
 {
 
@@ -101,6 +109,8 @@ public class BasicWalker: LevelWalker
     }
 }
 
+
+// Walker that inits one space
 public class SpecialWalker: LevelWalker
 {
     public SpecialWalker(Vector2Int gridSize, int RoomAmountLeft) : base (gridSize, RoomAmountLeft) 
@@ -134,6 +144,8 @@ public class SpecialWalker: LevelWalker
     }
 }
 
+
+// Walker that attempts to find furthest point from start point 
 public class BossWalker : LevelWalker
 {
     private Vector2Int StartRoom;
@@ -206,6 +218,7 @@ public class BossWalker : LevelWalker
 }
 
 
+// Factory for dynamic initialisation
 public class WalkerFactory
 {
 

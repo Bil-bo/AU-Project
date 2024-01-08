@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// For moving to the next level
 public class Ladder : MonoBehaviour, IFloorObject
 {
     public string ID { get; set; }

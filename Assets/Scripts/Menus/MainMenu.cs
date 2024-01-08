@@ -14,6 +14,8 @@ public class MainMenu : MonoBehaviour
     public GameObject mainCanvas;
     public GameObject settingsCanvas;
 
+
+    // preload addressables
     IEnumerator Start()
     {
         AsyncOperationHandle<IList<GameObject>> loadAllHandle = Addressables.LoadAssetsAsync<GameObject>("PreLoad", null);

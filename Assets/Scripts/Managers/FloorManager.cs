@@ -1,9 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
 
+
+// Manager for every floor object
 public class FloorManager : MonoBehaviour
 {
     public List<Door> DoorList =new();
@@ -31,6 +31,8 @@ public class FloorManager : MonoBehaviour
 
     public List<GameObject> Uncleared = new();
 
+
+    // Called in MainGameManager, to set up each child in the floor
     public void Initialise(Vector2Int coordinate, int level)
     {
         FloorID = "Level"+level+coordinate+gameObject.name;
@@ -66,12 +68,13 @@ public class FloorManager : MonoBehaviour
 
         if (other.CompareTag("PlayerRoaming"))
         {
-
+            // Start a timer
             InRoom = true; 
             if (!Clear) { StartCoroutine(CountDown()); }
 
             else
             {
+                // If the room is clear, set save point
                 PlayerPrefs.SetFloat("PlayerX", transform.position.x);
                 PlayerPrefs.SetFloat("PlayerY", other.transform.position.y);
                 PlayerPrefs.SetFloat("PlayerZ", transform.position.z);
@@ -93,7 +96,7 @@ public class FloorManager : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-
+        // Stop the timer
         if (other.CompareTag("PlayerRoaming"))
         {
             InRoom = false;
@@ -101,7 +104,7 @@ public class FloorManager : MonoBehaviour
 
     }
 
-
+    // Lock the doors
     private IEnumerator CountDown() 
     {
         yield return new WaitForSeconds(1f);

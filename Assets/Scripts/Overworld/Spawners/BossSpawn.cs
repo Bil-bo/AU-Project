@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+
+// Handles Boss Game Objects
 public class BossSpawn : MonoBehaviour, IFloorObject
 {
     public string ID { get;  set; }
@@ -13,11 +15,14 @@ public class BossSpawn : MonoBehaviour, IFloorObject
     public GameObject Trigger(string floorID, int objectID)
     {
         ID = floorID + "Object" + objectID;
+
+        // After init
         if (PlayerPrefs.HasKey(ID))
         {
 
             BossSpawnInfo = JsonUtility.FromJson<EnemySpawnerInfo>(PlayerPrefs.GetString(ID));
 
+            // If the boss is cleared
             if (BossSpawnInfo.Clear)
             {
 
@@ -25,6 +30,8 @@ public class BossSpawn : MonoBehaviour, IFloorObject
                 return null;
             }
 
+
+            // If the boss was just defeated
             else if (GameData.Instance.EnemySpawnerID == ID)
             {
 
@@ -38,6 +45,8 @@ public class BossSpawn : MonoBehaviour, IFloorObject
                 return null;
             }
 
+
+            // Init the boss
             else
             {
                 Addressables.LoadAssetAsync<GameObject>(BossSpawnInfo.EnemyID).Completed += (result) =>
@@ -63,6 +72,7 @@ public class BossSpawn : MonoBehaviour, IFloorObject
             }
         }
 
+        // Create the boss from the manager
         else
         {
 

@@ -59,6 +59,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
     // Start is called before the first frame update
     void Start()
     {
+        // Init listeners
         EventManager.AddListener<BattleTriggerEvent>(OnTriggerBattle);
         EventManager.AddListener<PickupCollectedEvent>(OnPickUpCollected);
         EventManager.AddListener<LevelPassedEvent>(OnLevelPassed);
@@ -106,6 +107,9 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
 
 
         }
+
+        // Should only be called on the first load
+        // Used to initialise everything
         else
         {
             int seed = (int)System.DateTime.Now.Ticks;
@@ -119,7 +123,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
             PlayerPrefs.SetInt("PickUpsNum", 2 * LevelAmount);
             GameData.Instance.AddPlayer(player.GetComponent<PlayerPropsRoaming>().BattleInfo);
 
-
+            // Once the addressManager has everything ready start building the play area
             StartCoroutine(Addresses.GenerateLists());
             Addresses.ListsReady += () => StartCoroutine(VisualisePlayArea());
 
@@ -130,7 +134,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
         }
     }
 
-
+    // Start a battle
     public void OnTriggerBattle(BattleTriggerEvent eventData)
     {
         PlayerPrefs.SetFloat("PlayerX", player.transform.position.x);
@@ -150,12 +154,16 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
 
     }
 
+
+    // Notice a pickup
     public void OnPickUpCollected(PickupCollectedEvent eventData)
     {
         PickUpsNum -= 1;
         PlayerPrefs.SetInt("PickUpsNum", PickUpsNum);
     }
 
+
+    // Move up a level
     public void OnLevelPassed(LevelPassedEvent eventData)
     {
         PlayerPrefs.SetInt("CurrentLevel", eventData.MoveToLevel);
@@ -168,66 +176,75 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
 
     }
 
+    // For init construction of play area
     private IEnumerator VisualisePlayArea()
     {
-
-
-
+        // For each level
         for (int i = 0; i < LevelAmount; i++)
         {
             List<Vector2Int> coordinates = new List<Vector2Int>();
             Dictionary<Vector2Int, GameObject> coordinateData = new Dictionary<Vector2Int, GameObject>();
 
+            // Find random pos
             int randX = UnityEngine.Random.Range(0, GridX);
             int randY = UnityEngine.Random.Range(0, GridY);
 
             Vector2Int startPos = new Vector2Int(randX, randY);
-            coordinates.Add(startPos);
+            coordinates.Add(startPos); // First in list is start point
 
             PlayerPrefs.SetString("Level" + i + startPos, LevelStart.name);
 
             coordinateData[startPos] = LevelStart;
 
+
+            // calculate number of rooms to generate; based on Isaac
             int RoomAmount = Mathf.RoundToInt(UnityEngine.Random.Range(0, 3) + 5 + ((i + 1) * 2.5f));
 
             while (coordinates.Count < RoomAmount)
             {
+                // Walk through level
                 coordinates.AddRange(WalkerFactory.CreateWalker(new Vector2Int(GridX, GridY), RoomAmount - coordinates.Count).Walk(coordinates));
             }
 
-
+            // Get FloorPrefabs from Addressables
             yield return StartCoroutine(Addresses.GetFloors(coordinates.Skip(1).ToList(), i,
                 result => coordinateData = coordinateData.Concat(result).ToDictionary(a => a.Key, a => a.Value)));
 
-
+            // Add special rooms
             coordinateData = SpecialRoomManager.SpecialRoomRoll(LevelAmount, i, coordinateData);
 
             coordinates = coordinateData.Keys.ToList();
 
-
+            // Save
             string jsonCoordinates = new CoordWrapper { coordinates = coordinates }.SaveToString();
             Debug.Log("Level "+ i +" coordinates = " + jsonCoordinates);
             PlayerPrefs.SetString("LevelBuild" + i, jsonCoordinates);
 
-
+            // Temp initialisation
             ConstructPlayArea(coordinateData, coordinates, i);
             yield return new WaitForSeconds(1f);
 
         }
         yield return null;
+
+        // Lazy destroy and reconstruct scene to show changes
         string currentSceneName = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentSceneName);
     }
 
+    // Instantiation of play area
     private void ConstructPlayArea(Dictionary<Vector2Int, GameObject> coordinateData, List<Vector2Int> coordinates, int level)
     {
 
         foreach (Vector2Int coordinate in coordinates)
         {
+            // Replace prefab with instantiation
             GameObject newFloor = Instantiate(coordinateData[coordinate], Floors);
             coordinateData[coordinate] = newFloor;
         }
 
+
+        // Directions for doors
         List<Vector2Int> seen = new();
         List<Vector2Int> directions = new List<Vector2Int> {
                 new Vector2Int(0,-1),
@@ -237,6 +254,8 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
 
         foreach (Vector2Int coordinate in coordinates)
         {
+
+            // Find dimensions
             GameObject floor = coordinateData[coordinate];
             Vector3 dimensions = floor.GetComponentInChildren<MeshRenderer>().bounds.size;
             floor.transform.position = new Vector3(coordinate.x * dimensions.x, 0, coordinate.y * dimensions.z);
@@ -244,12 +263,13 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
             FloorManager floorPlan = floor.GetComponent<FloorManager>();
             floorPlan.Initialise(coordinate, level);
 
-            //Debug.Log(coordinateData[coordinate].transform.position);
             foreach (Vector2Int direction in directions)
             {
+                // If already visited floor skip
                 if (seen.Contains(coordinate + direction)) { continue; }
                 else if (coordinates.Contains(coordinate + direction))
-                {
+                { 
+                    // add door
                     GameObject door = Instantiate(WallWithDoorPrefab,
                         new Vector3(floor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15,
                             floor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)),
@@ -261,28 +281,27 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
 
                 else
                 {
+                    // add wall
                     Instantiate(WallPrefab,
                         new Vector3(floor.transform.position.x + ((dimensions.x / 2) * direction.x) - (direction.x / 2f), 15, floor.transform.position.z + ((dimensions.z / 2) * direction.y) - (direction.y / 2f)),
                         Quaternion.Euler(new Vector3(0, (direction.y != 0) ? 90 : 0, 0)), Walls);
                 }
 
             }
+
+            // add ceiling
             Instantiate(CeilingPrefab, floor.transform.position + (Vector3.up * 29.5f), Quaternion.identity, Ceilings);
             seen.Add(coordinate);
 
         }
     }
 
-
+    // Reconstruct play area from save
     private IEnumerator ReconstructPlayArea(int level, Action result)
     {
         string jsonCoords = PlayerPrefs.GetString("LevelBuild" + level);
 
         List<Vector2Int> coordinates = JsonUtility.FromJson<CoordWrapper>(jsonCoords).LoadFromString();
-
-
-
-
 
         Dictionary<Vector2Int, GameObject> RestoredData = new();
         foreach (var coord in coordinates)
@@ -320,6 +339,7 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
         }
     }
 
+    // Listener Handling
     private void OnDestroy()
     {
         EventManager.RemoveListener<BattleTriggerEvent>(OnTriggerBattle);
@@ -329,6 +349,8 @@ public class MainGameManager : MonoBehaviour, IOnTriggerBattle, IOnPickUpCollect
 }
 
 
+
+// For saving to player prefs
 [Serializable]
 public class CoordWrapper
 {

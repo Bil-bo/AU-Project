@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// Effect for adding a status effect to a target
 public class AddStatusEffect : ICardActions
 {
     private BaseBattleCharacter User;
@@ -14,7 +16,7 @@ public class AddStatusEffect : ICardActions
         this.Status = effect;
     }
 
-
+    // Set up the status effect
     public void Effect()
     {
         foreach (BaseBattleCharacter target in Target)

@@ -1,8 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
+
+// based on unity's FPS microgame
+// Event manager used as hub for notifying objects of events without creating unecessary dependencies
 public static class EventManager
 {
     static readonly Dictionary<Type, Action<IEvent>> s_Events = new Dictionary<Type, Action<IEvent>>();

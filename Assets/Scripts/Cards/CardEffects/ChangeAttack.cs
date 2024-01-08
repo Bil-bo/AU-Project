@@ -1,4 +1,7 @@
-﻿internal class ChangeAttack : ICardActions
+﻿
+// I didn't do this one
+// what is internal
+internal class ChangeAttack : ICardActions
 {
 
     private BaseBattleCharacter Target;

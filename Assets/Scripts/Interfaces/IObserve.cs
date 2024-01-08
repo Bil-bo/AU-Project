@@ -1,9 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
+
+// Partner interfaces to the IEvents, for better understanding
 public interface IObserve {}
+
+
 // Broadcast from the DealDamage card action
 public interface IOnPreTakeDamage : IObserve
 {

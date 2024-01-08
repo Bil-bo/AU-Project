@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// On level init pull player to start point
 public class GetPlayer : MonoBehaviour, IFloorObject
 {
     public string ID { get; set; }
@@ -35,6 +37,7 @@ public class GetPlayer : MonoBehaviour, IFloorObject
 
     }
 
+    // In case scene is loading too fast
     private IEnumerator PullPlayer()
     {
         yield return new WaitForSeconds(1f);

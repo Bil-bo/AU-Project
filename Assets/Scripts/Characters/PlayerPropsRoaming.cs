@@ -1,11 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using TMPro;
 using UnityEngine.SceneManagement;
-
 using UnityEngine;
-using System;
 
 
 // Player in main scene

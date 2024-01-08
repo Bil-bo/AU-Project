@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+
+// Class for roaming support members
 public class RescueSpawn : MonoBehaviour, IFloorObject
 {
     public string ID { get; set; }

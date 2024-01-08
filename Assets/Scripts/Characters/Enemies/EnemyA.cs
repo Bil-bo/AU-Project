@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// Enemy with unimplemented behaviour: changes based on counter
 public class EnemyA : BattleEnemy
 { 
     private int counterField = 0;

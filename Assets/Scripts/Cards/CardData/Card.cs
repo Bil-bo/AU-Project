@@ -2,23 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
+
+// Dictates main behaviours of cards
+// Attached as a child to a card base for maximum functionality and look
 public abstract class Card : MonoBehaviour
 {
     public Transform CardBase { get; set; }
 
+    // Scriptable Object for base informatio of the card instance
     [SerializeField]
     private CardInfo _cardInfo;
 
+  
     public GameObject CardView { get; set; }
 
+
+    // For uniquely identifying all cards, for merge purposes
     public Guid CardID { get; } = Guid.NewGuid();
 
     private string _Name;
 
+    // Property, to update visible name as well as text name
     public string Name 
     {
         get { return _Name; } 
@@ -29,6 +35,8 @@ public abstract class Card : MonoBehaviour
         } 
     }
 
+
+    // Property, to update visible Description at same time
     private string _Description;
 
     public string Description
@@ -56,10 +64,13 @@ public abstract class Card : MonoBehaviour
         } 
     }
 
+
+    // sorts out merges into more suitable form 
     public Dictionary<string, GameObject> Merges = new();
 
     private CardType _CardType;
 
+    // For event purposes
     public CardType CardType
     {
         get { return _CardType; }
@@ -75,6 +86,8 @@ public abstract class Card : MonoBehaviour
 
     private int _Range;
     private bool initSet = false;
+
+    // How far the card can attack
     public int Range
     {
         get { return _Range; }
@@ -99,11 +112,13 @@ public abstract class Card : MonoBehaviour
     }
 
 
+   // As a list to hold multiple damage values for selection purposes
     private List<int> _Damage = new();
 
-
+    // Damage property to apply initial modifiers to damage on get
     public List<int> Damage { get { return _Damage.Select(item => item + DamageModifier).ToList();  } set { _Damage = value; } }
 
+    // The current attack of the player
     private int _DamageModifier = 0;
 
     public int DamageModifier 
@@ -120,11 +135,11 @@ public abstract class Card : MonoBehaviour
     protected List<int> FlatDamage;
 
 
-
+    // For getting events with low dependency
     public Guid UserID;
 
-    //private bool Activated = false;
 
+    //Init card
     private void Awake()
     {
         CardView = gameObject;
@@ -141,7 +156,8 @@ public abstract class Card : MonoBehaviour
 
 
     }
-
+    
+    // Dictionaries are not serialisable (incompatible with scriptable objects) so set up here
     private void FormMerges(List<string> inputs, List<GameObject> outputs)
     {
         for (int i = 0; i < inputs.Count; i++) 
@@ -154,8 +170,12 @@ public abstract class Card : MonoBehaviour
 
     public virtual void Deselected() { }
 
+    // Main override, where cards effects go
     public abstract void Use(BattlePlayer player, List<BaseBattleCharacter> targets);
 
+
+    // Check If two cards can merge
+    // If they can, return the card to merge
     public virtual GameObject CanMerge(Card cardToMerge) {
         if (Merges.ContainsKey(cardToMerge.Name))
         {
@@ -168,6 +188,8 @@ public abstract class Card : MonoBehaviour
         return null;
     }
 
+
+    // Using substrings to create a variable description
     private string ConstructDescription(string initDescription)
     {
         string finishedDescription = initDescription;

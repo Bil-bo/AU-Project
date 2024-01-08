@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+
+// Treasure chest, for roaming rewards
 public class TreasureChest : MonoBehaviour, IFloorObject
 {
     public string ID { get; set; }

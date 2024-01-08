@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// Yeah its just EnemyA again would've been cool
 public class FinalBoss : BattleEnemy
 {
 

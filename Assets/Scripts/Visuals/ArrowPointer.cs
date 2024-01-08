@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+
+// For assisting in targeting a character
 public class ArrowPointer : MonoBehaviour
 {
 
@@ -30,6 +33,7 @@ public class ArrowPointer : MonoBehaviour
 
     }
 
+    // Set to the card you want to select
     public void SetStartPos(RectTransform cardPos) 
     {
         Vector2 targetPos = cardPos.position;
@@ -41,6 +45,8 @@ public class ArrowPointer : MonoBehaviour
         ControlPoint.rectTransform.anchoredPosition = StartPoint.rectTransform.anchoredPosition;
     }
 
+
+    // Make pointer visible
     public void ShowArrow(bool show)
     {
         EndPoint.gameObject.SetActive(show);
@@ -52,6 +58,8 @@ public class ArrowPointer : MonoBehaviour
         }
     }
 
+
+    // Move arrow
     public void DrawArrow(Vector2 mousePos)
     { 
         
@@ -60,6 +68,10 @@ public class ArrowPointer : MonoBehaviour
         DrawQuadraticBezierCurve(StartPoint.rectTransform.anchoredPosition, ControlPoint.rectTransform.anchoredPosition, EndPoint.rectTransform.anchoredPosition);
     }
 
+
+
+    //Chat GPT code
+    // Basically just creating a smooth curve of points on a line
     private void DrawQuadraticBezierCurve(Vector2 p0, Vector2 p1, Vector2 p2)
     {
         for (int i = 0; i < MiddleSegments.Count; i++)
@@ -70,8 +82,6 @@ public class ArrowPointer : MonoBehaviour
         }
     }
 
-    //Chat gpt code
-    // Basically just creating a smooth curve of points on a line
     private Vector2 QuadraticBezierLerp(Vector2 p0, Vector2 p1, Vector2 p2, float t)
     {
         float u = 1 - t;

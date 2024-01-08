@@ -4,6 +4,8 @@ using UnityEditor;
 using UnityEngine;
 using System;
 
+
+// Simple interface for storing data from events
 public interface IEvent
 {
 
@@ -20,6 +22,8 @@ public class PreTakeDamageEvent: IEvent
 
 }
 
+
+// Broadcast from absorb health
 public class PreHealEvent : IEvent
 {
     public Guid Defender {get; set; }
@@ -38,6 +42,7 @@ public class PostTakeDamageEvent: IEvent
 
 }
 
+// from absorb health
 public class PostHealingEvent: IEvent
 {
     public Guid TargetID {get; set; }
@@ -50,14 +55,14 @@ public class PostHealingEvent: IEvent
 }
 
 
-// Broadcast from the BaseBattleCharacter TakeDamage method
+// player TakeDamage method
 public class PlayerDeathEvent: IEvent
 {
     public Guid ID { get; set; }
     public BattlePlayer player { get; set; }
 }
 
-
+// enemy take damage
 public class EnemyDeathEvent : IEvent
 {
     public Guid ID { get; set; }
@@ -113,6 +118,8 @@ public class CardUsedEvent: IEvent
     public Card Card { get; set; }
 }
 
+
+// From the addStatusEffect Counter
 public class StatusEffectAddedEvent : IEvent
 {
     public Guid CharacterID { get; set; }
@@ -122,30 +129,43 @@ public class StatusEffectAddedEvent : IEvent
     public BoolContainer IsMerged { get; set; } = new BoolContainer();
 }
 
+
+/* ROAMING SCENE EVENTS */
+
+// from the enemy roaming classes
 public class BattleTriggerEvent : IEvent {}
 
+
+// from treasure chests
 public class TreasureCollectedEvent : IEvent
 {
     public List<GameObject> Treasure { get; set; } = new();
     public PlayerPropsRoaming Collider {  get; set; }
 }
 
+// From pickups
 public class PickupCollectedEvent: IEvent
 {
     public PickUpsData PickUp { get; set; }
 }
 
+// From boss spawners
 public class BossDefeatedEvent : IEvent {}
 
+// From final boss
 public class FinalBossDefeatedEvent : IEvent { }
+
+// From ladder
 public class LevelPassedEvent : IEvent
 {
     public int MoveToLevel { get; set; }
 }
 
+// From bound player
 public class PlayerRescuedEvent : IEvent
 {
     public string SpawnerID { get; set; }
 }
 
+// Simple data class for allowing a bool to persist
 public class BoolContainer { public bool IsTrue { get; set; } = false; }

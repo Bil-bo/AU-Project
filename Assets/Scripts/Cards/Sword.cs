@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
+
+// Short range, high damage attack
 public class Sword : Card
 {
     public override void Use(BattlePlayer player, List<BaseBattleCharacter> targets)

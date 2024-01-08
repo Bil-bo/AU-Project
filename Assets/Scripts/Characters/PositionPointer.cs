@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+// data class
 public class PositionPointer : MonoBehaviour
 {
     [SerializeField]
