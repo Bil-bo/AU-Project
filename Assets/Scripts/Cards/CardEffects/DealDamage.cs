@@ -45,6 +45,7 @@ public class DealDamage : ICardActions
                 PreTakeDamageEvent preDamage = new()
                 {
                     Defender = target.CharID,
+                    Attacker = User.CharID,
                     DmgCalc = calc
                 };
                 EventManager.Broadcast(preDamage);

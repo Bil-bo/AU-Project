@@ -52,6 +52,34 @@ MonoBehaviour:
     - Card
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c4db33550c7e3114594c3b3992007e13
+    m_Address: Bless
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: afc4c5fc1bc1fc948ae717ffd1f2db36
+    m_Address: Cripple
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21c337599670ffa49beea61fe7168188
+    m_Address: Plague
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4764921edf593f145a2d606aa7d0683a
+    m_Address: Strengthen
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Card
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4562b9ab865f4624f8caf235f5a362b1, type: 2}
   m_SchemaSet:

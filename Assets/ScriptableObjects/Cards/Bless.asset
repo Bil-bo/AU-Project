@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99231315dddaa5b4b983d4ddac998a6e, type: 3}
   m_Name: Bless
   m_EditorClassIdentifier: 
-  Name: 
-  Description: 
+  Name: Bless
+  Description: Strengthens all party members, increasing attack by 50%
   Cost: 0
   CardInput: []
   CardOutput: []
-  Type: 0
-  Target: 0
+  Type: 2
+  Target: 6
   Range: 0
   Damage: 
   FlatDamage: 
