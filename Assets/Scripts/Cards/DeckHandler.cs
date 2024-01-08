@@ -30,12 +30,19 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
         get { return _currentPlayer; }
         set 
         {
-            if (Player != null) { button.onClick.RemoveListener(Player.FinishTurn); }
+            if (Player != null)
+            {
+                button.onClick.RemoveListener(Player.FinishTurn);
+                Player.OnEnergyChanged = (e, m) => PlayerEnergy.text = e.ToString() + "/" + m.ToString(); 
+            }
             _currentPlayer = value;
-            if (Player != null) { Player.OnEnergyChanged += (e, m) => PlayerEnergy.text = e.ToString() + "/" + m.ToString(); }
-            Player = _currentPlayer.GetComponent<BattlePlayer>();
-            Player.OnEnergyChanged += (e,m) => PlayerEnergy.text = e.ToString()+"/"+m.ToString();
-            button.onClick.AddListener(Player.FinishTurn);
+
+            if (value != null)
+            {
+                Player = _currentPlayer.GetComponent<BattlePlayer>();
+                Player.OnEnergyChanged += (e, m) => PlayerEnergy.text = e.ToString() + "/" + m.ToString();
+                button.onClick.AddListener(Player.FinishTurn);
+            }
         } 
     }
 

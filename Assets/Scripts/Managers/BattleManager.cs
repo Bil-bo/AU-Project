@@ -280,13 +280,14 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
         for (int i = 0; i < party.Count; i++)
         { 
             BattlePlayer playerData = party[i].GetComponent<BattlePlayer>();
-            Instantiate(StatusFieldPrefab, playerData.transform);
-            HealthBar healthBar = Instantiate(HealthBarPrefab, playerData.transform).GetComponent<HealthBar>();
-            healthBar.Initialise(playerData.CharID, playerData.maxHealth, playerData.CurrentHealth);
+
 
             deckHandler.AddDeck(party[i]);
             party[i].SetActive(true);
             playerData.PositionMarker = PlayerPositions[i];
+            Instantiate(StatusFieldPrefab, playerData.transform);
+            HealthBar healthBar = Instantiate(HealthBarPrefab, playerData.transform).GetComponent<HealthBar>();
+            healthBar.Initialise(playerData.CharID, playerData.maxHealth, playerData.CurrentHealth);
             PlayerCount++;
             players.Add(playerData);
 
@@ -394,6 +395,7 @@ public class BattleManager : MonoBehaviour, IOnPlayerDeath, IOnEnemyDeath
             manager.ShowOverlay("You Lost!");
             PlayerPrefs.SetInt("Init", 0);
             yield return new WaitForSeconds(3f);
+            GameData.Instance.Restart();
             CleanUp();
             SceneManager.LoadScene(0);
         }

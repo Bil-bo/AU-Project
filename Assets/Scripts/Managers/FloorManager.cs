@@ -107,7 +107,7 @@ public class FloorManager : MonoBehaviour
 
     private IEnumerator CountDown() 
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         if (InRoom) { DoorList.ForEach(door => door.SetState(true)); }
 
