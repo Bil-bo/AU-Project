@@ -7,7 +7,7 @@ public interface IObserve {}
 // Broadcast from the DealDamage card action
 public interface IOnPreTakeDamage : IObserve
 {
-    void OnPreTakeDamage(IEvent eventData);
+    void OnPreTakeDamage(PreTakeDamageEvent eventData);
 
 }
 

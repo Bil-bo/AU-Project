@@ -14,6 +14,8 @@ public interface IEvent
 public class PreTakeDamageEvent: IEvent
 {
     public Guid Defender { get; set; }
+    
+    public Guid Attacker {get; set; }
     public DamageCalculation DmgCalc { get; set; }
 
 }

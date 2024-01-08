@@ -55,6 +55,7 @@ public class AbsorbHealth : ICardActions
                 PreTakeDamageEvent preDamage = new()
                 {
                     Defender = target.CharID,
+                    Attacker = user.CharID,
                     DmgCalc = calc
                 };
                 EventManager.Broadcast(preDamage);

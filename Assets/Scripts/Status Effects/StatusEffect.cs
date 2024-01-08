@@ -26,6 +26,8 @@ public abstract class StatusEffect: IOnStatusEffectAdded
     public string Name;
     public BaseBattleCharacter Target;
 
+    public BaseBattleCharacter User;
+
 
 
     public StatusEffect(int counter)
@@ -89,3 +91,87 @@ public class PoisonEffect: StatusEffect, IOnStartOfTurn
     }
 
 } 
+public class Strengthen: StatusEffect, IOnPreTakeDamage
+{
+
+    public Strengthen(int counter) : base(counter)
+    {
+        this.Name = "Strengthen";
+    }
+
+
+    public override void Initialise()
+    {
+        base.Initialise();
+        EventManager.AddListener<PreTakeDamageEvent>(OnPreTakeDamage);
+
+    }
+
+    public void OnPreTakeDamage(PreTakeDamageEvent eventData)
+    {
+        Debug.Log("Strengthen is happening");
+        if(eventData.Attacker == Target.CharID)
+        {
+            Debug.Log("Damage is increased!");
+            Modifier damageMod = new Modifier((originalDamage) => originalDamage* 1.5f, 0);
+            eventData.DmgCalc.AddModifier(damageMod);
+            Counter--;
+        }
+
+    }
+
+    public override void Remove()
+    {
+        base.Remove();
+        EventManager.RemoveListener<PreTakeDamageEvent>(OnPreTakeDamage);
+    }
+
+
+}
+
+public class Cripple : StatusEffect, IOnPreTakeDamage
+{
+
+    public Cripple(int counter) : base(counter)
+    {
+        this.Name = "Cripple";
+    }
+    public override void Initialise()
+    {
+        base.Initialise();
+        EventManager.AddListener<PreTakeDamageEvent>(OnPreTakeDamage);
+        Debug.Log("Initialising cripple effect");
+    
+
+    }
+
+    public void OnPreTakeDamage(PreTakeDamageEvent eventData) //This reduces the enemy's damage by 50% when applied to them
+    {
+
+        Debug.Log("The Pre take damage event is happening");
+        
+        if(eventData.Attacker == Target.CharID)
+        {
+            Debug.Log(eventData.Defender);
+            Debug.Log(eventData.Attacker);
+            Debug.Log("Modified");
+            
+            Modifier damageMod = new Modifier((originalDamage) => originalDamage * 0.5f,0);
+            eventData.DmgCalc.AddModifier(damageMod);
+            Counter--;
+           
+
+        }
+
+    }
+
+    
+
+    public override void Remove()
+    {
+        base.Remove();
+        EventManager.RemoveListener<PreTakeDamageEvent>(OnPreTakeDamage);
+        
+    }
+
+}

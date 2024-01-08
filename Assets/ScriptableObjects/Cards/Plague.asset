@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99231315dddaa5b4b983d4ddac998a6e, type: 3}
   m_Name: Plague
   m_EditorClassIdentifier: 
-  Name: 
-  Description: 
+  Name: Plague
+  Description: Cripples all enemies, reducing all of their attack by 50%
   Cost: 0
   CardInput: []
   CardOutput: []
-  Type: 0
-  Target: 0
+  Type: 2
+  Target: 5
   Range: 0
   Damage: 
   FlatDamage: 

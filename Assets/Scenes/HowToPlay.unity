@@ -177,15 +177,22 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "- Main aim of the game is to collect 3 pickups, game is completed when\nthis
-    condition is fulfilled.\n\n-When trying to unlock the 2nd room, you will need
-    to complete a puzzle,\nthese will be yellow plates on the ground, they will glow
-    green if you \nstep on them, this has to be done in a correct order of course,
-    otherwise\nthey all go back to being yellow and the puzzle resets.\n\n-When getting
-    into combat, you must drag and drop cards onto enemies\nto make them work, each
-    card has different ranges, e.g. sword can only\nattack the frontmost enemy (at
-    the start) and so on...\n\n- If you get an undesirable hand, you can end turn.
-    This is essentially\nskipping a turn until you get a desirable hand. \n"
+  m_text: "- Main aim of the game is to defeat the boss enemy, to make this easier,
+    you \nwill need to collect as many pickups as possible while navigating through
+    the\nlarge number of enemies around and defeating them! Pickups weaken\nthe final
+    boss.\n\nEmbark on an immersive journey through a dynamic 3D universe teeming
+    with \ndiverse rooms and formidable adversaries. Engage in adrenaline-pumping\nencounters
+    as you explore each room, triggering automatic lockdowns that \nchallenge you
+    to conquer the enemies within. Triumph over your foes and unveil \na thrilling
+    array of reward cards, empowering your player with strategic choices \nand unlocking
+    new dimensions of excitement!\n\n-When getting into combat, you must drag and
+    drop cards onto enemies\nto make them work, each card has different ranges, e.g.
+    sword can only\nattack the frontmost enemy (at the start) and so on... You can
+    also combine cards to create\na stronger card, e.g. Poison can be dragged onto
+    Sword to make Poison Knife.\n\n- If you get an undesirable hand, you can end
+    turn. This is essentially\nskipping a turn until you get a desirable hand. \n\n-When
+    winning a battle, you can select a reward card, click the card, then click\nthe
+    player to apply this to.\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -212,8 +219,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 16
+  m_fontSizeBase: 16
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -707,7 +714,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 280, y: -180}
-  m_SizeDelta: {x: 160, y: 60}
+  m_SizeDelta: {x: 160, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1491341350
 MonoBehaviour:
@@ -755,7 +762,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2060499229}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: returnMenu
+        m_MethodName: ReturnMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1021,6 +1028,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02f2e018d02af1e4fba27681d8423704, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isNewGame: 0
+  mainCanvas: {fileID: 0}
+  settingsCanvas: {fileID: 0}
 --- !u!114 &2060499230
 MonoBehaviour:
   m_ObjectHideFlags: 0
