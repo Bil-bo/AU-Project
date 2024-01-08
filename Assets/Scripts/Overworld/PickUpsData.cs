@@ -35,7 +35,7 @@ public class PickUpsData : MonoBehaviour, IFloorObject
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("PlayerRoaming"))
         {
             PickupCollectedEvent gameEvent = new PickupCollectedEvent()
             {

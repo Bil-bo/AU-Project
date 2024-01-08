@@ -15,6 +15,7 @@ TagManager:
   - Arrow
   - FinalBoss
   - Support
+  - PlayerRoaming
   layers:
   - Default
   - TransparentFX

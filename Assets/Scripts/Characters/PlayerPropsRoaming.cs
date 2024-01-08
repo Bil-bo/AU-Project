@@ -83,17 +83,6 @@ public class PlayerPropsRoaming : MonoBehaviour
     }
 
 
-    // For colliding with rigidBodies (Buttons for now)
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Collider other = hit.collider;
-        if (other.CompareTag("Button"))
-        {
-            other.GetComponent<ButtonPad>().collided();
-
-        }
-    }
-
     private IEnumerator DelayAndLoadMainMenu()
 {
     yield return new WaitForSeconds(3f); // Wait for 3 seconds

@@ -22,7 +22,7 @@ public class Ladder : MonoBehaviour, IFloorObject
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("You finna move");
-        if (other.CompareTag("Player")) 
+        if (other.CompareTag("PlayerRoaming")) 
         {
             LevelPassedEvent levelPassed = new LevelPassedEvent()
             {

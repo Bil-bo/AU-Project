@@ -12,8 +12,6 @@ public class TreasureChest : MonoBehaviour, IFloorObject
     
     public List<GameObject> ChestList = new List<GameObject>();
 
-    [SerializeField]
-    private RewardPanel panel;
 
     public GameObject Trigger(string floorID, int objectID)
     {
@@ -60,12 +58,12 @@ public class TreasureChest : MonoBehaviour, IFloorObject
             }));
         }
 
-        return null;
+        return gameObject;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("PlayerRoaming"))
         {
             gameObject.SetActive(false);
 

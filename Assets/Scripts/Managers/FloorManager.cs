@@ -67,7 +67,7 @@ public class FloorManager : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
 
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("PlayerRoaming"))
         {
 
             InRoom = true; 
@@ -97,7 +97,7 @@ public class FloorManager : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
 
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("PlayerRoaming"))
         {
             InRoom = false;
         }

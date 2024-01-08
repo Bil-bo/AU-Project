@@ -32,11 +32,14 @@ public class GetPlayer : MonoBehaviour, IFloorObject
 
     private IEnumerator PullPlayer()
     {
-        yield return null;
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        yield return new WaitForSeconds(1f);
+        GameObject player = GameObject.FindGameObjectWithTag("PlayerRoaming");
         Debug.Log(transform.position);
         player.transform.position = transform.position;
-        
+        PlayerPrefs.SetFloat("PlayerX", transform.position.x);
+        PlayerPrefs.SetFloat("PlayerY", transform.position.y);
+        PlayerPrefs.SetFloat("PlayerZ", transform.position.z);
+
 
     }
 

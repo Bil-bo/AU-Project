@@ -13,7 +13,7 @@ public class EnemyPropsRoaming : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("PlayerRoaming"))
         {
             GameData.Instance.battleEnemies = battleEnemyInfos;
             GameData.Instance.CardRewards = CardRewardsInfos;
