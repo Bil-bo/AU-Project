@@ -1,11 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.RestService;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class RescueSpawn : MonoBehaviour, IFloorObject, IOnPlayerRescued
+public class RescueSpawn : MonoBehaviour, IFloorObject
 {
     public string ID { get; set; }
     private RescueInfo Rescue = new();
@@ -14,7 +10,7 @@ public class RescueSpawn : MonoBehaviour, IFloorObject, IOnPlayerRescued
     private void Awake()
     {
         Debug.Log("morning");
-        EventManager.AddListener<PlayerRescuedEvent>(OnPlayerRescued);
+
     }
 
     public GameObject Trigger(string floorID, int objectID)
@@ -45,7 +41,7 @@ public class RescueSpawn : MonoBehaviour, IFloorObject, IOnPlayerRescued
                     playerData.SpawnerID = ID;
                 };
 
-                return gameObject;
+                return null;
             }
         }
 
@@ -64,25 +60,12 @@ public class RescueSpawn : MonoBehaviour, IFloorObject, IOnPlayerRescued
 
             }));
 
-            return gameObject;
+            return null;
             
         }    
     }
 
-    public void OnPlayerRescued(PlayerRescuedEvent eventData)
-    {
-        Debug.Log("Been Called");
-        if (eventData.SpawnerID == ID)
-        {
-            Debug.Log("That's Me");
-            transform.parent.GetComponent<FloorManager>().RemoveFromList(gameObject);
-        }
-    }
 
-    private void OnDestroy()
-    {
-        EventManager.RemoveListener<PlayerRescuedEvent>(OnPlayerRescued);
-    }
 }
 
 

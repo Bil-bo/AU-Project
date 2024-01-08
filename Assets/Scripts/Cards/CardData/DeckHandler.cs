@@ -311,7 +311,7 @@ public class DeckHandler : MonoBehaviour, IOnAttackChanged, IOnPlayerDeath
             hand.Clear();
         }
 
-        foreach (GameObject card in partyDecks[DeadPlayer]) { Destroy(card); }
+        foreach (GameObject card in InDeck[DeadPlayer]) { card.SetActive(false); }
         partyDecks.Remove(DeadPlayer);
         GameData.Instance.BattlePlayers.Remove(DeadPlayer);
 

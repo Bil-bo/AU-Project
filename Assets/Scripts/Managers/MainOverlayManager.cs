@@ -32,7 +32,7 @@ public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUp
         }
         else 
         {
-            PlayerPrefs.SetInt("PickUpsCollected", 0);
+            PlayerPrefs.SetInt("PickUpsCollected",0);
             PickUpText.text = "PickUps Collected: " + PickUpscollected;
         }
 
@@ -47,6 +47,7 @@ public class MainOverlayManager : MonoBehaviour, IOnTreasureCollected, IOnPickUp
     public void OnPickUpCollected(PickupCollectedEvent eventData)
     {
         PickUpscollected++;
+        PlayerPrefs.SetInt("PickUpsCollected", PickUpscollected);
         PickUpText.text = "PickUps Collected: " + PickUpscollected;
     }
 

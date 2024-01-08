@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3865268901610602528}
   - component: {fileID: 3735884716019572517}
   - component: {fileID: -3901111890059942347}
-  - component: {fileID: 4643698069067138595}
+  - component: {fileID: -6151305591685391046}
   m_Layer: 0
   m_Name: FinalBoss
   m_TagString: Enemy
@@ -134,7 +134,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &4643698069067138595
+--- !u!114 &-6151305591685391046
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,13 +143,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4267710845453900681}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e850be55a0a568e49b3b540efa0351a8, type: 3}
+  m_Script: {fileID: 11500000, guid: 3cac5d3d77a10714692ba6093de3a516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
-  maxHealth: 0
-  CurrentHealth: 0
-  Attack: 0
-  Defense: 0
-  damageNumberPrefab: {fileID: 0}
-  Position: 0
+  battleEnemyInfos:
+  - {fileID: 3517959726302896293, guid: 33a83c7c5fb2e6f41b735a7a3ffaa20b, type: 3}
+  CardRewardsInfos: []

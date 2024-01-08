@@ -45,21 +45,18 @@ public class FloorManager : MonoBehaviour
             PlayerPrefs.SetInt(FloorID, 0);
         }
 
-        if (!Clear)
+        int i = 0;
+        foreach (IFloorObject f in transform.GetComponentsInChildren<IFloorObject>(true))
         {
-            int i = 0;
-            foreach (IFloorObject f in transform.GetComponentsInChildren<IFloorObject>(true))
-            {
-                GameObject floorObject = f.Trigger(FloorID, i);
-                if (floorObject != null) { Uncleared.Add(floorObject); i++; }
+            GameObject floorObject = f.Trigger(FloorID, i);
+            if (floorObject != null) { Uncleared.Add(floorObject); i++; }
                 
-            }
+        }
 
-            if (Uncleared.Count == 0)
-            {
-                Clear = true;
-                PlayerPrefs.SetInt(FloorID, 1);
-            }
+        if (Uncleared.Count == 0)
+        {
+            Clear = true;
+            PlayerPrefs.SetInt(FloorID, 1);
         }
     }
 

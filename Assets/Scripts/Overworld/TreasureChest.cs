@@ -32,6 +32,7 @@ public class TreasureChest : MonoBehaviour, IFloorObject
 
             else
             {
+                Debug.Log("Area Has Been Cleared");
                 ChestInfo.CardStore.ForEach(card => Addressables.LoadAssetAsync<GameObject>(card).Completed += (result) =>
                 {
                     ChestList.Add(result.Result);
@@ -53,12 +54,12 @@ public class TreasureChest : MonoBehaviour, IFloorObject
                     ChestInfo.CardStore.Add(item.Key);
                     ChestList.Add(item.Value);
                 });
-                PlayerPrefs.SetString(ID, JsonUtility.ToJson(ChestList));
+                PlayerPrefs.SetString(ID, JsonUtility.ToJson(ChestInfo));
 
             }));
         }
 
-        return gameObject;
+        return null;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -66,6 +67,8 @@ public class TreasureChest : MonoBehaviour, IFloorObject
         if (other.CompareTag("PlayerRoaming"))
         {
             gameObject.SetActive(false);
+            ChestInfo.Clear = true;
+            PlayerPrefs.SetString(ID, JsonUtility.ToJson(ChestInfo));
 
             TreasureCollectedEvent gameEvent = new TreasureCollectedEvent()
             {

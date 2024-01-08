@@ -20,10 +20,15 @@ public class GetPlayer : MonoBehaviour, IFloorObject
 
         else
         {
-            PlayerPrefs.SetInt(ID, 1);
-            Debug.Log("Should pull now");
-            StartCoroutine(PullPlayer());
+            if (PlayerPrefs.GetInt(ID, 0) == 0)
+            {
 
+                PlayerPrefs.SetInt(ID, 1);
+
+
+                Debug.Log("Should pull now");
+                StartCoroutine(PullPlayer());
+            }
             return null;
         }
 

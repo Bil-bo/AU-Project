@@ -102,6 +102,7 @@ public class RewardPanel : MonoBehaviour
     private void AddToDeck(GameObject player) 
     {
         GameData.Instance.BattlePlayers[player].AddRange(SelectedCards);
+        SelectedCards.ForEach(x => x.transform.SetParent(GameData.Instance.transform));
         RewardsToChoose -= SelectedCards.Count;
         foreach (Toggle t in CardButtons) 
         {
